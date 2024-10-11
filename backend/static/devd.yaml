@@ -1164,6 +1164,8 @@ components:
           format: int64
           description: "Timestamp (in miliseconds) when the project was created"
         # todo: Tokens?
+        owner:
+          $ref: "#/components/schemas/UserId"
         features:
           type: array
           items:
