@@ -924,6 +924,8 @@ paths:
   ## User routes
   /user/{user_id}:
     get:
+      tags:
+        - User
       summary: "Get user by ID"
       description: "Fetches detailed information about a specific user by their ID. Requires JWT authentication."
       security:
@@ -1020,12 +1022,12 @@ paths:
         "500":
           $ref: "#/components/schemas/InternalError"
 
-  /login:
+  /auth/login:
     post:
       tags:
         - Authentication
       summary: "Authenticate a user"
-      description: "Validates user credentials and returns a JWT token if authentication is successful"
+      description: "Validates user credentials and returns a JWT token if authentication is successful. The password is provided in plain text and checked against the hashed version stored in the database."
       requestBody:
         required: true
         content:
@@ -1038,7 +1040,7 @@ paths:
                   description: "The username of the user"
                 password:
                   type: string
-                  description: "The password of the user"
+                  description: "The user's plain-text password"
               required:
                 - username
                 - password
@@ -1056,7 +1058,7 @@ paths:
         "500":
           $ref: "#/components/schemas/InternalError"
 
-  /signup:
+  /auth/signup:
     post:
       tags:
         - Authentication
@@ -1074,7 +1076,8 @@ paths:
                   description: "The user's desired email"
                 password:
                   type: string
-                  description: "The user's desired password"
+                  format: password
+                  description: "The user's plain-text password. It will be hashed and salted before storage."
                 email:
                   type: string
                   description: "The user's email address"
@@ -1101,7 +1104,7 @@ paths:
         "500":
           $ref: "#/components/schemas/InternalError"
 
-  /logout:
+  /auth/logout:
     post:
       tags:
         - Authentication
@@ -1129,12 +1132,20 @@ components:
     User:
       type: object
       properties:
+        _id:
+          $ref: "#/components/schemas/UserId"
+        email:
+          type: string
+          description: "The user's email address"
         username:
           type: string
           description: "The username of the user"
-        password:
+        salt:
           type: string
-          description: "The user's password"
+          description: "Salt used for hashing the password"
+        hash:
+          type: string
+          description: "Hashed version of the user's password"
         projects:
           type: array
           description: "A list of projects the user is associated with"
@@ -1147,9 +1158,6 @@ components:
                 type: string
                 description: "User's access level to the project"
                 enum: ["admin", "guest"]
-        email:
-          type: string
-          description: "The user's email address"
 
     Project:
       type: object
@@ -1186,6 +1194,11 @@ components:
           items:
             $ref: "#/components/schemas/TaskId"
           description: "A list of Ids to tasks the projects contains"
+        guests:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserId"
+          description: "A list of userids to users that have guest access to the project"
       required:
         - _id
         - description

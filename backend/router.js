@@ -1,9 +1,15 @@
+const Product = require("./controllers/project");
+const Auth = require("./controllers/authentication");
+
 module.exports = function (app) {
   app.get("/", (req, res) => {
     res.redirect(301, "/documentation");
   });
+  // Auth Routes
+  app.post("/auth/signup", Auth.signup);
+  app.post("/auth/login", Auth.login);
 
-  app.get("/projects", (req, res) => {
-    res.send([{ name: "test project 1" }, { name: "test project 2" }]);
-  });
+  // Project Routes
+  app.get("/projects", Product.getAllProducts);
+  app.post("/projects", Product.postNewProduct);
 };

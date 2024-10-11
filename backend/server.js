@@ -8,12 +8,16 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const keys = require("./config/keys");
 const { ProjectModel } = require("./models/ModelsStore");
+const passport = require("passport");
+require("./services/passport");
 
 const app = express();
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use(passport.initialize());
 
 app.use("/documentation", swaggerUi.serve, swaggerUi.setup(devdDocument));
 

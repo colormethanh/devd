@@ -10,6 +10,7 @@ const projectSchema = new Schema({
   components: [{ type: Schema.Types.ObjectId, ref: "Component" }],
   pages: [{ type: Schema.Types.ObjectId, ref: "Page" }],
   tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],
+  guests: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 const ProjectModel = mongoose.model("project", projectSchema);
