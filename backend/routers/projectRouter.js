@@ -6,6 +6,11 @@ const productRoutes = function (productController) {
 
   router.get("/", productController.getAllProjects);
   router.post("/", requireAuth, productController.postNewProjects);
+  router.get("/:projectId", productController.getProject);
+
+  // todo: Put project
+  // todo: Delete project
+
   return router;
 };
 

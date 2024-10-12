@@ -981,40 +981,6 @@ paths:
         "500":
           $ref: "#/components/schemas/InternalError"
 
-  ## User routes
-  /{user_id}/projects:
-    get:
-      tags:
-        - User
-      summary: "Get projects for a specific user"
-      description: "Retrieves a list of projects for the specified user. The user must be logged in with a valid JWT."
-      security:
-        - bearerAuth: [] # JWT-based authentication required
-      parameters:
-        - in: path
-          name: user_id
-          required: true
-          description: "The unique ID of the user"
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "List of projects retrieved successfully"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Project"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-
   /auth/login:
     post:
       tags:
