@@ -1,18 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
-const devdDocument = YAML.load("./static/devd.yaml");
 const cors = require("cors");
 const passport = require("passport");
+
+// Sub Routers
 const productRouter = require("./routers/projectRouter");
 require("./services/passport");
 const authRouter = require("./routers/authRouter");
+const swaggerRoutes = require("./routers/swaggerRouter");
 
-const StartServer = ({ authController, projectController }) => {
+const StartApp = ({ authController, projectController }) => {
   const app = express();
 
-  // App Level middleware
+  // App Level middleware setup
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -20,11 +20,11 @@ const StartServer = ({ authController, projectController }) => {
   const router = express.Router();
 
   // App routes
-  router.use("/documentation", swaggerUi.serve, swaggerUi.setup(devdDocument));
+  router.use("/documentation", swaggerRoutes());
   router.use("/projects", productRouter(projectController));
   router.use("/auth", authRouter(authController));
   app.use("/", router);
   return app;
 };
 
-module.exports = StartServer;
+module.exports = StartApp;

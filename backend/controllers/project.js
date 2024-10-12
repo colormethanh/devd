@@ -1,14 +1,15 @@
 const { ProjectModel } = require("../models/project");
 
-exports.getAllProducts = async (req, res, next) => {
+exports.getAllProjects = async (req, res, next) => {
   try {
-    res.send([{ name: "test project 1" }, { name: "test project 2" }]);
+    const projects = await ProjectModel.find({});
+    res.send(projects);
   } catch (err) {
     next(err);
   }
 };
 
-exports.postNewProduct = async (req, res, next) => {
+exports.postNewProjects = async (req, res, next) => {
   try {
     const { name, description } = req.body;
 
@@ -18,6 +19,7 @@ exports.postNewProduct = async (req, res, next) => {
     let newProject = new ProjectModel({ name, description });
     newProject = await newProject.save();
     res.send(newProject);
+    // todo: Assign owner of project and add to user object
   } catch (err) {
     next(err);
   }
