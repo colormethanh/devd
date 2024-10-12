@@ -1,11 +1,11 @@
 const express = require("express");
 const { requireAuth } = require("./authMiddleware");
 
-const productRoutes = function (productDB) {
+const productRoutes = function (productController) {
   const router = express.Router();
 
-  router.get("/", productDB.getAllProjects);
-  router.post("/", requireAuth, productDB.postNewProjects);
+  router.get("/", productController.getAllProjects);
+  router.post("/", requireAuth, productController.postNewProjects);
   return router;
 };
 

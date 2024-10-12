@@ -1,10 +1,10 @@
 const express = require("express");
 
-const authRoutes = function (authDB) {
+const authRoutes = function (authController) {
   const router = express.Router();
 
-  router.post("/login", authDB.login);
-  router.post("/signup", authDB.signup);
+  router.post("/login", authController.login);
+  router.post("/signup", authController.signup);
   return router;
 };
 

@@ -922,7 +922,7 @@ paths:
           $ref: "#/components/schemas/InternalError"
 
   ## User routes
-  /user/{user_id}:
+  /user/me:
     get:
       tags:
         - User
@@ -930,13 +930,6 @@ paths:
       description: "Fetches detailed information about a specific user by their ID. Requires JWT authentication."
       security:
         - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: string
-            description: "The ID of the user to retrieve"
       responses:
         "200":
           description: "User information retrieved successfully"

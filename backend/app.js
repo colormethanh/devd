@@ -4,12 +4,13 @@ const cors = require("cors");
 const passport = require("passport");
 
 // Sub Routers
+const userRoutes = require("./routers/userRouter");
 const productRouter = require("./routers/projectRouter");
 require("./services/passport");
 const authRouter = require("./routers/authRouter");
 const swaggerRoutes = require("./routers/swaggerRouter");
 
-const StartApp = ({ authController, projectController }) => {
+const StartApp = ({ authController, projectController, userController }) => {
   const app = express();
 
   // App Level middleware setup
@@ -23,6 +24,8 @@ const StartApp = ({ authController, projectController }) => {
   router.use("/documentation", swaggerRoutes());
   router.use("/projects", productRouter(projectController));
   router.use("/auth", authRouter(authController));
+  router.use("/user", userRoutes(userController));
+
   app.use("/", router);
   return app;
 };

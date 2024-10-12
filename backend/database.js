@@ -2,8 +2,9 @@ const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const authController = require("./controllers/authentication");
 const projectController = require("./controllers/project");
+const userController = require("./controllers/user");
 
-const Controllers = { authController, projectController };
+const Controllers = { authController, projectController, userController };
 
 async function ConnectDB() {
   try {
