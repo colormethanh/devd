@@ -18,7 +18,7 @@ const UserSchema = new Schema({
         ref: "Project",
         required: true,
       },
-      access: {
+      role: {
         type: String,
         enum: ["admin", "guest"],
         required: true,

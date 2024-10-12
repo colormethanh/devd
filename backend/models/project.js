@@ -6,7 +6,7 @@ const projectSchema = new Schema({
   description: { type: String, required: true },
   date_created: Number,
   name: { type: String, required: true, unique: true },
-  owner: { type: Schema.Types.ObjectId, ref: "User" },
+  owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   features: [{ type: Schema.Types.ObjectId, ref: "Feature" }],
   components: [{ type: Schema.Types.ObjectId, ref: "Component" }],
   pages: [{ type: Schema.Types.ObjectId, ref: "Page" }],

@@ -1154,7 +1154,7 @@ components:
             properties:
               project:
                 $ref: "#/components/schemas/ProjectId"
-              access:
+              role:
                 type: string
                 description: "User's access level to the project"
                 enum: ["admin", "guest"]
