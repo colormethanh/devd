@@ -1164,6 +1164,9 @@ components:
       properties:
         _id:
           $ref: "#/components/schemas/ProjectId"
+        name:
+          type: string
+          description: "Name of the project"
         description:
           type: string
           description: "Description of the project"

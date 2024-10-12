@@ -28,7 +28,6 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.setPassword = function (password) {
-  // todo: set up error handling
   this.salt = crypto.randomBytes(16).toString("hex");
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, 1000, 64, "sha512")

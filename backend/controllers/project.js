@@ -1,4 +1,4 @@
-const { ProjectModel } = require("../models/ModelsStore");
+const { ProjectModel } = require("../models/project");
 
 exports.getAllProducts = async (req, res, next) => {
   try {
@@ -10,7 +10,14 @@ exports.getAllProducts = async (req, res, next) => {
 
 exports.postNewProduct = async (req, res, next) => {
   try {
-    res.status(200).send("Post request retrieved");
+    const { name, description } = req.body;
+
+    if (!name || !description)
+      return res.status(400).send("Name and Descriptions are required");
+
+    let newProject = new ProjectModel({ name, description });
+    newProject = await newProject.save();
+    res.send(newProject);
   } catch (err) {
     next(err);
   }

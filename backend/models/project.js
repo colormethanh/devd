@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const projectSchema = new Schema({
   description: { type: String, required: true },
   date_created: Number,
+  name: { type: String, required: true, unique: true },
   owner: { type: Schema.Types.ObjectId, ref: "User" },
   features: [{ type: Schema.Types.ObjectId, ref: "Feature" }],
   components: [{ type: Schema.Types.ObjectId, ref: "Component" }],

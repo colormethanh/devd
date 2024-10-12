@@ -1,5 +1,5 @@
 const jwt = require("jwt-simple");
-const { UserModel } = require("../models/ModelsStore");
+const { UserModel } = require("../models/User");
 const keys = require("../config/keys");
 const { checkIfUserExist } = require("../utils/authHelpers");
 
@@ -9,7 +9,7 @@ const tokenForUser = (user) => {
     {
       sub: user._id,
       iat: timestamp,
-      exp: timestamp + 5 * 60 * 60,
+      exp: timestamp + 5 * 60 * 60, // expires in 5 hours
     },
     keys.TOKEN_SECRET
   );
