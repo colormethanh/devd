@@ -1,41 +1,49 @@
-const { ProjectModel } = require("../models/Project");
-const { UserModel } = require("../models/User");
+const ProjectModel = require("../models/Project");
+const UserModel = require("../models/User");
 
-exports.getAllProjects = async (req, res, next) => {
+exports.getAllProjects = async () => {
   try {
     const projects = await ProjectModel.find({});
-    res.send(projects);
+    return projects;
   } catch (err) {
-    next(err);
+    throw Error(err);
   }
 };
 
-exports.postNewProjects = async (req, res, next) => {
+exports.postNewProject = async (name, description, userId) => {
   try {
-    const { name, description } = req.body;
-    const user = await UserModel.findById(req.user._id);
+    if (!name || !description || !userId)
+      throw Error("Name, description, and userId was not provided");
 
-    if (!user) return res.status(404).send("User could not be found");
-    if (!name || !description)
-      return res.status(400).send("Name and Descriptions are required");
+    const user = await UserModel.findById(userId);
+    if (!user) throw Error("user does not exist");
 
-    let newProject = new ProjectModel({ name, description, owner: user });
+    // todo: If project saves but user does not save? We should delete the project
+    let newProject = new ProjectModel({
+      name,
+      description,
+      owner: user,
+      date_created: Date.now(),
+    });
     newProject = await newProject.save();
 
     user.projects.push({ project_id: newProject._id, role: "admin" });
+
     user.save();
-    res.send(newProject);
+    return newProject;
   } catch (err) {
-    next(err);
+    throw Error(err);
   }
 };
 
-exports.getProject = async (req, res, next) => {
+exports.getProject = async (projectId) => {
   try {
-    const project = await ProjectModel.findById(req.params.projectId);
-    if (!project) return res.status(404).send("Project could not be found");
-    res.send(project);
+    if (!projectId) throw Error("Project Id is required");
+
+    const project = await ProjectModel.findById(projectId);
+
+    return project;
   } catch (err) {
-    next(err);
+    throw Error(err);
   }
 };

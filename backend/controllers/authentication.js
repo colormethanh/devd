@@ -1,5 +1,5 @@
 const jwt = require("jwt-simple");
-const { UserModel } = require("../models/User");
+const UserModel = require("../models/User");
 const keys = require("../config/keys");
 const { checkIfUserExist } = require("../utils/authHelpers");
 

@@ -4,11 +4,12 @@ const cors = require("cors");
 const passport = require("passport");
 
 // Sub Routers
-const userRoutes = require("./routers/userRouter");
-const productRouter = require("./routers/projectRouter");
+const userRouter = require("./routers/userRouter");
+const projectRouter = require("./routers/projectRouter");
 require("./services/passport");
 const authRouter = require("./routers/authRouter");
-const swaggerRoutes = require("./routers/swaggerRouter");
+const swaggerRouter = require("./routers/swaggerRouter");
+const pageRouter = require("./routers/pageRouter");
 
 const StartApp = ({ authController, projectController, userController }) => {
   const app = express();
@@ -21,10 +22,11 @@ const StartApp = ({ authController, projectController, userController }) => {
   const router = express.Router();
 
   // App routes
-  router.use("/documentation", swaggerRoutes());
-  router.use("/projects", productRouter(projectController));
+  router.use("/documentation", swaggerRouter());
+  router.use("/projects", projectRouter(projectController));
   router.use("/auth", authRouter(authController));
-  router.use("/user", userRoutes(userController));
+  router.use("/user", userRouter(userController));
+  router.use("/projects/:projectid/pages", pageRouter());
 
   app.use("/", router);
   return app;

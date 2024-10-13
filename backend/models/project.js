@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Define our model
 const projectSchema = new Schema({
   description: { type: String, required: true },
-  date_created: Number,
+  date_created: { type: Number, required: true },
   name: { type: String, required: true, unique: true },
   owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   features: [{ type: Schema.Types.ObjectId, ref: "Feature" }],
@@ -16,6 +15,4 @@ const projectSchema = new Schema({
 
 const ProjectModel = mongoose.model("project", projectSchema);
 
-module.exports = {
-  ProjectModel,
-};
+module.exports = ProjectModel;
