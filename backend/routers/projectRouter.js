@@ -19,9 +19,10 @@ const projectRoutes = function (projectController) {
 
       const project = await projectController.getProject(projectId);
 
-      if (!project) res.status(404).send("Could not find project");
+      if (project instanceof Error)
+        return res.status(project.statusCode).send(project.message);
 
-      res.send(project);
+      return res.send(project);
     } catch (err) {
       next(err);
     }
@@ -38,6 +39,9 @@ const projectRoutes = function (projectController) {
         description,
         req.user._id
       );
+
+      if (newProject instanceof Error)
+        return res.status(newProject.statusCode).send(newProject.message);
 
       return res.send({
         message: "New project successfully created",

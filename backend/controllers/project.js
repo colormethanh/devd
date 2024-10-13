@@ -1,5 +1,6 @@
 const ProjectModel = require("../models/Project");
 const UserModel = require("../models/User");
+const { createError } = require("../utils/errorHelpers");
 
 exports.getAllProjects = async () => {
   try {
@@ -13,10 +14,10 @@ exports.getAllProjects = async () => {
 exports.postNewProject = async (name, description, userId) => {
   try {
     if (!name || !description || !userId)
-      throw Error("Name, description, and userId was not provided");
+      return createError("Name, Description, and userId are required", 400);
 
     const user = await UserModel.findById(userId);
-    if (!user) throw Error("user does not exist");
+    if (!user) return createError("Could not find user", 404);
 
     // todo: If project saves but user does not save? We should delete the project
     let newProject = new ProjectModel({
@@ -38,7 +39,7 @@ exports.postNewProject = async (name, description, userId) => {
 
 exports.getProject = async (projectId) => {
   try {
-    if (!projectId) throw Error("Project Id is required");
+    if (!projectId) return createError("Project Id is required", 400);
 
     const project = await ProjectModel.findById(projectId);
 
