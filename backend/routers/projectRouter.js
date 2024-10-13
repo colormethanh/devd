@@ -1,7 +1,7 @@
 const express = require("express");
 const { requireAuth } = require("./authMiddleware");
 
-const productRoutes = function (projectController) {
+const projectRoutes = function (projectController) {
   const router = express.Router();
 
   router.get("/", async (req, res, next) => {
@@ -54,4 +54,4 @@ const productRoutes = function (projectController) {
   return router;
 };
 
-module.exports = productRoutes;
+module.exports = projectRoutes;

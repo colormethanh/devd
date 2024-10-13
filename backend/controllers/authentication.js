@@ -2,6 +2,7 @@ const jwt = require("jwt-simple");
 const UserModel = require("../models/User");
 const keys = require("../config/keys");
 const { checkIfUserExist } = require("../utils/authHelpers");
+const { createError } = require("../utils/errorHelpers");
 
 const tokenForUser = (user) => {
   const timestamp = Math.round(Date.now() / 1000);
@@ -15,50 +16,30 @@ const tokenForUser = (user) => {
   );
 };
 
-exports.login = async (req, res, next) => {
-  const { username, password } = req.body;
-
-  if (!username || !password)
-    return res.status(400).send("Must provide username and password");
-
+exports.login = async (username, password) => {
   try {
     const user = await UserModel.findOne({ username });
-
-    // Check if user exists
-    if (!user) return res.status(401).send("Invalid password or username");
-
-    // Check if user's password matches
     const passwordValid = user.validatePassword(password);
-    if (!passwordValid)
-      return res.status(401).send("Invalid password or username");
 
-    const token = tokenForUser(user);
-    return res.send({ token: token });
+    if (!passwordValid || !user)
+      return createError("Incorrect username or password", 400);
+
+    return tokenForUser(user);
   } catch (err) {
-    next(err);
+    throw Error(err);
   }
 };
 
-exports.signup = async (req, res, next) => {
-  const { email, username, password } = req.body;
-
-  if (!email || !username || !password) {
-    return res
-      .status(400)
-      .send({ error: "You must provide an email, username, and password" });
-  }
-
+exports.signup = async (email, username, password) => {
   try {
-    // Check if the user already exists with the supplied credentials
     const userExists = await checkIfUserExist(UserModel, {
       email,
       username,
     });
 
-    if (userExists)
-      return res
-        .status(409)
-        .send({ error: "login credentials already in use" });
+    if (userExists) {
+      return createError("Username or email already taken", 400);
+    }
 
     const user = new UserModel();
     user.email = email;
@@ -66,8 +47,8 @@ exports.signup = async (req, res, next) => {
     user.setPassword(password);
     await user.save();
 
-    res.json({ token: tokenForUser(user) });
+    return tokenForUser(user);
   } catch (err) {
-    next(err);
+    throw Error(err);
   }
 };

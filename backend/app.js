@@ -29,6 +29,7 @@ const StartApp = ({ authController, projectController, userController }) => {
   router.use("/projects/:projectid/pages", pageRouter());
 
   app.use("/", router);
+
   return app;
 };
 
