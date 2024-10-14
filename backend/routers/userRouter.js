@@ -1,4 +1,6 @@
 const express = require("express");
+const { createError } = require("../utils/errorHelpers");
+const { createResponseObject } = require("../utils/responseHelpers");
 const { requireAuth } = require("./authMiddleware");
 
 const userRoutes = function (userController) {
@@ -8,12 +10,11 @@ const userRoutes = function (userController) {
     try {
       const user = await userController.getUser(req.user._id);
 
-      if (!user) return res.status(404).send("User could not be found");
+      if (!user) return createError(404, "User could not be found");
 
-      if (user instanceof Error)
-        return res.status(user.statusCode).send(user.message);
+      if (user instanceof Error) return next(user);
 
-      res.send(user);
+      res.send(createResponseObject({ user: user }));
     } catch (err) {
       next(err);
     }

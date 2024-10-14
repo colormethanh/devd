@@ -19,14 +19,17 @@ const tokenForUser = (user) => {
 exports.login = async (username, password) => {
   try {
     const user = await UserModel.findOne({ username });
+
+    if (!user) return createError(400, "Incorrect username or password");
+
     const passwordValid = user.validatePassword(password);
 
-    if (!passwordValid || !user)
-      return createError("Incorrect username or password", 400);
+    if (!passwordValid)
+      return createError(400, "Incorrect username or password");
 
     return tokenForUser(user);
   } catch (err) {
-    throw Error(err);
+    return createError(err.statusCode, err.message);
   }
 };
 
@@ -38,7 +41,7 @@ exports.signup = async (email, username, password) => {
     });
 
     if (userExists) {
-      return createError("Username or email already taken", 400);
+      return createError(400, "Username or email already taken");
     }
 
     const user = new UserModel();
@@ -49,6 +52,6 @@ exports.signup = async (email, username, password) => {
 
     return tokenForUser(user);
   } catch (err) {
-    throw Error(err);
+    throw createError(err.statusCode, err.message);
   }
 };

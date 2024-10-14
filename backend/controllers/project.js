@@ -7,17 +7,17 @@ exports.getAllProjects = async () => {
     const projects = await ProjectModel.find({});
     return projects;
   } catch (err) {
-    throw Error(err);
+    return createError(err.statusCode);
   }
 };
 
 exports.postNewProject = async (name, description, userId) => {
   try {
     if (!name || !description || !userId)
-      return createError("Name, Description, and userId are required", 400);
+      return createError(400, "Name, Description, and userId are required");
 
     const user = await UserModel.findById(userId);
-    if (!user) return createError("Could not find user", 404);
+    if (!user) return createError(404, "Could not find user");
 
     // todo: If project saves but user does not save? We should delete the project
     let newProject = new ProjectModel({
@@ -33,7 +33,7 @@ exports.postNewProject = async (name, description, userId) => {
     user.save();
     return newProject;
   } catch (err) {
-    throw Error(err);
+    return createError(err.statusCode, err.message);
   }
 };
 
@@ -45,6 +45,6 @@ exports.getProject = async (projectId) => {
 
     return project;
   } catch (err) {
-    throw Error(err);
+    throw createError(err.statusCode, err.message);
   }
 };

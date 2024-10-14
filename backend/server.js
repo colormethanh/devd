@@ -1,12 +1,10 @@
 const dotenv = require("dotenv");
 const StartApp = require("./app");
 const { ConnectDB, Controllers } = require("./database");
-
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
-
 const StartServer = async () => {
+  const PORT = process.env.PORT || 3000;
   await ConnectDB();
 
   StartApp(Controllers).listen(PORT, () => {

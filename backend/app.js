@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require("passport");
+const { ErrorMessages } = require("./utils/errorHelpers");
 
 // Sub Routers
 const userRouter = require("./routers/userRouter");
@@ -30,6 +31,11 @@ const StartApp = ({ authController, projectController, userController }) => {
 
   app.use("/", router);
 
+  app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || ErrorMessages[statusCode];
+    return res.status(statusCode).send(message);
+  });
   return app;
 };
 

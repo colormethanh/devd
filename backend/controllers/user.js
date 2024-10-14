@@ -4,9 +4,9 @@ const { createError } = require("../utils/errorHelpers");
 exports.getUser = async (userId) => {
   try {
     const user = await UserModel.findById(userId);
-    if (!user) return createError("User could not be found", 404);
+    if (!user) return createError(404, "User could not be found");
     return user;
   } catch (err) {
-    throw Error(err);
+    return createError(err.statusCode, err.message);
   }
 };

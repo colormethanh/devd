@@ -1,5 +1,7 @@
 const express = require("express");
 const { requireAuth } = require("./authMiddleware");
+const { createError } = require("../utils/errorHelpers");
+const { createResponseObject } = require("../utils/responseHelpers");
 
 const projectRoutes = function (projectController) {
   const router = express.Router();
@@ -7,9 +9,9 @@ const projectRoutes = function (projectController) {
   router.get("/", async (req, res, next) => {
     try {
       const projects = await projectController.getAllProjects();
-      return res.send(projects);
+      return res.send(createResponseObject(projects));
     } catch (err) {
-      next(err);
+      next(createError(err.statusCode, err.message));
     }
   });
 
@@ -19,12 +21,11 @@ const projectRoutes = function (projectController) {
 
       const project = await projectController.getProject(projectId);
 
-      if (project instanceof Error)
-        return res.status(project.statusCode).send(project.message);
+      if (project instanceof Error) return next(project);
 
       return res.send(project);
     } catch (err) {
-      next(err);
+      next(createError(err.statusCode, err.message));
     }
   });
 
@@ -32,7 +33,7 @@ const projectRoutes = function (projectController) {
     try {
       const { name, description } = req.body;
       if (!name || !description || !req.user._id)
-        return res.status(400).send("Name and Description are required");
+        return next(createError(400, "Name and Description is required"));
 
       const newProject = await projectController.postNewProject(
         name,
@@ -40,15 +41,16 @@ const projectRoutes = function (projectController) {
         req.user._id
       );
 
-      if (newProject instanceof Error)
-        return res.status(newProject.statusCode).send(newProject.message);
+      if (newProject instanceof Error) return next(newProject);
 
-      return res.send({
-        message: "New project successfully created",
-        project_id: newProject._id,
-      });
+      return res.send(
+        createResponseObject(
+          { projectId: newProject._id },
+          "New project successfully created"
+        )
+      );
     } catch (err) {
-      next(err);
+      next(createError(err.statusCode, err.message));
     }
   });
 

@@ -1,4 +1,6 @@
 const express = require("express");
+const { createError } = require("../utils/errorHelpers");
+const { createResponseObject } = require("../utils/responseHelpers");
 
 const authRoutes = function (authController) {
   const router = express.Router();
@@ -7,38 +9,37 @@ const authRoutes = function (authController) {
     const { username, password } = req.body;
 
     if (!username || !password)
-      return res.status(400).send("Must provide username and password");
+      return next(createError(400, "Must provide username and password"));
 
     try {
       const userToken = await authController.login(username, password);
 
-      if (userToken instanceof Error)
-        return res.status(userToken.statusCode).send(userToken.message);
+      if (userToken instanceof Error) return next(userToken);
 
-      return res.send({ token: userToken });
+      return res.send(
+        createResponseObject({ token: userToken }, "Login Successful")
+      );
     } catch (err) {
-      next(err);
+      next(createError(err.statusCode, err.message));
     }
   });
 
   router.post("/signup", async (req, res, next) => {
     const { email, username, password } = req.body;
 
-    if (!email || !username || !password) {
-      return res
-        .status(400)
-        .send({ error: "You must provide an email, username, and password" });
-    }
+    if (!email || !username || !password)
+      return next(
+        createError(400, "You must provide an email, username, and password")
+      );
 
     try {
       const userToken = await authController.signup(email, username, password);
 
-      if (userToken instanceof Error)
-        return res.status(userToken.statusCode).send(userToken.message);
+      if (userToken instanceof Error) return next(userToken);
 
-      res.send({ token: userToken });
+      return res.send(createResponseObject({ token: userToken }));
     } catch (err) {
-      next(err);
+      next(createError(err.statusCode, err.message));
     }
   });
 

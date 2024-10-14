@@ -1403,6 +1403,14 @@ components:
       type: string
       description: "Access token used for authorization"
 
+    ResponseObject:
+      type: object
+      description: "An object to standardize server responses"
+      properties:
+        message:
+          type: string
+        payload:
+          type: object
   securitySchemes:
     bearerAuth:
       type: http
