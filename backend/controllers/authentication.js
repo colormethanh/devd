@@ -20,12 +20,12 @@ exports.login = async (username, password) => {
   try {
     const user = await UserModel.findOne({ username });
 
-    if (!user) return createError(400, "Incorrect username or password");
+    if (!user) return createError(401, "Incorrect username or password");
 
     const passwordValid = user.validatePassword(password);
 
     if (!passwordValid)
-      return createError(400, "Incorrect username or password");
+      return createError(401, "Incorrect username or password");
 
     return tokenForUser(user);
   } catch (err) {

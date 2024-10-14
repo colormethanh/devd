@@ -9,6 +9,7 @@ const projectRoutes = function (projectController) {
   router.get("/", async (req, res, next) => {
     try {
       const projects = await projectController.getAllProjects();
+
       return res.send(createResponseObject(projects));
     } catch (err) {
       next(createError(err.statusCode, err.message));

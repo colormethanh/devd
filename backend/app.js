@@ -34,7 +34,9 @@ const StartApp = ({ authController, projectController, userController }) => {
   app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || ErrorMessages[statusCode];
-    return res.status(statusCode).send(message);
+    return res
+      .status(statusCode)
+      .send({ message: message, statusCode: statusCode });
   });
   return app;
 };
