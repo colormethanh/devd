@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require("passport");
 const { ErrorMessages } = require("./utils/errorHelpers");
+const { createResponseObject } = require("./utils/responseHelpers");
 
 // Sub Routers
 const userRouter = require("./routers/userRouter");
@@ -36,7 +37,12 @@ const StartApp = ({ authController, projectController, userController }) => {
     const message = err.message || ErrorMessages[statusCode];
     return res
       .status(statusCode)
-      .send({ message: message, statusCode: statusCode });
+      .send(
+        createResponseObject(
+          { message: message, statusCode: statusCode },
+          "Error"
+        )
+      );
   });
   return app;
 };

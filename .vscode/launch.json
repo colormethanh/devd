@@ -11,6 +11,20 @@
       "skipFiles": ["<node_internals>/**"],
       "cwd": "${workspaceFolder}/backend",
       "program": "${workspaceFolder}\\backend\\server.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Mocha Tests",
+      "program": "${workspaceFolder}/backend/node_modules/mocha/bin/_mocha",
+      "args": ["--timeout", "10000", "--colors"],
+      "internalConsoleOptions": "openOnSessionStart",
+      "env": {
+        "NODE_ENV": "test"
+      },
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal", // or "internalConsole" if you prefer
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

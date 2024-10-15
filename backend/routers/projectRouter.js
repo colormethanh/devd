@@ -46,7 +46,7 @@ const projectRoutes = function (projectController) {
 
       return res.send(
         createResponseObject(
-          { projectId: newProject._id },
+          { project_id: newProject._id },
           "New project successfully created"
         )
       );
