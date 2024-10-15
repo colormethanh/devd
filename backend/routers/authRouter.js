@@ -29,7 +29,7 @@ const authRoutes = function (authController) {
 
     if (!email || !username || !password)
       return next(
-        createError(400, "You must provide an email, username, and password")
+        createError(400, "Email, Username, and Password are required")
       );
 
     try {

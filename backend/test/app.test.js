@@ -11,14 +11,20 @@ const {
   clearDocuments,
   models,
   superTestLogin,
+  seedDB,
 } = require("./utils/testHelper.js");
 
 describe("AUTHORIZATION", () => {
   before(async () => {
     await ConnectDB();
+    await seedDB();
   });
 
-  describe("GET auth/login", () => {
+  after(async () => {
+    await clearDocuments();
+  });
+
+  describe("POST auth/login", () => {
     it("should login with correct credentials", async () => {
       const res = await supertest(StartApp(Controllers))
         .post("/auth/login")
@@ -43,17 +49,98 @@ describe("AUTHORIZATION", () => {
       expect(res.body.payload).to.have.property("statusCode", 401);
     });
   });
+
+  describe("POST auth/signup", async () => {
+    it("Should create a new user with correctly supplied parameters", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({
+          email: "lameguyemail@aol.com",
+          username: "lameguy",
+          password: "lameguypassword",
+        })
+        .expect(200);
+
+      console.log(res.body);
+      expect(res.body.payload).to.have.property("token");
+    });
+
+    it("Should return error if user already exists", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({
+          email: "coolguyemail@gmail.com",
+          username: "coolguy",
+          password: "coolguypassword",
+        })
+        .expect(400);
+
+      console.log(res.body);
+      expect(res.body).to.have.property("message", "Error");
+      expect(res.body.payload).to.have.property(
+        "message",
+        "Username or email already taken"
+      );
+    });
+
+    it("Should return error if no parameters are submitted", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({})
+        .expect(400);
+
+      console.log(res.body);
+      expect(res.body).to.have.property("message", "Error");
+      expect(res.body.payload).to.have.property(
+        "message",
+        "Email, Username, and Password are required"
+      );
+    });
+  });
 });
 
-describe("Projects", () => {
-  let token;
-
+describe("USER", () => {
   before(async () => {
     await ConnectDB();
+    await seedDB();
   });
 
   after(async () => {
-    await clearDocuments(models.ProjectModel);
+    await clearDocuments();
+  });
+  describe("GET user/me", () => {
+    it("Should return error if not logged in", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get("/user/me")
+        .expect(401);
+      expect(res.body).to.be.an("object");
+      expect(res.statusCode).to.equal(401);
+    });
+
+    it("Should return user object", async () => {
+      const loginResponse = superTestLogin();
+      const token = (await loginResponse).body.payload.token;
+
+      const res = await supertest(StartApp(Controllers))
+        .get("/user/me")
+        .set("authorization", `Bearer ${token}`)
+        .expect(200);
+      expect(res.body.payload.user).to.be.an("object");
+      expect(res.body.payload.user).to.have.property("_id");
+      expect(res.body.payload.user).to.have.property("email");
+      expect(res.body.payload.user).to.have.property("username");
+    });
+  });
+});
+
+describe("PROJECTS", () => {
+  before(async () => {
+    await ConnectDB();
+    await seedDB();
+  });
+
+  after(async () => {
+    await clearDocuments();
   });
 
   describe("GET /projects", () => {
@@ -81,10 +168,7 @@ describe("Projects", () => {
     });
 
     it("Should post a project in a document", async () => {
-      const loginResponse = await supertest(StartApp(Controllers))
-        .post("/auth/login")
-        .send({ username: "coolguy", password: "coolguypassword" })
-        .expect(200);
+      const loginResponse = await superTestLogin();
 
       const token = loginResponse.body.payload.token;
 
@@ -100,10 +184,7 @@ describe("Projects", () => {
     });
 
     it("Should return an error if you don't provide proper details", async () => {
-      const loginResponse = await supertest(StartApp(Controllers))
-        .post("/auth/login")
-        .send({ username: "coolguy", password: "coolguypassword" })
-        .expect(200);
+      const loginResponse = await superTestLogin();
 
       const token = loginResponse.body.payload.token;
 
@@ -118,3 +199,14 @@ describe("Projects", () => {
     });
   });
 });
+
+// describe("PAGE", () => {
+//   before(async () => {
+//     await ConnectDB();
+//   });
+
+//   after(async () => {
+//     await clearDocuments(models.ProjectModel);
+//   });
+
+// });
