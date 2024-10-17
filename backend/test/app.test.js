@@ -1,27 +1,29 @@
 const supertest = require("supertest");
 let chai = require("chai");
+const mongoose = require("mongoose");
 
 const StartApp = require("../app.js");
 const { ConnectDB, Controllers } = require("../database");
 
 const { expect } = chai;
 
-//Helpers to reset test DB data
 const {
-  clearDocuments,
+  clearDB,
   models,
   superTestLogin,
   seedDB,
 } = require("./utils/testHelper.js");
+const ProjectModel = require("../models/Project.js");
 
 describe("AUTHORIZATION", () => {
   before(async () => {
     await ConnectDB();
+    await clearDB();
     await seedDB();
   });
 
   after(async () => {
-    await clearDocuments();
+    await clearDB();
   });
 
   describe("POST auth/login", () => {
@@ -60,8 +62,6 @@ describe("AUTHORIZATION", () => {
           password: "lameguypassword",
         })
         .expect(200);
-
-      console.log(res.body);
       expect(res.body.payload).to.have.property("token");
     });
 
@@ -74,8 +74,6 @@ describe("AUTHORIZATION", () => {
           password: "coolguypassword",
         })
         .expect(400);
-
-      console.log(res.body);
       expect(res.body).to.have.property("message", "Error");
       expect(res.body.payload).to.have.property(
         "message",
@@ -89,7 +87,6 @@ describe("AUTHORIZATION", () => {
         .send({})
         .expect(400);
 
-      console.log(res.body);
       expect(res.body).to.have.property("message", "Error");
       expect(res.body.payload).to.have.property(
         "message",
@@ -102,11 +99,12 @@ describe("AUTHORIZATION", () => {
 describe("USER", () => {
   before(async () => {
     await ConnectDB();
+    await clearDB();
     await seedDB();
   });
 
   after(async () => {
-    await clearDocuments();
+    await clearDB();
   });
   describe("GET user/me", () => {
     it("Should return error if not logged in", async () => {
@@ -134,13 +132,16 @@ describe("USER", () => {
 });
 
 describe("PROJECTS", () => {
+  let seedResults;
+
   before(async () => {
     await ConnectDB();
-    await seedDB();
+    await clearDB();
+    seedResults = await seedDB();
   });
 
   after(async () => {
-    await clearDocuments();
+    await clearDB();
   });
 
   describe("GET /projects", () => {
@@ -198,15 +199,137 @@ describe("PROJECTS", () => {
       expect(postResponse.body.payload).to.have.property("statusCode", 400);
     });
   });
+
+  describe("GET /projects/:project_id", () => {
+    it("should return the specified project", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}`)
+        .expect(200);
+
+      expect(res.body.payload).to.have.property(
+        "_id",
+        seedResults.testProject._id.toString()
+      );
+      expect(res.body.payload).to.have.property("name");
+      expect(res.body.payload).to.have.property("description");
+      expect(res.body.payload).to.have.property("date_created");
+      expect(res.body.payload).to.have.property(
+        "owner",
+        seedResults.testUserId.toString()
+      );
+      expect(res.body.payload).to.have.property("features");
+      expect(res.body.payload).to.have.property("components");
+      expect(res.body.payload).to.have.property("pages");
+      expect(res.body.payload).to.have.property("tasks");
+      expect(res.body.payload).to.have.property("guests");
+    });
+
+    it("should return an error if the the project_id is invalid", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testUserId}`)
+        .expect(404);
+      expect(res.body).to.have.property("message", "Error");
+    });
+  });
 });
 
-// describe("PAGE", () => {
-//   before(async () => {
-//     await ConnectDB();
-//   });
+describe("PAGE", () => {
+  let seedResults;
 
-//   after(async () => {
-//     await clearDocuments(models.ProjectModel);
-//   });
+  before(async () => {
+    await ConnectDB();
+    await clearDB();
+    seedResults = await seedDB();
+  });
 
-// });
+  after(async () => {
+    await clearDB();
+  });
+
+  describe("GET /projects/:project_id/pages", () => {
+    it("should return all page ids for a specific project", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}/pages`)
+        .expect(200);
+      expect(res.body.payload).to.have.property("pages");
+      expect(res.body.payload.pages).to.be.an("array");
+      const project = await ProjectModel.findById(
+        seedResults.testProject._id
+      ).select("pages -_id");
+      const projectPages = project.pages.map((page) => page.toString());
+
+      expect(res.body.payload.pages).to.eql(projectPages);
+    });
+  });
+
+  describe("POST /project/:project_id/pages", () => {
+    it("should post a new page", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const res = await supertest(StartApp(Controllers))
+        .post(`/projects/${seedResults.testProject._id}/pages`)
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "Page for testing",
+          description: "A new project used for testing",
+        })
+        .expect(200);
+
+      expect(res.body.payload).to.have.property("page_id");
+
+      const pageInDB = await models.PageModel.findById(
+        res.body.payload.page_id
+      );
+      expect(pageInDB);
+
+      const parentProject = await models.ProjectModel.findById(
+        seedResults.testProject._id
+      );
+      expect(parentProject.pages).includes(
+        new mongoose.Types.ObjectId(res.body.payload.page_id)
+      );
+    });
+
+    // Test error occurs if post without correct attributes
+    it("should return an error if there are missing attributes", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      // Testing with empty body
+      await supertest(StartApp(Controllers))
+        .post(`/projects/${seedResults.testProject._id}/pages`)
+        .set("authorization", `Bearer ${token}`)
+        .send({})
+        .expect(400);
+
+      // Testing with empty body properties
+      await supertest(StartApp(Controllers))
+        .post(`/projects/${seedResults.testProject._id}/pages`)
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "",
+          description: "",
+        })
+        .expect(400);
+    });
+  });
+
+  describe("GET /project/:project_id/pages/:page_id", () => {
+    it("Should return page from given page_id", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}`
+        )
+        .expect(200);
+      expect(res.body.payload.page).to.have.property(
+        "_id",
+        seedResults.testPage._id.toString()
+      );
+    });
+
+    // page does not exist
+
+    // page is not involved in project
+  });
+});

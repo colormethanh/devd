@@ -24,7 +24,9 @@ const projectRoutes = function (projectController) {
 
       if (project instanceof Error) return next(project);
 
-      return res.send(project);
+      if (!project) return next(createError(404));
+
+      return res.send(createResponseObject(project));
     } catch (err) {
       next(createError(err.statusCode, err.message));
     }
@@ -54,9 +56,6 @@ const projectRoutes = function (projectController) {
       next(createError(err.statusCode, err.message));
     }
   });
-
-  // todo: Put project
-  // todo: Delete project
 
   return router;
 };

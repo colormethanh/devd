@@ -4,6 +4,7 @@ const cors = require("cors");
 const passport = require("passport");
 const { ErrorMessages } = require("./utils/errorHelpers");
 const { createResponseObject } = require("./utils/responseHelpers");
+const { extractProjectId } = require("./utils/middlewares");
 
 // Sub Routers
 const userRouter = require("./routers/userRouter");
@@ -13,7 +14,12 @@ const authRouter = require("./routers/authRouter");
 const swaggerRouter = require("./routers/swaggerRouter");
 const pageRouter = require("./routers/pageRouter");
 
-const StartApp = ({ authController, projectController, userController }) => {
+const StartApp = ({
+  authController,
+  projectController,
+  userController,
+  pageController,
+}) => {
   const app = express();
 
   // App Level middleware setup
@@ -28,10 +34,15 @@ const StartApp = ({ authController, projectController, userController }) => {
   router.use("/projects", projectRouter(projectController));
   router.use("/auth", authRouter(authController));
   router.use("/user", userRouter(userController));
-  router.use("/projects/:projectid/pages", pageRouter());
+  router.use(
+    "/projects/:project_id/pages",
+    extractProjectId,
+    pageRouter(pageController)
+  );
 
   app.use("/", router);
 
+  // Error Handler
   app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || ErrorMessages[statusCode];

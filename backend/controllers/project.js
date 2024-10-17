@@ -23,7 +23,7 @@ exports.postNewProject = async (name, description, userId) => {
     let newProject = new ProjectModel({
       name,
       description,
-      owner: user,
+      owner: userId,
       date_created: Date.now(),
     });
     newProject = await newProject.save();
@@ -45,6 +45,6 @@ exports.getProject = async (projectId) => {
 
     return project;
   } catch (err) {
-    throw createError(err.statusCode, err.message);
+    return createError(err.statusCode, err.message);
   }
 };

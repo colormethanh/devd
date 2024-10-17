@@ -207,7 +207,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Page"
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "Name of new page"
+                description:
+                  type: string
+                  description: "Description of new page"
+
       responses:
         "201":
           description: "Page created successfully"

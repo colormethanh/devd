@@ -4,8 +4,9 @@ const StartApp = require("../../app.js");
 
 const UserModel = require("../../models/User");
 const ProjectModel = require("../../models/Project");
+const PageModel = require("../../models/Page");
 
-const models = { UserModel, ProjectModel };
+const models = { UserModel, ProjectModel, PageModel };
 
 const superTestLogin = async () => {
   return supertest(StartApp(Controllers))
@@ -14,7 +15,7 @@ const superTestLogin = async () => {
     .expect(200);
 };
 
-const clearDocuments = async () => {
+const clearDB = async () => {
   try {
     await Promise.all(
       Object.keys(models).map((key) => {
@@ -39,6 +40,17 @@ const seedDB = async () => {
     "A project for testing",
     testUserId
   );
+
+  const testPage = await Controllers.pageController.postPage(
+    "Page for testing",
+    "A page used for testing",
+    testProject._id
+  );
+
+  testProject.pages.push(testPage);
+  testProject.save();
+
+  return { testProject, testUserId, testPage };
 };
 
-module.exports = { clearDocuments, models, superTestLogin, seedDB };
+module.exports = { clearDB, models, superTestLogin, seedDB };

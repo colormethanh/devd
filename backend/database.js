@@ -5,8 +5,14 @@ const keys = require("./config/keys");
 const authController = require("./controllers/authentication");
 const projectController = require("./controllers/project");
 const userController = require("./controllers/user");
+const pageController = require("./controllers/page");
 
-const Controllers = { authController, projectController, userController };
+const Controllers = {
+  authController,
+  projectController,
+  userController,
+  pageController,
+};
 
 async function ConnectDB() {
   try {
