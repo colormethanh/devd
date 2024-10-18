@@ -1,6 +1,5 @@
 const express = require("express");
 const { requireAuth } = require("./authMiddleware");
-const pageModel = require("../models/Page");
 const { createError } = require("../utils/errorHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 
@@ -21,7 +20,7 @@ const pageRoutes = function (pageController) {
     }
   });
 
-  router.post("/", async (req, res, next) => {
+  router.post("/", requireAuth, async (req, res, next) => {
     try {
       const { name, description } = req.body;
 
@@ -49,7 +48,8 @@ const pageRoutes = function (pageController) {
 
     try {
       const page = await pageController.getPage(page_id);
-      if (page instanceof Error) return next(err);
+      if (page instanceof Error) return next(page);
+      if (!page) return next(createError(404));
 
       return res.send(createResponseObject({ page }));
     } catch (err) {

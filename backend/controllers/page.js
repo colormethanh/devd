@@ -14,7 +14,7 @@ exports.getPages = async (project_id) => {
 
 exports.getPage = async (page_id) => {
   try {
-    const page = PageModel.findById(page_id);
+    const page = await PageModel.findById(page_id);
     return page;
   } catch (err) {
     return createError(err.statusCode, err.message);

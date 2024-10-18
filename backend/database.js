@@ -6,12 +6,14 @@ const authController = require("./controllers/authentication");
 const projectController = require("./controllers/project");
 const userController = require("./controllers/user");
 const pageController = require("./controllers/page");
+const componentController = require("./controllers/component");
 
 const Controllers = {
   authController,
   projectController,
   userController,
   pageController,
+  componentController,
 };
 
 async function ConnectDB() {
@@ -23,4 +25,13 @@ async function ConnectDB() {
   }
 }
 
-module.exports = { ConnectDB, Controllers };
+async function DisconnectDB() {
+  try {
+    await mongoose.disconnect();
+    console.log("🌙 Database has been disconnected");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = { ConnectDB, DisconnectDB, Controllers };

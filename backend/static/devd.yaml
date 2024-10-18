@@ -53,7 +53,7 @@ paths:
                   type: string
                   description: "A brief description of the project"
       responses:
-        "201":
+        "200":
           description: "Project successfully created"
           content:
             application/json:
@@ -217,12 +217,21 @@ paths:
                   description: "Description of new page"
 
       responses:
-        "201":
+        "200":
           description: "Page created successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Page"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Confirmation message"
+                    example: "Page created successfully."
+                  page_id:
+                    type: string
+                    description: "The unique ID of the newly created page"
+                    example: "5f1d7f3e9b1a1b3b7d6d8f7e"
         "400":
           $ref: "#/components/schemas/BadRequestError"
         "401":
@@ -384,7 +393,7 @@ paths:
       summary: "Create a new component in the project"
       description: "This route allows the user to create a new component within a specified project. Requires JWT authentication."
       security:
-        - bearerAuth: [] # Requires JWT token for authentication
+        - bearerAuth: []
       parameters:
         - name: project_id
           in: path
@@ -397,14 +406,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Component"
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: "Name of new page"
+                description:
+                  type: string
+                  description: "Description of new page"
+                snippet:
+                  type: string
+                  description: "Code snippet for component"
+                pages:
+                  type: array
+                  items:
+                    type: string
+                    description: "Page ids"
+                  description: "An array of the pages the component is in"
       responses:
-        "201":
+        "200":
           description: "Component created successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Component"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Confirmation message"
+                    example: "Component created successfully."
+                  component_id:
+                    type: string
+                    description: "The unique ID of the newly created component"
+                    example: "5f1d7f3e9b1a1b3b7d6d8f7e"
         "400":
           $ref: "#/components/schemas/BadRequestError"
         "401":
@@ -599,12 +633,21 @@ paths:
                   ],
                 ]
       responses:
-        "201":
+        "200":
           description: "Task created successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Task"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Confirmation message"
+                    example: "Task created successfully."
+                  task_id:
+                    type: string
+                    description: "The unique ID of the newly created task"
+                    example: "5f1d7f3e9b1a1b3b7d6d8f7e"
         "400":
           $ref: "#/components/schemas/BadRequestError"
         "401":
@@ -795,14 +838,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Bug"
+              $ref: "#/components/schemas/BugId"
       responses:
-        "201":
+        "200":
           description: "Bug created successfully"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Bug"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Confirmation message"
+                    example: "Bug created successfully."
+                  bug_id:
+                    type: string
+                    description: "The unique ID of the newly created bug"
+                    example: "5f1d7f3e9b1a1b3b7d6d8f7e"
         "400":
           $ref: "#/components/schemas/BadRequestError"
         "401":
@@ -1030,7 +1082,7 @@ paths:
       tags:
         - Authentication
       summary: "Register a new user"
-      description: "Allows a new user to creat an account."
+      description: "Allows a new user to create an account."
       requestBody:
         required: true
         content:
@@ -1049,7 +1101,7 @@ paths:
                   type: string
                   description: "The user's email address"
       responses:
-        "201":
+        "200":
           description: "User successfully registered"
           content:
             application/json:
@@ -1289,6 +1341,8 @@ components:
           items:
             $ref: "#/components/schemas/ComponentId"
           description: "List of parent component Ids"
+        date_created:
+          type: string
         status:
           type: string
           enum:

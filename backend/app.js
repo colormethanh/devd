@@ -13,12 +13,14 @@ require("./services/passport");
 const authRouter = require("./routers/authRouter");
 const swaggerRouter = require("./routers/swaggerRouter");
 const pageRouter = require("./routers/pageRouter");
+const componentRouter = require("./routers/componentRouter");
 
 const StartApp = ({
   authController,
   projectController,
   userController,
   pageController,
+  componentController,
 }) => {
   const app = express();
 
@@ -30,14 +32,19 @@ const StartApp = ({
   const router = express.Router();
 
   // App routes
-  router.use("/documentation", swaggerRouter());
-  router.use("/projects", projectRouter(projectController));
   router.use("/auth", authRouter(authController));
   router.use("/user", userRouter(userController));
+  router.use("/documentation", swaggerRouter());
+  router.use("/projects", projectRouter(projectController));
   router.use(
     "/projects/:project_id/pages",
     extractProjectId,
     pageRouter(pageController)
+  );
+  router.use(
+    "/projects/:project_id/components",
+    extractProjectId,
+    componentRouter(componentController)
   );
 
   app.use("/", router);
