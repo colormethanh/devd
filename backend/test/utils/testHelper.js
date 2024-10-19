@@ -31,22 +31,38 @@ const clearDB = async () => {
 
 const seedDB = async () => {
   // todo: rewrite seed to use models instead of controller
-  const testUserId = await Controllers.authController.signupAndGetId(
-    "coolguyemail@gmail.com",
-    "coolguy",
-    "coolguypassword"
-  );
+  let testUser = new UserModel({
+    username: "coolguy",
+    email: "coolguyemail@gmail.com",
+  });
+  testUser.setPassword("coolguypassword");
+  testUser = await testUser.save();
 
+  let testUser2 = new UserModel({
+    username: "lukewarmguy",
+    email: "lukewarmguy@gmail.com",
+  });
+  testUser2.setPassword("lukewarmguypassword");
+  testUser2 = await testUser2.save();
+
+  // Create testProject and make testUser owner of testProject1
+  // Create testProject2 and make testUser the owner and testUser a guest
   const testProject = await Controllers.projectController.postNewProject(
     "Test project",
     "A project for testing",
-    testUserId
+    testUser._id
   );
+  testUser.projects.push({ project: testProject._id, role: "admin" });
 
   const testProject2 = await Controllers.projectController.postNewProject(
     "Second Test project",
     "The second project used for testing"
   );
+  testUser2.projects.push({ project: testProject2._id, role: "admin" });
+  testUser.projects.push({ project: testProject2._id, role: "guest" });
+
+  testUser.save();
+  testUser2.save();
 
   const testPage = await Controllers.pageController.postPage(
     "Page for testing",
@@ -81,7 +97,8 @@ const seedDB = async () => {
   return {
     testProject,
     testProject2,
-    testUserId,
+    testUser,
+    testUser2,
     testPage,
     testPage2,
     testComponent,

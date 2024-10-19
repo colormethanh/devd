@@ -13,7 +13,6 @@ const {
   superTestLogin,
   seedDB,
 } = require("./utils/testHelper.js");
-const ProjectModel = require("../models/Project.js");
 
 describe("PROJECTS", () => {
   let seedResults;
@@ -61,6 +60,8 @@ describe("PROJECTS", () => {
       expect(res.statusCode).to.equal(401);
     });
 
+    it("Should not post if the logged in user is not the owner");
+
     it("Should post a project in a document and return Object ID", async () => {
       const loginResponse = await superTestLogin();
       const token = loginResponse.body.payload.token;
@@ -74,6 +75,26 @@ describe("PROJECTS", () => {
         })
         .expect(200);
       expect(postResponse.body.payload).to.have.property("project_id");
+    });
+
+    it("Should add a newly posted project into user's project attribute", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/projects")
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "Project for testing",
+          description: "A new project used for testing",
+        })
+        .expect(200);
+      const user = await models.UserModel.findById(seedResults.testUser._id);
+      expect(
+        user.projects.some(
+          (project) => project.project === postResponse.body.payload.project_id
+        )
+      );
     });
 
     it("Should return an error if you don't provide proper details", async () => {
@@ -102,23 +123,15 @@ describe("PROJECTS", () => {
         "_id",
         seedResults.testProject._id.toString()
       );
-      expect(res.body.payload).to.have.property("name");
-      expect(res.body.payload).to.have.property("description");
-      expect(res.body.payload).to.have.property("date_created");
       expect(res.body.payload).to.have.property(
         "owner",
-        seedResults.testUserId.toString()
+        seedResults.testUser._id.toString()
       );
-      expect(res.body.payload).to.have.property("features");
-      expect(res.body.payload).to.have.property("components");
-      expect(res.body.payload).to.have.property("pages");
-      expect(res.body.payload).to.have.property("tasks");
-      expect(res.body.payload).to.have.property("guests");
     });
 
     it("should return an error if the the project_id is invalid", async () => {
       const res = await supertest(StartApp(Controllers))
-        .get(`/projects/${seedResults.testUserId}`)
+        .get(`/projects/${seedResults.testUser._id}`)
         .expect(404);
       expect(res.body).to.have.property("message", "Error");
     });

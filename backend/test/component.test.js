@@ -44,6 +44,14 @@ describe("COMPONENT", () => {
       expect(getResponse.body.payload.components).to.be.an("array");
       expect(getResponse.body.payload.components).to.have.lengthOf(1);
     });
+
+    it(
+      "should return only visible pages if user is not signed in and not a guest"
+    );
+
+    it(
+      "should return only visible invisible pages if the used is signed in and either a guest or an admin"
+    );
   });
 
   describe("POST /projects/:project_id/components", () => {
@@ -83,6 +91,8 @@ describe("COMPONENT", () => {
     });
   });
 
+  it("Should not post if logged in user it not the owner");
+
   describe("GET /projects/:project_id/components/:page_id", () => {
     it.skip("Should retrieve a list of components from a page");
   });
@@ -115,5 +125,13 @@ describe("COMPONENT", () => {
         .get(`/projects/${seedResults.testProject._id}/components/${2324324}`)
         .expect(400);
     });
+
+    it(
+      "should return only if component is visible when user is not signed in and not a guest"
+    );
+
+    it(
+      "should return an invisible component if the used is signed in and either a guest or an admin"
+    );
   });
 });

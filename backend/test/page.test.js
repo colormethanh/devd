@@ -51,6 +51,14 @@ describe("PAGE", () => {
 
       expect(res.body.payload.pages).to.eql(projectPages);
     });
+
+    it(
+      "should return only visible pages if user is not signed in and not a guest"
+    );
+
+    it(
+      "should return only visible invisible pages if the used is signed in and either a guest or an admin"
+    );
   });
 
   describe("POST /project/:project_id/pages", () => {
@@ -81,6 +89,8 @@ describe("PAGE", () => {
         new mongoose.Types.ObjectId(res.body.payload.page_id)
       );
     });
+
+    it("Should not post if the logged in user is not the owner");
 
     it("should return an error if there are missing attributes", async () => {
       const loginResponse = await superTestLogin();
@@ -143,6 +153,12 @@ describe("PAGE", () => {
         .expect(500);
     });
 
-    // todo: page is not involved with project
+    it(
+      "should return only if page is visible when user is not signed in and not a guest"
+    );
+
+    it(
+      "should return and invisible page if the used is signed in and either a guest or an admin"
+    );
   });
 });
