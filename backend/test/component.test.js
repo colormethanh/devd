@@ -89,12 +89,27 @@ describe("COMPONENT", () => {
         })
         .expect(401);
     });
+    it("Should not post if logged in user it not the owner", async () => {
+      const loginResponse = superTestLogin();
+      const token = (await loginResponse).body.payload.token;
+
+      const res = await supertest(StartApp(Controllers))
+        .post(`/projects/${seedResults.testProject2._id}/components`)
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "My cool component",
+          description: "A cool component, for a cool guy",
+          snippet: "<div> <h1> Hello World! </h1> </div>",
+          pages: [seedResults.testPage2._id],
+        })
+        .expect(403);
+    });
+
+    it("should not post if test page is not a part of the project");
   });
 
-  it("Should not post if logged in user it not the owner");
-
   describe("GET /projects/:project_id/components/:page_id", () => {
-    it.skip("Should retrieve a list of components from a page");
+    it("Should retrieve a list of components from a page");
   });
 
   describe("GET /projects/:project_id/components/:component_id", () => {

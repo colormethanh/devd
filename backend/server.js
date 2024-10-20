@@ -3,6 +3,7 @@ const StartApp = require("./app");
 const { ConnectDB, Controllers } = require("./database");
 dotenv.config();
 
+// todo: logging error system for
 const StartServer = async () => {
   const PORT = process.env.PORT || 3000;
   await ConnectDB();

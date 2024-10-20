@@ -1,5 +1,5 @@
 const express = require("express");
-const { requireAuth } = require("./authMiddleware");
+const { requireAuth, requireProjectRole } = require("./authMiddleware");
 const { createError } = require("../utils/errorHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 
@@ -37,14 +37,19 @@ const componentRoutes = function (componentController) {
     }
   });
 
-  router.post("/", requireAuth, async (req, res, next) => {
-    if (!req.project_id) return createError(400, "project_id is required");
+  router.post("/", requireAuth, requireProjectRole, async (req, res, next) => {
+    if (!req.project_id)
+      return next(createError(400, "project_id is required"));
+
+    if (req.role !== "admin")
+      return next(
+        createError(403, "Only project owners are allowed to make changes")
+      );
 
     const { name, description, snippet, pages } = req.body;
     if (!name || !description || !snippet || !pages)
-      return createError(
-        400,
-        "Name, description, snipper, and pages are required"
+      return next(
+        createError(400, "Name, description, snipper, and pages are required")
       );
 
     try {
@@ -56,8 +61,9 @@ const componentRoutes = function (componentController) {
         req.project_id
       );
 
-      if (newComponent instanceof Error) return next(err);
-      if (!newComponent) return next(500, "Error creating component");
+      if (newComponent instanceof Error) return next(newComponent);
+      if (!newComponent)
+        return next(createError(500, "Error creating component"));
 
       return res.send(createResponseObject({ component_id: newComponent._id }));
     } catch (err) {

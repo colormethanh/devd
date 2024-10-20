@@ -11,7 +11,7 @@ const tokenForUser = (user) => {
     {
       sub: user._id,
       iat: timestamp,
-      exp: timestamp + 5 * 60 * 60, // expires in 5 hours
+      exp: timestamp + 5 * 60, // expires in 5 minutes
     },
     keys.TOKEN_SECRET
   );

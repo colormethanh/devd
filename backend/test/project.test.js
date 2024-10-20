@@ -60,8 +60,6 @@ describe("PROJECTS", () => {
       expect(res.statusCode).to.equal(401);
     });
 
-    it("Should not post if the logged in user is not the owner");
-
     it("Should post a project in a document and return Object ID", async () => {
       const loginResponse = await superTestLogin();
       const token = loginResponse.body.payload.token;
