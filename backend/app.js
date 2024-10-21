@@ -21,6 +21,7 @@ const StartApp = ({
   userController,
   pageController,
   componentController,
+  refreshTokenController,
 }) => {
   const app = express();
 
@@ -32,7 +33,10 @@ const StartApp = ({
   const router = express.Router();
 
   // App routes
-  router.use("/auth", authRouter(authController));
+  router.use(
+    "/auth",
+    authRouter(authController, userController, refreshTokenController)
+  );
   router.use("/user", userRouter(userController));
   router.use("/documentation", swaggerRouter());
   router.use("/projects", projectRouter(projectController));

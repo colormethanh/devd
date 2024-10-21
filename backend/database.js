@@ -7,6 +7,7 @@ const projectController = require("./controllers/project");
 const userController = require("./controllers/user");
 const pageController = require("./controllers/page");
 const componentController = require("./controllers/component");
+const refreshTokenController = require("./controllers/refreshToken");
 
 const Controllers = {
   authController,
@@ -14,6 +15,7 @@ const Controllers = {
   userController,
   pageController,
   componentController,
+  refreshTokenController,
 };
 
 async function ConnectDB() {

@@ -1,21 +1,7 @@
-const jwt = require("jwt-simple");
 const UserModel = require("../models/User");
-const keys = require("../config/keys");
 const { checkIfUserExist } = require("../utils/authHelpers");
 const { createError } = require("../utils/errorHelpers");
-const { CreateResponseObject } = require("../utils/responseHelpers");
-
-const tokenForUser = (user) => {
-  const timestamp = Math.round(Date.now() / 1000);
-  return jwt.encode(
-    {
-      sub: user._id,
-      iat: timestamp,
-      exp: timestamp + 5 * 60, // expires in 5 minutes
-    },
-    keys.TOKEN_SECRET
-  );
-};
+const { tokenForUser, refreshTokenForUser } = require("../services/passport");
 
 exports.login = async (username, password) => {
   try {
@@ -28,7 +14,10 @@ exports.login = async (username, password) => {
     if (!passwordValid)
       return createError(401, "Incorrect username or password");
 
-    return tokenForUser(user);
+    const accessToken = tokenForUser(user);
+    const refreshToken = await refreshTokenForUser(user);
+
+    return { accessToken, refreshToken };
   } catch (err) {
     return createError(err.statusCode, err.message);
   }
