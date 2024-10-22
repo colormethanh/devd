@@ -6,8 +6,15 @@ const UserModel = require("../../models/User");
 const ProjectModel = require("../../models/Project");
 const PageModel = require("../../models/Page");
 const ComponentModel = require("../../models/Components");
+const RefreshTokenModel = require("../../models/RefreshToken.js");
 
-const models = { UserModel, ProjectModel, PageModel, ComponentModel };
+const models = {
+  UserModel,
+  ProjectModel,
+  PageModel,
+  ComponentModel,
+  RefreshTokenModel,
+};
 
 const superTestLogin = async () => {
   return supertest(StartApp(Controllers))

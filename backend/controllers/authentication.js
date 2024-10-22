@@ -67,7 +67,10 @@ exports.signup = async (email, username, password) => {
     user.setPassword(password);
     await user.save();
 
-    return tokenForUser(user);
+    const accessToken = tokenForUser(user);
+    const refreshToken = await refreshTokenForUser(user);
+
+    return { accessToken, refreshToken, user_id: user._id };
   } catch (err) {
     throw createError(err.statusCode, err.message);
   }

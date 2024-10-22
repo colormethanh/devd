@@ -7,7 +7,12 @@ const StartApp = require("../app.js");
 const { ConnectDB, DisconnectDB, Controllers } = require("../database");
 const { expect } = chai;
 
-const { clearDB, seedDB, superTestLogin } = require("./utils/testHelper.js");
+const {
+  clearDB,
+  seedDB,
+  superTestLogin,
+  models,
+} = require("./utils/testHelper.js");
 
 describe("AUTHORIZATION", () => {
   let seedResults;
@@ -20,13 +25,11 @@ describe("AUTHORIZATION", () => {
     await DisconnectDB();
   });
 
-  // Connect to DB and seed data
   beforeEach(async () => {
     await clearDB();
     seedResults = await seedDB();
   });
 
-  // Clear DB and disconnect after tests complete
   afterEach(async () => {
     await clearDB();
   });
@@ -73,6 +76,23 @@ describe("AUTHORIZATION", () => {
       );
     });
 
+    it("should return 403 for an invalid or expired refresh token", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .post("/auth/refresh-token")
+        .send({
+          refreshToken: {
+            token: "invalidToken",
+            user_id: seedResults.testUser._id,
+          },
+        })
+        .expect(403);
+
+      expect(res.body.payload).to.have.property(
+        "message",
+        "Invalid or expired refresh token"
+      );
+    });
+
     it("should return 401 for invalid credentials", async () => {
       const res = await supertest(StartApp(Controllers))
         .post("/auth/login")
@@ -85,5 +105,31 @@ describe("AUTHORIZATION", () => {
       );
       expect(res.body.payload).to.have.property("statusCode", 401);
     });
+  });
+
+  describe("POST /auth/signup", () => {
+    it("should return create user in db", async () => {
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({
+          username: "lameguy",
+          password: "lameguypassword",
+          email: "lameguy@aol.com",
+        })
+        .expect(200);
+
+      expect(postResponse.body.payload).to.have.property("user_id");
+      const userInDB = models.UserModel.findById(
+        postResponse.body.payload.user_id
+      );
+
+      expect(userInDB);
+    });
+
+    it("should return accessToken and refreshToken");
+
+    it("should return an error if duplicate username");
+
+    it("should return an error if missing credentials");
   });
 });

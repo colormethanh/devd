@@ -1,4 +1,5 @@
 const RefreshTokenModel = require("../models/RefreshToken");
+const { createError } = require("../utils/errorHelpers");
 
 exports.createRefreshToken = async (user_id, token, expiresAt) => {
   try {
@@ -17,6 +18,12 @@ exports.createRefreshToken = async (user_id, token, expiresAt) => {
 exports.getRefreshToken = async (token) => {
   try {
     const refreshToken = await RefreshTokenModel.findOne({ token: token });
+
+    if (!refreshToken) return null;
+
+    const isExpired = refreshToken.expiresAt < Date.now();
+
+    if (isExpired) return null;
 
     return refreshToken;
   } catch (err) {

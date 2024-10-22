@@ -44,11 +44,15 @@ const authRoutes = function (
       );
 
     try {
-      const userToken = await authController.signup(email, username, password);
+      const signupResponse = await authController.signup(
+        email,
+        username,
+        password
+      );
 
-      if (userToken instanceof Error) return next(userToken);
+      if (signupResponse instanceof Error) return next(userToken);
 
-      return res.send(createResponseObject({ token: userToken }));
+      return res.send(createResponseObject(signupResponse));
     } catch (err) {
       next(createError(err.statusCode, err.message));
     }
@@ -62,6 +66,7 @@ const authRoutes = function (
     }
 
     try {
+      // Retrieve and check refresh token
       const tokenInDB = await refreshTokenController.getRefreshToken(
         refreshToken.token
       );
@@ -78,7 +83,7 @@ const authRoutes = function (
 
       if (!userInDB) return next(401, "invalid user ID");
 
-      const accessToken = tokenForUser(userInDB);
+      const accessToken = tokenForUser(refreshToken);
 
       return res.send(createResponseObject({ accessToken }));
     } catch (err) {
