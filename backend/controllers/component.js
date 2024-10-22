@@ -3,11 +3,21 @@ const ProjectModel = require("../models/Project");
 const PageModel = require("../models/Page");
 const { createError } = require("../utils/errorHelpers");
 
-exports.getComponentsFromProject = async (project_id) => {
+exports.getComponentsFromProject = async (project_id, authorized = false) => {
   try {
-    const components = await ProjectModel.findById(project_id).select(
-      "components -_id"
-    );
+    let components;
+
+    if (authorized) {
+      components = await ComponentModel.where("project")
+        .equals(project_id)
+        .select("_id");
+    } else {
+      components = await ComponentModel.where("project")
+        .equals(project_id)
+        .where("visibility")
+        .equals("public")
+        .select("_id");
+    }
     return components;
   } catch (err) {
     return createError(err.statusCode, err.message);

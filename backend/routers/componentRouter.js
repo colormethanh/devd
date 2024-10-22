@@ -1,19 +1,38 @@
 const express = require("express");
 const { requireAuth, requireProjectRole } = require("./authMiddleware");
 const { createError } = require("../utils/errorHelpers");
+const { checkIsOwnerOrGuest } = require("../utils/authHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 
 const componentRoutes = function (componentController) {
   const router = express.Router();
 
-  router.get("/", async (req, res, next) => {
+  router.get("/guest", async (req, res, next) => {
     if (!req.project_id) return createError(400, "project_id is required");
 
     try {
       const components = await componentController.getComponentsFromProject(
         req.project_id
       );
-      return res.send(createResponseObject(components));
+      return res.send(createResponseObject({ components: components }));
+    } catch (err) {
+      return next(err);
+    }
+  });
+
+  router.get("/", requireAuth, async (req, res, next) => {
+    const user = req.user;
+
+    if (!req.project_id) return createError(400, "project_id is required");
+
+    const isOwnerOrGuest = await checkIsOwnerOrGuest(user, req.project_id);
+
+    try {
+      const components = await componentController.getComponentsFromProject(
+        req.project_id,
+        isOwnerOrGuest
+      );
+      return res.send(createResponseObject({ components }));
     } catch (err) {
       return next(err);
     }

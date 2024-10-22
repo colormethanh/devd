@@ -50,7 +50,7 @@ const authRoutes = function (
         password
       );
 
-      if (signupResponse instanceof Error) return next(userToken);
+      if (signupResponse instanceof Error) return next(signupResponse);
 
       return res.send(createResponseObject(signupResponse));
     } catch (err) {

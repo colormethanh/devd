@@ -10,3 +10,16 @@ exports.checkIfUserExist = async (userModel, userInfo) => {
   // todo: Make it so that it returns the info that is already taken
   return results.some((result) => result !== null);
 };
+
+exports.checkIsOwnerOrGuest = async (user, project_id) => {
+  const userProjects = user.projects;
+  const project = await userProjects.find(
+    (project) => project.project_id.toString() === project_id
+  );
+
+  if (!project) return false;
+
+  const isOwnerOrGuest = project.role === "admin" || project.role === "guest";
+
+  return isOwnerOrGuest;
+};

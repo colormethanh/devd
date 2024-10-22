@@ -35,29 +35,64 @@ describe("COMPONENT", () => {
     await clearDB();
   });
 
-  describe("GET /projects/:project_id/components", () => {
-    it("Should retrieve a list of components for a project", async () => {
+  describe("GET /projects/:project_id/components/guest", () => {
+    it("should return only public components if user is not owner or guest", async () => {
       const getResponse = await supertest(StartApp(Controllers))
-        .get(`/projects/${seedResults.testProject._id}/components`)
+        .get(`/projects/${seedResults.testProject._id}/components/guest`)
         .expect(200);
       expect(getResponse.body.payload).to.have.property("components");
       expect(getResponse.body.payload.components).to.be.an("array");
-      expect(getResponse.body.payload.components).to.have.lengthOf(1);
+
+      const component = await models.ComponentModel.findById(
+        getResponse.body.payload.components[0]
+      );
+
+      expect(component).to.have.property("visibility", "public");
+    });
+  });
+
+  describe("GET /projects/:project_id/components", () => {
+    it("Should retrieve a list of all components for a project if owner or guest", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}/components`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200);
+      expect(getResponse.body.payload).to.have.property("components");
+      expect(getResponse.body.payload.components).to.be.an("array");
+      expect(getResponse.body.payload.components).to.have.lengthOf(2);
     });
 
-    it(
-      "should return only visible pages if user is not signed in and not a guest"
-    );
+    it("Should return error if user is not logged in", async () => {
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}/components`)
+        .expect(401);
+    });
 
-    it(
-      "should return only visible invisible pages if the used is signed in and either a guest or an admin"
-    );
+    it("Should retrieve a list of public components if logged in user is not guest or owner", async () => {
+      const loginResponse = await superTestLogin("mrpink", "mrpinkpassword");
+      const token = loginResponse.body.payload.token;
+
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}/components`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200);
+      expect(getResponse.body.payload).to.have.property("components");
+      expect(getResponse.body.payload.components).to.be.an("array");
+
+      const component = await models.ComponentModel.findById(
+        getResponse.body.payload.components[0]
+      );
+      expect(component).to.have.property("visibility", "public");
+    });
   });
 
   describe("POST /projects/:project_id/components", () => {
     it("Should post a new component to db and return the new components id", async () => {
-      const loginResponse = superTestLogin();
-      const token = (await loginResponse).body.payload.token;
+      const loginResponse = await superTestLogin();
+      const token = await loginResponse.body.payload.token;
 
       const postResponse = await supertest(StartApp(Controllers))
         .post(`/projects/${seedResults.testProject._id}/components`)
@@ -78,6 +113,8 @@ describe("COMPONENT", () => {
       expect(pageInDb);
     });
 
+    it("Should add the newly created component into the projects DB");
+
     it("Should return error if not logged in", async () => {
       const res = await supertest(StartApp(Controllers))
         .post(`/projects/${seedResults.testProject._id}/components`)
@@ -89,7 +126,7 @@ describe("COMPONENT", () => {
         })
         .expect(401);
     });
-    it("Should not post if logged in user it not the owner", async () => {
+    it("Should not post if logged in user is not the owner", async () => {
       const loginResponse = superTestLogin();
       const token = (await loginResponse).body.payload.token;
 

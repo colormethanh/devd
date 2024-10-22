@@ -1,7 +1,5 @@
 const supertest = require("supertest");
 let chai = require("chai");
-const keys = require("../config/keys.js");
-const jwt = require("jwt-simple");
 
 const StartApp = require("../app.js");
 const { ConnectDB, DisconnectDB, Controllers } = require("../database");
@@ -76,7 +74,7 @@ describe("AUTHORIZATION", () => {
       );
     });
 
-    it("should return 403 for an invalid or expired refresh token", async () => {
+    it("should return 403 for an invalid refresh token", async () => {
       const res = await supertest(StartApp(Controllers))
         .post("/auth/refresh-token")
         .send({
@@ -84,6 +82,31 @@ describe("AUTHORIZATION", () => {
             token: "invalidToken",
             user_id: seedResults.testUser._id,
           },
+        })
+        .expect(403);
+
+      expect(res.body.payload).to.have.property(
+        "message",
+        "Invalid or expired refresh token"
+      );
+    });
+
+    it("should return 403 error for expired refresh token", async () => {
+      const loginResponse = await superTestLogin();
+      const { token, refreshToken } = loginResponse.body.payload;
+
+      const refreshTokenInDB = await models.RefreshTokenModel.findOne({
+        token: refreshToken.token,
+      });
+
+      refreshTokenInDB.expiresAt = Date.now();
+
+      refreshTokenInDB.save();
+
+      const res = await supertest(StartApp(Controllers))
+        .post("/auth/refresh-token")
+        .send({
+          refreshToken,
         })
         .expect(403);
 
@@ -126,10 +149,37 @@ describe("AUTHORIZATION", () => {
       expect(userInDB);
     });
 
-    it("should return accessToken and refreshToken");
+    it("should return accessToken and refreshToken", async () => {
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({
+          username: "lameguy",
+          password: "lameguypassword",
+          email: "lameguy@aol.com",
+        })
+        .expect(200);
 
-    it("should return an error if duplicate username");
+      expect(postResponse.body.payload).to.have.property("accessToken");
 
-    it("should return an error if missing credentials");
+      expect(postResponse.body.payload).to.have.property("refreshToken");
+    });
+
+    it("should return 400 error if duplicate username", async () => {
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({
+          username: "coolguy",
+          password: "coolguypassword",
+          email: "coolguy@gmail.com",
+        })
+        .expect(400);
+    });
+
+    it("should return 400 error if missing credentials", async () => {
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/auth/signup")
+        .send({})
+        .expect(400);
+    });
   });
 });
