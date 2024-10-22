@@ -24,9 +24,17 @@ exports.getComponentsFromProject = async (project_id, authorized = false) => {
   }
 };
 
-exports.getComponent = async (component_id) => {
+exports.getComponent = async (component_id, authorized = false) => {
   try {
-    const component = await ComponentModel.findById(component_id);
+    let component;
+
+    component = await ComponentModel.findById(component_id);
+
+    if (!component) return createError(404);
+
+    if (component.visibility === "private" && !authorized)
+      return createError(403);
+
     return component;
   } catch (err) {
     return createError(err.statusCode || 400, err.message);

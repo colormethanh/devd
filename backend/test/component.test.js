@@ -113,7 +113,30 @@ describe("COMPONENT", () => {
       expect(pageInDb);
     });
 
-    it("Should add the newly created component into the projects DB");
+    it("Should add the newly created component into the projects DB", async () => {
+      const loginResponse = await superTestLogin();
+      const token = await loginResponse.body.payload.token;
+
+      const postResponse = await supertest(StartApp(Controllers))
+        .post(`/projects/${seedResults.testProject._id}/components`)
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "My cool component",
+          description: "A cool component, for a cool guy",
+          snippet: "<div> <h1> Hello World! </h1> </div>",
+          pages: [seedResults.testPage._id],
+        })
+        .expect(200);
+
+      const projectComponents = await models.ProjectModel.findById(
+        seedResults.testProject._id
+      ).select("components ");
+
+      component = projectComponents.components.find(
+        (component) => (component = postResponse.body.payload.component_id)
+      );
+      expect(component);
+    });
 
     it("Should return error if not logged in", async () => {
       const res = await supertest(StartApp(Controllers))
@@ -141,8 +164,6 @@ describe("COMPONENT", () => {
         })
         .expect(403);
     });
-
-    it("should not post if test page is not a part of the project");
   });
 
   describe("GET /projects/:project_id/components/:page_id", () => {
@@ -153,37 +174,70 @@ describe("COMPONENT", () => {
     it("Should return a component, given it's id", async () => {
       const getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}`
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent2._id}/guest`
         )
         .expect(200);
 
       expect(getResponse.body.payload.component._id).to.equal(
-        seedResults.testComponent._id.toString()
+        seedResults.testComponent2._id.toString()
       );
     });
 
-    it("Should return an error if the given id is not in the db", async () => {
+    it("Should return 404 error if the given id is not in the db", async () => {
       const getResponse = await supertest(StartApp(Controllers))
         .get(
           `/projects/${
             seedResults.testProject._id
-          }/components/${new mongoose.Types.ObjectId()}`
+          }/components/${new mongoose.Types.ObjectId()}/guest`
         )
         .expect(404);
     });
 
     it("Should return an error if the given id is not an id", async () => {
       const getResponse = await supertest(StartApp(Controllers))
-        .get(`/projects/${seedResults.testProject._id}/components/${2324324}`)
+        .get(
+          `/projects/${seedResults.testProject._id}/components/${2324324}/guest`
+        )
         .expect(400);
     });
 
-    it(
-      "should return only if component is visible when user is not signed in and not a guest"
-    );
+    it("should return visible component when user is not logged in", async () => {
+      const loginResponse = await superTestLogin();
+      const token = await loginResponse.body.payload.token;
 
-    it(
-      "should return an invisible component if the used is signed in and either a guest or an admin"
-    );
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent2._id}/guest`
+        )
+        .expect(200);
+      expect(getResponse.body.payload.component).to.have.property(
+        "_id",
+        seedResults.testComponent2._id.toString()
+      );
+    });
+
+    it("should return 403 error when component is invisible and user is not logged in", async () => {
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}/guest`
+        )
+        .expect(403);
+    });
+
+    it("should return an invisible component if the used is signed in and either a guest or an admin", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+
+      expect(getResponse.body.payload.component._id).to.equal(
+        seedResults.testComponent._id.toString()
+      );
+    });
   });
 });

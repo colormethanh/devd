@@ -38,13 +38,42 @@ const componentRoutes = function (componentController) {
     }
   });
 
-  router.get("/:component_id", async (req, res, next) => {
+  router.get("/:component_id/guest", async (req, res, next) => {
+    if (!req.project_id) return createError(400, "project_id is required");
+
     const { component_id } = req.params;
     if (!component_id)
       return next(createError(400, "component_id is required"));
 
     try {
       const component = await componentController.getComponent(component_id);
+
+      if (component instanceof Error) return next(component);
+
+      if (!component) return next(createError(404));
+
+      return res.send(createResponseObject({ component }));
+    } catch (err) {
+      return next(createError(err.statusCode, err.message));
+    }
+  });
+
+  router.get("/:component_id", requireAuth, async (req, res, next) => {
+    const user = req.user;
+
+    if (!req.project_id) return createError(400, "project_id is required");
+
+    const isOwnerOrGuest = await checkIsOwnerOrGuest(user, req.project_id);
+
+    const { component_id } = req.params;
+    if (!component_id)
+      return next(createError(400, "component_id is required"));
+
+    try {
+      const component = await componentController.getComponent(
+        component_id,
+        isOwnerOrGuest
+      );
 
       if (component instanceof Error) return next(component);
 
