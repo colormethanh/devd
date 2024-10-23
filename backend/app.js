@@ -4,7 +4,7 @@ const cors = require("cors");
 const passport = require("passport");
 const { ErrorMessages } = require("./utils/errorHelpers");
 const { createResponseObject } = require("./utils/responseHelpers");
-const { extractProjectId } = require("./utils/middlewares");
+const { extractProjectId, extractRole } = require("./utils/middlewares");
 
 // Sub Routers
 const userRouter = require("./routers/userRouter");
@@ -48,7 +48,7 @@ const StartApp = ({
   router.use(
     "/projects/:project_id/components",
     extractProjectId,
-    componentRouter(componentController)
+    componentRouter(componentController, pageController)
   );
 
   app.use("/", router);

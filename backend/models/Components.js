@@ -55,6 +55,6 @@ const ComponentSchema = new Schema({
 });
 
 // Create the model
-const ComponentModel = model("component", ComponentSchema);
+const ComponentModel = model("Component", ComponentSchema);
 
 module.exports = ComponentModel;

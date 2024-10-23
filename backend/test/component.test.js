@@ -166,8 +166,31 @@ describe("COMPONENT", () => {
     });
   });
 
-  describe("GET /projects/:project_id/components/:page_id", () => {
-    it("Should retrieve a list of components from a page");
+  describe("GET /projects/:project_id/components/page/:page_id/guest", () => {
+    it("Should retrieve a list of only public components from a page ", async () => {
+      let getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/components/page/${seedResults.testPage._id}/guest`
+        )
+        .expect(200);
+
+      expect(getResponse.body.payload.components).to.be.an("array");
+    });
+  });
+
+  describe("GET /projects/:project_id/components/page/:page_id", () => {
+    it("Should retrieve a list of components from a page", async () => {
+      let loginResponse = await superTestLogin();
+      let tokens = loginResponse.body.payload;
+
+      let getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/components/page/${seedResults.testPage._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+      expect(getResponse.body.payload).to.be.an("array");
+    });
   });
 
   describe("GET /projects/:project_id/components/:component_id", () => {

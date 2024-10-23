@@ -37,28 +37,50 @@ describe("PAGE", () => {
     await clearDB();
   });
 
-  describe("GET /projects/:project_id/pages", () => {
-    it("should return all page ids for a specific project", async () => {
+  describe("GET /project/:project_id/pages", () => {
+    it("Should return all pages from project if admin or guest", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
       const res = await supertest(StartApp(Controllers))
         .get(`/projects/${seedResults.testProject._id}/pages`)
+        .set("authorization", `Bearer ${tokens.token}`)
         .expect(200);
       expect(res.body.payload).to.have.property("pages");
       expect(res.body.payload.pages).to.be.an("array");
-      const project = await ProjectModel.findById(
-        seedResults.testProject._id
-      ).select("pages -_id");
-      const projectPages = project.pages.map((page) => page.toString());
-
-      expect(res.body.payload.pages).to.eql(projectPages);
+      expect(res.body.payload.pages).to.have.lengthOf(2);
     });
 
-    it(
-      "should return only visible pages if user is not signed in and not a guest"
-    );
+    it("Should return public pages if logged in but not admin or guest", async () => {
+      const loginResponse = await superTestLogin(
+        "lukewarmguy",
+        "lukewarmguypassword"
+      );
+      const tokens = loginResponse.body.payload;
 
-    it(
-      "should return only visible invisible pages if the used is signed in and either a guest or an admin"
-    );
+      const res = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}/pages`)
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+      expect(res.body.payload).to.have.property("pages");
+      expect(res.body.payload.pages).to.be.an("array");
+      expect(res.body.payload.pages).to.have.lengthOf(1);
+      expect(res.body.payload.pages[0]).to.have.have.property(
+        "visibility",
+        "public"
+      );
+    });
+  });
+
+  describe("GET /projects/:project_id/pages/public", () => {
+    it("should return public pages for a specific project", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(`/projects/${seedResults.testProject._id}/pages/public`)
+        .expect(200);
+      expect(res.body.payload).to.have.property("pages");
+      expect(res.body.payload.pages).to.be.an("array");
+      expect(res.body.payload.pages).to.have.lengthOf(1);
+    });
   });
 
   describe("POST /project/:project_id/pages", () => {
@@ -90,7 +112,22 @@ describe("PAGE", () => {
       );
     });
 
-    it("Should not post if the logged in user is not the owner");
+    it("Should not post if the logged in user is not the owner", async () => {
+      const loginResponse = await superTestLogin(
+        "lukewarmguy",
+        "lukewarmguypassword"
+      );
+      const token = loginResponse.body.payload.token;
+
+      const res = await supertest(StartApp(Controllers))
+        .post(`/projects/${seedResults.testProject._id}/pages`)
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "Page for testing",
+          description: "A new project used for testing",
+        })
+        .expect(403);
+    });
 
     it("should return an error if there are missing attributes", async () => {
       const loginResponse = await superTestLogin();
@@ -125,11 +162,11 @@ describe("PAGE", () => {
     });
   });
 
-  describe("GET /project/:project_id/pages/:page_id", () => {
+  describe("GET /project/:project_id/pages/:page_id/public", () => {
     it("Should return page from given page_id", async () => {
       const res = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}`
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}/public`
         )
         .expect(200);
       expect(res.body.payload.page).to.have.property(
@@ -138,27 +175,59 @@ describe("PAGE", () => {
       );
     });
 
+    it("Should return 403 error if given private id", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}/public`
+        )
+        .expect(403);
+    });
+
     it("Should return an error if invalid_id", async () => {
       // Id does not exist
       const res = await supertest(StartApp(Controllers))
         .get(
           `/projects/${
             seedResults.testProject._id
-          }/pages/${new mongoose.Types.ObjectId()}`
+          }/pages/${new mongoose.Types.ObjectId()}/public`
         )
         .expect(404);
+
       // page_id is not an objectId
       const res2 = await supertest(StartApp(Controllers))
-        .get(`/projects/${seedResults.testProject._id}/pages/${12345678}`)
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${12345678}/public`
+        )
         .expect(500);
     });
+  });
 
-    it(
-      "should return only if page is visible when user is not signed in and not a guest"
-    );
+  describe("GET /project/:project_id/pages/:page_id", () => {
+    it("should return 403 if user is not admin or guest", async () => {
+      const loginResponse = await superTestLogin(
+        "lukewarmguy",
+        "lukewarmguypassword"
+      );
+      const tokens = loginResponse.body.payload;
 
-    it(
-      "should return and invisible page if the used is signed in and either a guest or an admin"
-    );
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(403);
+    });
+
+    it("should return private page if user owner or admin", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+    });
   });
 });

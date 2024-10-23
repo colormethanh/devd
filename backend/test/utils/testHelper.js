@@ -87,6 +87,8 @@ const seedDB = async () => {
     "A page used for testing",
     testProject._id
   );
+  testPage.visibility = "public";
+  testPage.save();
 
   const testPage2 = await Controllers.pageController.postPage(
     "Second page for testing",

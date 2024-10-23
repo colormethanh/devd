@@ -24,6 +24,16 @@ exports.getComponentsFromProject = async (project_id, authorized = false) => {
   }
 };
 
+exports.getComponentsFromPage = async (page_id) => {
+  try {
+    const page = await PageModel.findById(page_id).populate("components");
+
+    return page;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};
+
 exports.getComponent = async (component_id, authorized = false) => {
   try {
     let component;

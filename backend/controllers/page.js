@@ -4,9 +4,11 @@ const { createError } = require("../utils/errorHelpers");
 
 exports.getPages = async (project_id) => {
   try {
-    const Pages = await ProjectModel.findById(project_id).select("-_id pages");
+    const Project = await ProjectModel.findById(project_id)
+      .select("-_id pages")
+      .populate("pages");
 
-    return Pages;
+    return Project.pages;
   } catch (err) {
     return createError(err.statusCode, err.message);
   }

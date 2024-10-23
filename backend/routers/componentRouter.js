@@ -4,7 +4,7 @@ const { createError } = require("../utils/errorHelpers");
 const { checkIsOwnerOrGuest } = require("../utils/authHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 
-const componentRoutes = function (componentController) {
+const componentRoutes = function (componentController, pageController) {
   const router = express.Router();
 
   router.get("/guest", async (req, res, next) => {
@@ -80,6 +80,53 @@ const componentRoutes = function (componentController) {
       if (!component) return next(createError(404));
 
       return res.send(createResponseObject({ component }));
+    } catch (err) {
+      return next(createError(err.statusCode, err.message));
+    }
+  });
+
+  // Gets public components in a page given page id
+  router.get("/page/:page_id/guest", async (req, res, next) => {
+    const { page_id } = req.params;
+    try {
+      const page = await pageController.getPage(page_id);
+
+      if (!page) return next(createError(400, "Invalid page_id"));
+
+      if (page.visibility === "private") return next(createError(401));
+
+      return res.send(createResponseObject({ components: page.components }));
+    } catch (err) {
+      return next(createError(err.statusCode, err.message));
+    }
+  });
+
+  // Gets all components in a page given page id
+  router.get("/page/:page_id", requireAuth, async (req, res, next) => {
+    try {
+      const user = req.user;
+      if (!user) return next(createError(401));
+
+      const project_id = req.project_id;
+      if (!project_id) return next(createError(400, "project_id is required"));
+
+      const { page_id } = req.params;
+
+      const isOwnerOrGuest = checkIsOwnerOrGuest(user, project_id);
+
+      const page = await componentController.getComponentsFromPage(page_id);
+
+      if (isOwnerOrGuest) {
+        return res.send(createResponseObject(page.components));
+      } else {
+        if (page.visibility === "private") return next(createError(403));
+
+        const components = page.reduce(
+          (component) => component.visibility === "public"
+        );
+
+        return res.send(createResponseObject(components));
+      }
     } catch (err) {
       return next(createError(err.statusCode, err.message));
     }

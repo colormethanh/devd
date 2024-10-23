@@ -25,3 +25,18 @@ exports.checkIsOwnerOrGuest = async (user, project_id) => {
 
   return isOwnerOrGuest;
 };
+
+exports.checkIsOwner = async (user, project_id) => {
+  if (!user) return false;
+
+  const userProjects = user.projects;
+  const project = await userProjects.find(
+    (project) => project.project_id.toString() === project_id
+  );
+
+  if (!project) return false;
+
+  const isOwner = project.role === "admin";
+
+  return isOwner;
+};

@@ -21,6 +21,6 @@ pageSchema = new Schema({
   visibility: { type: String, enum: ["private", "public"], required: true },
 });
 
-const PageModel = mongoose.model("page", pageSchema);
+const PageModel = mongoose.model("Page", pageSchema);
 
 module.exports = PageModel;

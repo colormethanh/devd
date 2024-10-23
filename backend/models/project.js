@@ -13,6 +13,6 @@ const projectSchema = new Schema({
   guests: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
-const ProjectModel = mongoose.model("project", projectSchema);
+const ProjectModel = mongoose.model("Project", projectSchema);
 
 module.exports = ProjectModel;
