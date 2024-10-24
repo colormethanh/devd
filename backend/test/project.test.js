@@ -75,6 +75,29 @@ describe("PROJECTS", () => {
       expect(postResponse.body.payload).to.have.property("project_id");
     });
 
+    it("Should return 401 error if invalid token", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/projects")
+        .set("authorization", `Bearer abc.123.jwt`)
+        .send({
+          name: "Project for testing",
+          description: "A new project used for testing",
+        })
+        .expect(401);
+
+      const postResponse2 = await supertest(StartApp(Controllers))
+        .post("/projects")
+        .set("authorization", `NotBearer abc.123.jwt`)
+        .send({
+          name: "Project for testing",
+          description: "A new project used for testing",
+        })
+        .expect(401);
+    });
+
     it("Should add a newly posted project into user's project attribute", async () => {
       const loginResponse = await superTestLogin();
       const token = loginResponse.body.payload.token;

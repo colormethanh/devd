@@ -35,10 +35,10 @@ describe("COMPONENT", () => {
     await clearDB();
   });
 
-  describe("GET /projects/:project_id/components/guest", () => {
+  describe("GET /projects/:project_id/components/public", () => {
     it("should return only public components if user is not owner or guest", async () => {
       const getResponse = await supertest(StartApp(Controllers))
-        .get(`/projects/${seedResults.testProject._id}/components/guest`)
+        .get(`/projects/${seedResults.testProject._id}/components/public`)
         .expect(200);
       expect(getResponse.body.payload).to.have.property("components");
       expect(getResponse.body.payload.components).to.be.an("array");
@@ -82,10 +82,10 @@ describe("COMPONENT", () => {
       expect(getResponse.body.payload).to.have.property("components");
       expect(getResponse.body.payload.components).to.be.an("array");
 
-      const component = await models.ComponentModel.findById(
-        getResponse.body.payload.components[0]
+      expect(getResponse.body.payload.components[0]).to.have.property(
+        "visibility",
+        "public"
       );
-      expect(component).to.have.property("visibility", "public");
     });
   });
 
@@ -166,11 +166,11 @@ describe("COMPONENT", () => {
     });
   });
 
-  describe("GET /projects/:project_id/components/page/:page_id/guest", () => {
+  describe("GET /projects/:project_id/components/page/:page_id/public", () => {
     it("Should retrieve a list of only public components from a page ", async () => {
       let getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/page/${seedResults.testPage._id}/guest`
+          `/projects/${seedResults.testProject._id}/components/page/${seedResults.testPage._id}/public`
         )
         .expect(200);
 
@@ -193,11 +193,11 @@ describe("COMPONENT", () => {
     });
   });
 
-  describe("GET /projects/:project_id/components/:component_id", () => {
+  describe("GET /projects/:project_id/components/:component_id/public", () => {
     it("Should return a component, given it's id", async () => {
       const getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent2._id}/guest`
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent2._id}/public`
         )
         .expect(200);
 
@@ -211,7 +211,7 @@ describe("COMPONENT", () => {
         .get(
           `/projects/${
             seedResults.testProject._id
-          }/components/${new mongoose.Types.ObjectId()}/guest`
+          }/components/${new mongoose.Types.ObjectId()}/public`
         )
         .expect(404);
     });
@@ -219,7 +219,7 @@ describe("COMPONENT", () => {
     it("Should return an error if the given id is not an id", async () => {
       const getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/${2324324}/guest`
+          `/projects/${seedResults.testProject._id}/components/${2324324}/public`
         )
         .expect(400);
     });
@@ -230,7 +230,7 @@ describe("COMPONENT", () => {
 
       const getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent2._id}/guest`
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent2._id}/public`
         )
         .expect(200);
       expect(getResponse.body.payload.component).to.have.property(
@@ -239,12 +239,12 @@ describe("COMPONENT", () => {
       );
     });
 
-    it("should return 403 error when component is invisible and user is not logged in", async () => {
+    it("should return 403 error when component is private and user is not logged in", async () => {
       const getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}/guest`
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}/public`
         )
-        .expect(403);
+        .expect(401);
     });
 
     it("should return an invisible component if the used is signed in and either a guest or an admin", async () => {

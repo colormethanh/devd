@@ -4,6 +4,7 @@ const { createResponseObject } = require("../utils/responseHelpers");
 const jwt = require("jwt-simple");
 const keys = require("../config/keys");
 const { tokenForUser } = require("../services/passport");
+const logger = require("../utils/logging/logger");
 
 const authRoutes = function (
   authController,
@@ -19,9 +20,16 @@ const authRoutes = function (
       return next(createError(400, "Must provide username and password"));
 
     try {
+      logger.info("user lookup initiated");
       const tokens = await authController.login(username, password);
 
-      if (tokens instanceof Error) return next(tokens);
+      if (tokens instanceof Error) {
+        logger.error(
+          `Error when looking up user: ${tokens.message} - ${tokens.statusCode}`
+        );
+        return next(tokens);
+      }
+
       const { accessToken, refreshToken } = tokens;
 
       return res.send(
@@ -52,7 +60,9 @@ const authRoutes = function (
 
       if (signupResponse instanceof Error) return next(signupResponse);
 
-      return res.send(createResponseObject(signupResponse));
+      return res.send(
+        createResponseObject(signupResponse, "signup successful")
+      );
     } catch (err) {
       next(createError(err.statusCode, err.message));
     }
@@ -85,7 +95,9 @@ const authRoutes = function (
 
       const accessToken = tokenForUser(refreshToken);
 
-      return res.send(createResponseObject({ accessToken }));
+      return res.send(
+        createResponseObject({ accessToken }, "successfully refreshed token")
+      );
     } catch (err) {
       return next(err.statusCode, err.message);
     }

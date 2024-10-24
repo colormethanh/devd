@@ -1,11 +1,14 @@
 const { createError } = require("./errorHelpers");
+const logger = require("./logging/logger");
 
 const extractProjectId = (req, res, next) => {
+  logger.info("Extracting Project Id from parameters");
   req.project_id = req.params.project_id;
   return next();
 };
 
 const extractRole = (req, res, next) => {
+  logger.info("extracting role of user for project");
   if (!req.user) {
     req.role = "public";
     return next();
@@ -21,7 +24,7 @@ const extractRole = (req, res, next) => {
   );
 
   req.role = !project ? "public" : project.role;
-
+  logger.info(`User is of role: ${req.role} for project ${req.project_id}`);
   return next();
 };
 

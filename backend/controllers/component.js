@@ -3,22 +3,13 @@ const ProjectModel = require("../models/Project");
 const PageModel = require("../models/Page");
 const { createError } = require("../utils/errorHelpers");
 
-exports.getComponentsFromProject = async (project_id, authorized = false) => {
+exports.getComponentsFromProject = async (project_id) => {
   try {
-    let components;
+    const project = await ProjectModel.findById(project_id)
+      .select("components")
+      .populate("components");
 
-    if (authorized) {
-      components = await ComponentModel.where("project")
-        .equals(project_id)
-        .select("_id");
-    } else {
-      components = await ComponentModel.where("project")
-        .equals(project_id)
-        .where("visibility")
-        .equals("public")
-        .select("_id");
-    }
-    return components;
+    return project.components;
   } catch (err) {
     return createError(err.statusCode, err.message);
   }
@@ -34,16 +25,13 @@ exports.getComponentsFromPage = async (page_id) => {
   }
 };
 
-exports.getComponent = async (component_id, authorized = false) => {
+exports.getComponent = async (component_id) => {
   try {
     let component;
 
     component = await ComponentModel.findById(component_id);
 
     if (!component) return createError(404);
-
-    if (component.visibility === "private" && !authorized)
-      return createError(403);
 
     return component;
   } catch (err) {

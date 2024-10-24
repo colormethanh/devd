@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require("passport");
-const { ErrorMessages } = require("./utils/errorHelpers");
-const { createResponseObject } = require("./utils/responseHelpers");
-const { extractProjectId, extractRole } = require("./utils/middlewares");
+const logger = require("./utils/logging/logger");
+const morgan = require("morgan");
+const { extractProjectId } = require("./utils/middlewares");
+const errorRouter = require("./routers/errorRouter");
 
 // Sub Routers
 const userRouter = require("./routers/userRouter");
@@ -32,6 +33,17 @@ const StartApp = ({
   app.use(passport.initialize());
   const router = express.Router();
 
+  app.use(
+    morgan("common", {
+      stream: { write: (message) => logger.info(message.trim()) },
+    })
+  );
+
+  app.use((req, res, next) => {
+    logger.info(`Request received - ${req.url}`);
+    next();
+  });
+
   // App routes
   router.use(
     "/auth",
@@ -54,18 +66,8 @@ const StartApp = ({
   app.use("/", router);
 
   // Error Handler
-  app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || ErrorMessages[statusCode];
-    return res
-      .status(statusCode)
-      .send(
-        createResponseObject(
-          { message: message, statusCode: statusCode },
-          "Error"
-        )
-      );
-  });
+  app.use(errorRouter);
+
   return app;
 };
 

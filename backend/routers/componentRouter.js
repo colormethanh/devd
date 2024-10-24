@@ -1,44 +1,63 @@
 const express = require("express");
 const { requireAuth, requireProjectRole } = require("./authMiddleware");
 const { createError } = require("../utils/errorHelpers");
-const { checkIsOwnerOrGuest } = require("../utils/authHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
+const { extractRole } = require("../utils/middlewares");
 
 const componentRoutes = function (componentController, pageController) {
   const router = express.Router();
 
-  router.get("/guest", async (req, res, next) => {
+  router.get("/public", extractRole, async (req, res, next) => {
     if (!req.project_id) return createError(400, "project_id is required");
 
     try {
-      const components = await componentController.getComponentsFromProject(
+      let components = await componentController.getComponentsFromProject(
         req.project_id
       );
-      return res.send(createResponseObject({ components: components }));
+
+      components = components.filter(
+        (component) => component.visibility === "public"
+      );
+
+      return res.send(
+        createResponseObject(
+          { components },
+          "successfully retrieved public components"
+        )
+      );
     } catch (err) {
       return next(err);
     }
   });
 
-  router.get("/", requireAuth, async (req, res, next) => {
-    const user = req.user;
-
+  router.get("/", requireAuth, extractRole, async (req, res, next) => {
     if (!req.project_id) return createError(400, "project_id is required");
 
-    const isOwnerOrGuest = await checkIsOwnerOrGuest(user, req.project_id);
+    const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
 
     try {
-      const components = await componentController.getComponentsFromProject(
-        req.project_id,
-        isOwnerOrGuest
+      let components = await componentController.getComponentsFromProject(
+        req.project_id
       );
-      return res.send(createResponseObject({ components }));
+
+      if (!isOwnerOrGuest) {
+        components = components.filter(
+          (component) => component.visibility === "public"
+        );
+      }
+
+      return res.send(
+        createResponseObject(
+          { components },
+          "successfully retrieved components"
+        )
+      );
     } catch (err) {
       return next(err);
     }
   });
 
-  router.get("/:component_id/guest", async (req, res, next) => {
+  router.get("/:component_id/public", extractRole, async (req, res, next) => {
     if (!req.project_id) return createError(400, "project_id is required");
 
     const { component_id } = req.params;
@@ -52,41 +71,54 @@ const componentRoutes = function (componentController, pageController) {
 
       if (!component) return next(createError(404));
 
-      return res.send(createResponseObject({ component }));
-    } catch (err) {
-      return next(createError(err.statusCode, err.message));
-    }
-  });
+      if (component.visibility === "private") return next(createError(401));
 
-  router.get("/:component_id", requireAuth, async (req, res, next) => {
-    const user = req.user;
-
-    if (!req.project_id) return createError(400, "project_id is required");
-
-    const isOwnerOrGuest = await checkIsOwnerOrGuest(user, req.project_id);
-
-    const { component_id } = req.params;
-    if (!component_id)
-      return next(createError(400, "component_id is required"));
-
-    try {
-      const component = await componentController.getComponent(
-        component_id,
-        isOwnerOrGuest
+      return res.send(
+        createResponseObject({ component }, "successfully retrieved component")
       );
-
-      if (component instanceof Error) return next(component);
-
-      if (!component) return next(createError(404));
-
-      return res.send(createResponseObject({ component }));
     } catch (err) {
       return next(createError(err.statusCode, err.message));
     }
   });
+
+  router.get(
+    "/:component_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      if (!req.project_id) return createError(400, "project_id is required");
+
+      const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
+
+      const { component_id } = req.params;
+      if (!component_id)
+        return next(createError(400, "component_id is required"));
+
+      try {
+        let component = await componentController.getComponent(component_id);
+
+        if (component instanceof Error) return next(component);
+
+        if (!component)
+          return next(createError(404, "component could not be found"));
+
+        if (!isOwnerOrGuest && component.visibility === "private")
+          return next(createError(403));
+
+        return res.send(
+          createResponseObject(
+            { component },
+            "successfully retrieved component"
+          )
+        );
+      } catch (err) {
+        return next(createError(err.statusCode, err.message));
+      }
+    }
+  );
 
   // Gets public components in a page given page id
-  router.get("/page/:page_id/guest", async (req, res, next) => {
+  router.get("/page/:page_id/public", extractRole, async (req, res, next) => {
     const { page_id } = req.params;
     try {
       const page = await pageController.getPage(page_id);
@@ -95,44 +127,60 @@ const componentRoutes = function (componentController, pageController) {
 
       if (page.visibility === "private") return next(createError(401));
 
-      return res.send(createResponseObject({ components: page.components }));
+      return res.send(
+        createResponseObject(
+          { components: page.components },
+          "successfully retrieved component"
+        )
+      );
     } catch (err) {
       return next(createError(err.statusCode, err.message));
     }
   });
 
   // Gets all components in a page given page id
-  router.get("/page/:page_id", requireAuth, async (req, res, next) => {
-    try {
-      const user = req.user;
-      if (!user) return next(createError(401));
+  router.get(
+    "/page/:page_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        const user = req.user;
+        if (!user) return next(createError(401));
 
-      const project_id = req.project_id;
-      if (!project_id) return next(createError(400, "project_id is required"));
+        const project_id = req.project_id;
+        if (!project_id)
+          return next(createError(400, "project_id is required"));
 
-      const { page_id } = req.params;
+        const { page_id } = req.params;
 
-      const isOwnerOrGuest = checkIsOwnerOrGuest(user, project_id);
+        const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
 
-      const page = await componentController.getComponentsFromPage(page_id);
+        const page = await componentController.getComponentsFromPage(page_id);
 
-      if (isOwnerOrGuest) {
-        return res.send(createResponseObject(page.components));
-      } else {
-        if (page.visibility === "private") return next(createError(403));
+        if (isOwnerOrGuest) {
+          return res.send(
+            createResponseObject(
+              page.components,
+              "successfully retrieved component"
+            )
+          );
+        } else {
+          if (page.visibility === "private") return next(createError(403));
 
-        const components = page.reduce(
-          (component) => component.visibility === "public"
-        );
+          const components = page.filter(
+            (component) => component.visibility === "public"
+          );
 
-        return res.send(createResponseObject(components));
+          return res.send(createResponseObject(components));
+        }
+      } catch (err) {
+        return next(createError(err.statusCode, err.message));
       }
-    } catch (err) {
-      return next(createError(err.statusCode, err.message));
     }
-  });
+  );
 
-  router.post("/", requireAuth, requireProjectRole, async (req, res, next) => {
+  router.post("/", requireAuth, extractRole, async (req, res, next) => {
     if (!req.project_id)
       return next(createError(400, "project_id is required"));
 
@@ -160,7 +208,12 @@ const componentRoutes = function (componentController, pageController) {
       if (!newComponent)
         return next(createError(500, "Error creating component"));
 
-      return res.send(createResponseObject({ component_id: newComponent._id }));
+      return res.send(
+        createResponseObject(
+          { component_id: newComponent._id },
+          "successfully posted component"
+        )
+      );
     } catch (err) {
       next(createError(err.statusCode, err.message));
     }
