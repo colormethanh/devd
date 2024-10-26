@@ -23,6 +23,7 @@ async function ConnectDB() {
     await mongoose.connect(keys.MONGO_URI);
     console.log("🚀 DB connected!");
   } catch (err) {
+    // todo: if prod env log else console
     console.log(err);
   }
 }

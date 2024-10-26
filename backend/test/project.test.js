@@ -13,6 +13,7 @@ const {
   superTestLogin,
   seedDB,
 } = require("./utils/testHelper.js");
+const { tokenForUser } = require("../services/passport.js");
 
 describe("PROJECTS", () => {
   let seedResults;
@@ -75,6 +76,47 @@ describe("PROJECTS", () => {
       expect(postResponse.body.payload).to.have.property("project_id");
     });
 
+    it("should return 401 error if expired token", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+      const fakeToken = tokenForUser(
+        { _id: loginResponse.body.payload.refreshToken.user_id },
+        -1
+      );
+
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/projects")
+        .set("authorization", `Bearer ${fakeToken}`)
+        .send({
+          name: "Project for testing",
+          description: "A new project used for testing",
+        })
+        .expect(401);
+    });
+
+    it("Should return 401 error if invalid token", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const postResponse = await supertest(StartApp(Controllers))
+        .post("/projects")
+        .set("authorization", `Bearer abc.123.jwt`)
+        .send({
+          name: "Project for testing",
+          description: "A new project used for testing",
+        })
+        .expect(401);
+
+      const postResponse2 = await supertest(StartApp(Controllers))
+        .post("/projects")
+        .set("authorization", `NotBearer abc.123.jwt`)
+        .send({
+          name: "Project for testing",
+          description: "A new project used for testing",
+        })
+        .expect(401);
+    });
+
     it("Should add a newly posted project into user's project attribute", async () => {
       const loginResponse = await superTestLogin();
       const token = loginResponse.body.payload.token;
@@ -133,5 +175,66 @@ describe("PROJECTS", () => {
         .expect(404);
       expect(res.body).to.have.property("message", "Error");
     });
+  });
+
+  describe("PUT /projects/:project_id", () => {
+    it("should return modified project that matches db", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const putResponse = await supertest(StartApp(Controllers))
+        .put(`/projects/${seedResults.testProject._id}`)
+        .set("authorization", `Bearer ${token}`)
+        .send({
+          name: "Cool project",
+          description: "A cool project for a cool guy!",
+        })
+        .expect(200);
+
+      expect(putResponse.body.payload).to.have.property("updatedProject");
+      const updatedProject = putResponse.body.payload.updatedProject;
+
+      const projectInDB = await models.ProjectModel.findById(
+        updatedProject._id
+      );
+      expect(projectInDB);
+
+      expect(updatedProject).to.have.property("name", projectInDB.name);
+    });
+
+    it("should only update name and description");
+
+    it("should return 404 error if the project does not exist");
+
+    it("should return 400 error if nothing is supplied in body");
+
+    it("should return 403 error if not owner of the project");
+  });
+
+  describe("DELETE /projects/:project_id", () => {
+    it("should delete the project with the supplied project_id", async () => {
+      const loginResponse = await superTestLogin();
+      const token = loginResponse.body.payload.token;
+
+      const deleteResponse = await supertest(StartApp(Controllers))
+        .delete(`/projects/${seedResults.testProject._id}`)
+        .set("authorization", `Bearer ${token}`)
+        .expect(200);
+
+      expect(deleteResponse.body.payload).to.be.a("string");
+
+      const projectInDb = models.ProjectModel.findById(
+        seedResults.testProject._id
+      );
+      expect(!projectInDb);
+    });
+
+    it("should delete associated models on project deletion");
+
+    it("should return error if no project_id is supplied");
+
+    it("should return 404 if project does not exist");
+
+    it("should return 403 error if user is not owner of the project");
   });
 });

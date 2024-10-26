@@ -83,8 +83,77 @@ describe("PAGE", () => {
     });
   });
 
+  describe("GET /project/:project_id/pages/:page_id/public", () => {
+    it("Should return page from given page_id", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}/public`
+        )
+        .expect(200);
+      expect(res.body.payload.page).to.have.property(
+        "_id",
+        seedResults.testPage._id.toString()
+      );
+    });
+
+    it("Should return 403 error if given private id", async () => {
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}/public`
+        )
+        .expect(403);
+    });
+
+    it("Should return an error if invalid_id", async () => {
+      // Id does not exist
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${
+            seedResults.testProject._id
+          }/pages/${new mongoose.Types.ObjectId()}/public`
+        )
+        .expect(404);
+
+      // page_id is not an objectId
+      const res2 = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${12345678}/public`
+        )
+        .expect(500);
+    });
+  });
+
+  describe("GET /project/:project_id/pages/:page_id", () => {
+    it("should return 403 if user is not admin or guest", async () => {
+      const loginResponse = await superTestLogin(
+        "lukewarmguy",
+        "lukewarmguypassword"
+      );
+      const tokens = loginResponse.body.payload;
+
+      const res = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(403);
+    });
+
+    it("should return private page if user owner or admin", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const getResponse = await supertest(StartApp(Controllers))
+        .get(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+    });
+  });
+
   describe("POST /project/:project_id/pages", () => {
-    it("should post a new page and return object id", async () => {
+    it("should post a new page and return valid object id", async () => {
       const loginResponse = await superTestLogin();
       const token = loginResponse.body.payload.token;
 
@@ -159,75 +228,6 @@ describe("PAGE", () => {
           description: "A new project used for testing",
         })
         .expect(401);
-    });
-  });
-
-  describe("GET /project/:project_id/pages/:page_id/public", () => {
-    it("Should return page from given page_id", async () => {
-      const res = await supertest(StartApp(Controllers))
-        .get(
-          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}/public`
-        )
-        .expect(200);
-      expect(res.body.payload.page).to.have.property(
-        "_id",
-        seedResults.testPage._id.toString()
-      );
-    });
-
-    it("Should return 403 error if given private id", async () => {
-      const res = await supertest(StartApp(Controllers))
-        .get(
-          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}/public`
-        )
-        .expect(403);
-    });
-
-    it("Should return an error if invalid_id", async () => {
-      // Id does not exist
-      const res = await supertest(StartApp(Controllers))
-        .get(
-          `/projects/${
-            seedResults.testProject._id
-          }/pages/${new mongoose.Types.ObjectId()}/public`
-        )
-        .expect(404);
-
-      // page_id is not an objectId
-      const res2 = await supertest(StartApp(Controllers))
-        .get(
-          `/projects/${seedResults.testProject._id}/pages/${12345678}/public`
-        )
-        .expect(500);
-    });
-  });
-
-  describe("GET /project/:project_id/pages/:page_id", () => {
-    it("should return 403 if user is not admin or guest", async () => {
-      const loginResponse = await superTestLogin(
-        "lukewarmguy",
-        "lukewarmguypassword"
-      );
-      const tokens = loginResponse.body.payload;
-
-      const res = await supertest(StartApp(Controllers))
-        .get(
-          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}`
-        )
-        .set("authorization", `Bearer ${tokens.token}`)
-        .expect(403);
-    });
-
-    it("should return private page if user owner or admin", async () => {
-      const loginResponse = await superTestLogin();
-      const tokens = loginResponse.body.payload;
-
-      const getResponse = await supertest(StartApp(Controllers))
-        .get(
-          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage2._id}`
-        )
-        .set("authorization", `Bearer ${tokens.token}`)
-        .expect(200);
     });
   });
 });

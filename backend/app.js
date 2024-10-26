@@ -2,18 +2,20 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require("passport");
-const { ErrorMessages } = require("./utils/errorHelpers");
-const { createResponseObject } = require("./utils/responseHelpers");
-const { extractProjectId, extractRole } = require("./utils/middlewares");
-
-// Sub Routers
-const userRouter = require("./routers/userRouter");
-const projectRouter = require("./routers/projectRouter");
+const logger = require("./utils/logging/logger");
+const morgan = require("morgan");
+const { extractProjectId } = require("./utils/middlewares");
 require("./services/passport");
-const authRouter = require("./routers/authRouter");
-const swaggerRouter = require("./routers/swaggerRouter");
-const pageRouter = require("./routers/pageRouter");
-const componentRouter = require("./routers/componentRouter");
+
+const {
+  userRouter,
+  projectRouter,
+  authRouter,
+  swaggerRouter,
+  pageRouter,
+  componentRouter,
+  errorRouter,
+} = require("./routers/index.js");
 
 const StartApp = ({
   authController,
@@ -26,11 +28,29 @@ const StartApp = ({
   const app = express();
 
   // App Level middleware setup
+  app.use((req, res, next) => {
+    req.metadata = {
+      request_id: crypto.randomUUID(),
+    };
+
+    logger.info({
+      message: `Request received - ${req.url} `,
+      request_id: req.metadata.request_id,
+    });
+
+    next();
+  });
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
   app.use(passport.initialize());
   const router = express.Router();
+
+  app.use(
+    morgan("common", {
+      stream: { write: (message) => logger.info(message.trim()) },
+    })
+  );
 
   // App routes
   router.use(
@@ -54,18 +74,8 @@ const StartApp = ({
   app.use("/", router);
 
   // Error Handler
-  app.use((err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || ErrorMessages[statusCode];
-    return res
-      .status(statusCode)
-      .send(
-        createResponseObject(
-          { message: message, statusCode: statusCode },
-          "Error"
-        )
-      );
-  });
+  app.use(errorRouter);
+
   return app;
 };
 

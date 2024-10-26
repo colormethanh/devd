@@ -130,6 +130,21 @@ const seedDB = async () => {
   testProject.components.push(testComponent2._id);
   await testProject.save();
 
+  const testComponent3 = new ComponentModel({
+    name: "AnchorForTesting2",
+    description: "A reusable anchor component for various UI purposes.",
+    snippet: "<a src='somesite.com' >Click me for more</a>",
+    children: [],
+    parents: [],
+    images: [],
+    project: testProject2._id,
+    date_created: Date.now(),
+    visibility: "public",
+  });
+  await testComponent3.save();
+  testProject2.components.push(testComponent3._id);
+  await testProject2.save();
+
   return {
     testProject,
     testProject2,

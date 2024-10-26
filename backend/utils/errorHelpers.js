@@ -1,3 +1,5 @@
+const logger = require("./logging/logger");
+
 const createError = (statusCode = 500, message = "") => {
   const error = Error(message);
   error.statusCode = statusCode;

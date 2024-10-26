@@ -10,13 +10,15 @@ const userRoutes = function (userController) {
     try {
       const user = await userController.getUser(req.user._id);
 
-      if (!user) return createError(404, "User could not be found");
+      if (!user) return next(createError(404, "User could not be found"));
 
       if (user instanceof Error) return next(user);
 
-      res.send(createResponseObject({ user: user }));
+      res.send(
+        createResponseObject({ user: user }, "successfully retrieved used data")
+      );
     } catch (err) {
-      next(err);
+      next(createError(err.statusCode, err.message));
     }
   });
 
