@@ -8,6 +8,7 @@ module.exports = errorRouter = (err, req, res, next) => {
   logger.error({
     message: `${message} - url:${req.url} - code:${statusCode}`,
     url: req.url,
+    request_id: req.metadata.request_id,
   });
   return res
     .status(statusCode)

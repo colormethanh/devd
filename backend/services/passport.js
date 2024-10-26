@@ -8,13 +8,13 @@ const { createError } = require("../utils/errorHelpers");
 const { createRefreshToken } = require("../controllers/refreshToken");
 const logger = require("../utils/logging/logger");
 
-const tokenForUser = (user) => {
+const tokenForUser = (user, expirationInMinutes = 5) => {
   const timestamp = Math.round(Date.now() / 1000);
   return jwt.encode(
     {
       sub: user._id,
       iat: timestamp,
-      exp: timestamp + 5 * 60, // expires in 5 minutes
+      exp: timestamp + expirationInMinutes * 60, // expires in 5 minutes
     },
     keys.TOKEN_SECRET
   );
@@ -41,12 +41,18 @@ const refreshTokenForUser = async (user) => {
 };
 
 const tokenExtractor = (req) => {
-  logger.info("Extracting token from header");
+  logger.info({
+    message: "Extracting token from header",
+    request_id: req.metadata.request_id,
+  });
   const headers = req.headers;
   const authorization = headers.authorization;
 
   if (!authorization) {
-    logger.error("Authorization header not found -- 401");
+    logger.error({
+      message: "Authorization header not found -- 401",
+      request_id: req.metadata.request_id,
+    });
     return null;
   }
   const [type, token] = authorization.split(" ");
@@ -54,11 +60,18 @@ const tokenExtractor = (req) => {
   if (type !== "Bearer") return null;
 
   if (!token) {
-    logger.error("Token not found -- 401");
+    logger.error({
+      message: "Token not found -- 401",
+      request_id: req.metadata.request_id,
+    });
     return null;
   }
 
-  logger.info("Successfully extracted token");
+  logger.info({
+    message: "Successfully extracted token, sending to JWT middleware",
+    request_id: req.metadata.request_id,
+  });
+  req.token = token;
   return token;
 };
 
@@ -79,6 +92,13 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
       done(null, false);
     }
   } catch (err) {
+    // todo: I can't find where this error happens!!
+    if (err.name === "TokenExpiredError") {
+      logger.warn(`Token expired at ${payload.exp} --- Unauthorized`);
+      return done(null, false);
+    }
+
+    logger.error(`JWT Error: ${err.message}`);
     done(err, false);
   }
 });

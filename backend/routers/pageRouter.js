@@ -14,7 +14,10 @@ const pageRoutes = function (pageController) {
       const project_id = req.project_id;
       if (!project_id) return next(createError(400, "project_id is required"));
 
-      logger.info(`searching DB for pages in project ${project_id}`);
+      logger.info({
+        message: `searching DB for pages in project ${project_id}`,
+        request_id: req.metadata.request_id,
+      });
       let pages = await pageController.getPages(req.project_id);
       if (pages instanceof Error) return next(pages);
 
@@ -67,7 +70,9 @@ const pageRoutes = function (pageController) {
     if (!page_id) return next(createError(400, "page_id is required"));
 
     try {
-      logger.info(`attempting to search DB for page ${page_id}`);
+      logger.info({
+        message: `attempting to search DB for page ${page_id}, request_id: request.metadata.request_id,`,
+      });
       const page = await pageController.getPage(page_id);
       if (page instanceof Error) return next(page);
       if (!page) return next(createError(404, "page could not be found"));
@@ -132,7 +137,10 @@ const pageRoutes = function (pageController) {
       if (!isOwner)
         return next(createError(403, "admin rights required to make changes"));
 
-      logger.info("attempting to post new page to DB");
+      logger.info({
+        message: "attempting to post new page to DB",
+        request_id: req.metadata.request_id,
+      });
       const newPage = await pageController.postPage(
         name,
         description,

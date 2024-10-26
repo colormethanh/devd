@@ -138,7 +138,7 @@ describe("COMPONENT", () => {
       expect(component);
     });
 
-    it("Should return error if not logged in", async () => {
+    it("Should return 401 error if not logged in", async () => {
       const res = await supertest(StartApp(Controllers))
         .post(`/projects/${seedResults.testProject._id}/components`)
         .send({
@@ -149,6 +149,7 @@ describe("COMPONENT", () => {
         })
         .expect(401);
     });
+
     it("Should not post if logged in user is not the owner", async () => {
       const loginResponse = superTestLogin();
       const token = (await loginResponse).body.payload.token;
@@ -219,7 +220,9 @@ describe("COMPONENT", () => {
     it("Should return an error if the given id is not an id", async () => {
       const getResponse = await supertest(StartApp(Controllers))
         .get(
-          `/projects/${seedResults.testProject._id}/components/${2324324}/public`
+          `/projects/${
+            seedResults.testProject._id
+          }/components/${2324324}/public`
         )
         .expect(400);
     });

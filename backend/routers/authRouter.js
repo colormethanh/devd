@@ -20,13 +20,17 @@ const authRoutes = function (
       return next(createError(400, "Must provide username and password"));
 
     try {
-      logger.info("user lookup initiated");
+      logger.info({
+        message: "user lookup initiated",
+        request_id: req.metadata.request_id,
+      });
       const tokens = await authController.login(username, password);
 
       if (tokens instanceof Error) {
-        logger.error(
-          `Error when looking up user: ${tokens.message} - ${tokens.statusCode}`
-        );
+        logger.error({
+          message: `Error when looking up user: ${tokens.message} - ${tokens.statusCode}`,
+          request_id: req.metadata.request_id,
+        });
         return next(tokens);
       }
 

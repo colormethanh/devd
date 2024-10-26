@@ -133,6 +133,7 @@ paths:
           $ref: "#/components/schemas/NotFoundError"
         "500":
           $ref: "#/components/schemas/InternalError"
+
     delete:
       tags:
         - Project
@@ -162,12 +163,40 @@ paths:
           $ref: "#/components/schemas/InternalError"
 
   ## Pages Routes
+  /projects/{project_id}/pages/public:
+    get:
+      tags:
+        - Page
+      summary: "Retrieve a list of public pages for a specific project"
+      description: "Fetches all pages associated with the specified project ID."
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          description: "The ID of the project for which to retrieve pages"
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+      responses:
+        "200":
+          description: "A list of pages associated with the specified project"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Page"
+        "404":
+          $ref: "#/components/schemas/NotFoundError"
+        "500":
+          $ref: "#/components/schemas/InternalError"
   /projects/{project_id}/pages:
     get:
       tags:
         - Page
       summary: "Retrieve a list of pages for a specific project"
       description: "Fetches all pages associated with the specified project ID."
+      security:
+        - bearerAuth: []
       parameters:
         - name: project_id
           in: path
@@ -242,13 +271,48 @@ paths:
           $ref: "#/components/schemas/NotFoundError"
         "500":
           $ref: "#/components/schemas/InternalError"
-
+  /projects/{project_id}/pages/{page_id}/public:
+    get:
+      tags:
+        - Page
+      summary: "Retrieve a specific page in the project"
+      description: "This route allows the user to retrieve details of a specific page within a specified project."
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: "The ID of the project containing the page"
+        - name: page_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/PageId"
+          description: "The ID of the page to retrieve"
+      responses:
+        "200":
+          description: "Page retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+        "400":
+          $ref: "#/components/schemas/BadRequestError"
+        "403":
+          $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          $ref: "#/components/schemas/NotFoundError"
+        "500":
+          $ref: "#/components/schemas/InternalError"
   /projects/{project_id}/pages/{page_id}:
     get:
       tags:
         - Page
       summary: "Retrieve a specific page in the project"
       description: "This route allows the user to retrieve details of a specific page within a specified project."
+      security:
+        - bearerAuth: []
       parameters:
         - name: project_id
           in: path
@@ -355,12 +419,47 @@ paths:
           $ref: "#/components/schemas/InternalError"
 
   ## Component routes
+  /projects/{project_id}/components/public:
+    get:
+      tags:
+        - Component
+      summary: "Retrieve all public components in the project"
+      description: "This route allows the user to retrieve a list of all components within a specified project."
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: "The ID of the project containing the components"
+      responses:
+        "200":
+          description: "Components retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Component"
+        "400":
+          $ref: "#/components/schemas/BadRequestError"
+        "401":
+          $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          $ref: "#/components/schemas/NotFoundError"
+        "500":
+          $ref: "#/components/schemas/InternalError"
+
   /projects/{project_id}/components:
     get:
       tags:
         - Component
       summary: "Retrieve all components in the project"
       description: "This route allows the user to retrieve a list of all components within a specified project."
+      security:
+        - bearerAuth: []
       parameters:
         - name: project_id
           in: path
@@ -450,6 +549,123 @@ paths:
         "500":
           $ref: "#/components/schemas/InternalError"
 
+  /projects/{project_id}/components/page/{page_id}/public:
+    get:
+      tags:
+        - Component
+      summary: "Retrieve all public components of a page given it's ID"
+      description: "This route allows a user to retrieve a list of public components that are in a page given it's page ID"
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: "The ID of the project containing the content"
+        - name: page_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/pageId"
+          description: "The ID of the page to search"
+      responses:
+        "200":
+          description: "Component details retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Component"
+        "400":
+          $ref: "#/components/schemas/BadRequestError"
+        "401":
+          $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          $ref: "#/components/schemas/NotFoundError"
+        "500":
+          $ref: "#/components/schemas/InternalError"
+
+  /projects/{project_id}/components/page/{page_id}:
+    get:
+      tags:
+        - Component
+      summary: "Retrieve all components of a page given it's ID"
+      description: "This route allows a user to retrieve a list of public components that are in a page given it's page ID, this is a secured route which require login"
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: "The ID of the project containing the content"
+        - name: page_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/pageId"
+          description: "The ID of the page to search"
+      responses:
+        "200":
+          description: "Component details retrieved successfully"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Component"
+        "400":
+          $ref: "#/components/schemas/BadRequestError"
+        "401":
+          $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          $ref: "#/components/schemas/NotFoundError"
+        "500":
+          $ref: "#/components/schemas/InternalError"
+
+  /projects/{project_id}/components/{component_id}/public:
+    get:
+      tags:
+        - Component
+      summary: "Retrieve a specific component in the project"
+      description: "This route allows the user to retrieve detailed information about a specific component within a specified project. Requires JWT authentication."
+      parameters:
+        - name: project_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ProjectId"
+          description: "The ID of the project containing the component"
+        - name: component_id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ComponentId"
+          description: "The ID of the component to retrieve"
+      responses:
+        "200":
+          description: "Component details retrieved successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Component"
+        "400":
+          $ref: "#/components/schemas/BadRequestError"
+        "401":
+          $ref: "#/components/schemas/UnauthorizedError"
+        "403":
+          $ref: "#/components/schemas/ForbiddenError"
+        "404":
+          $ref: "#/components/schemas/NotFoundError"
+        "500":
+          $ref: "#/components/schemas/InternalError"
+
   /projects/{project_id}/components/{component_id}:
     get:
       tags:
@@ -457,7 +673,7 @@ paths:
       summary: "Retrieve a specific component in the project"
       description: "This route allows the user to retrieve detailed information about a specific component within a specified project. Requires JWT authentication."
       security:
-        - bearerAuth: [] # Requires JWT token for authentication
+        - bearerAuth: []
       parameters:
         - name: project_id
           in: path
@@ -565,421 +781,421 @@ paths:
         "500":
           $ref: "#/components/schemas/InternalError"
 
-  ## Task routes
-  /projects/{project_id}/tasks:
-    get:
-      summary: "Retrieve tasks for a specific project"
-      description: "Fetches the list of tasks for a specific project. The user must be authenticated with a valid JWT."
-      tags:
-        - Task
-      security:
-        - bearerAuth: [] # JWT-based authentication required
-      parameters:
-        - in: path
-          name: project_id
-          required: true
-          description: "The unique ID of the project"
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-      responses:
-        "200":
-          description: "A list of tasks retrieved successfully"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Task"
+  # ## Task routes
+  # /projects/{project_id}/tasks:
+  #   get:
+  #     summary: "Retrieve tasks for a specific project"
+  #     description: "Fetches the list of tasks for a specific project. The user must be authenticated with a valid JWT."
+  #     tags:
+  #       - Task
+  #     security:
+  #       - bearerAuth: []
+  #     parameters:
+  #       - in: path
+  #         name: project_id
+  #         required: true
+  #         description: "The unique ID of the project"
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #     responses:
+  #       "200":
+  #         description: "A list of tasks retrieved successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: "#/components/schemas/Task"
 
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-    post:
-      tags:
-        - Task
-      summary: "Create a new task in the project"
-      description: "This route allows the user to create a new task within the specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project to add the task to"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Task"
-            example:
-              name: "New Task"
-              description: "Detailed task description"
-              status: "inProgress"
-              date_created: 1696883200000
-              done_by_date: 1697488000000
-              relevant_contents:
-                [
-                  [
-                    { "type": "Page", "id": "page_id" },
-                    { "type": "Component", "id": "component_id" },
-                  ],
-                ]
-      responses:
-        "200":
-          description: "Task created successfully"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: "Confirmation message"
-                    example: "Task created successfully."
-                  task_id:
-                    type: string
-                    description: "The unique ID of the newly created task"
-                    example: "5f1d7f3e9b1a1b3b7d6d8f7e"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
+  #   post:
+  #     tags:
+  #       - Task
+  #     summary: "Create a new task in the project"
+  #     description: "This route allows the user to create a new task within the specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project to add the task to"
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Task"
+  #           example:
+  #             name: "New Task"
+  #             description: "Detailed task description"
+  #             status: "inProgress"
+  #             date_created: 1696883200000
+  #             done_by_date: 1697488000000
+  #             relevant_contents:
+  #               [
+  #                 [
+  #                   { "type": "Page", "id": "page_id" },
+  #                   { "type": "Component", "id": "component_id" },
+  #                 ],
+  #               ]
+  #     responses:
+  #       "200":
+  #         description: "Task created successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 message:
+  #                   type: string
+  #                   description: "Confirmation message"
+  #                   example: "Task created successfully."
+  #                 task_id:
+  #                   type: string
+  #                   description: "The unique ID of the newly created task"
+  #                   example: "5f1d7f3e9b1a1b3b7d6d8f7e"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
 
-  /projects/{project_id}/tasks/{task_id}:
-    get:
-      tags:
-        - Task
-      summary: "Retrieve a specific task in the project"
-      description: "This route allows the user to retrieve detailed information about a specific task within a specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project containing the task"
-        - name: task_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/TaskId"
-          description: "The ID of the task to retrieve"
-      responses:
-        "200":
-          description: "Task details retrieved successfully"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-    put:
-      tags:
-        - Task
-      summary: "Update an existing task in the project"
-      description: "This route allows the user to update an existing task within a specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project containing the task"
-        - name: task_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/TaskId"
-          description: "The ID of the task to be updated"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Task"
-            example:
-              name: "Updated Task Name"
-              description: "Updated task description"
-              status: "done"
-              date_completed: 1697558400000
-              relevant_contents:
-                [
-                  [
-                    { "type": "Page", "id": "page_id" },
-                    { "type": "Component", "id": "component_id" },
-                  ],
-                ]
-      responses:
-        "200":
-          description: "Task updated successfully"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Task"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-    delete:
-      tags:
-        - Task
-      summary: "Delete a specific task from a project"
-      description: "This route allows the user to delete a specific task from a project by its ID. Requires JWT authentication."
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project from which to delete the task"
-        - name: task_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/TaskId"
-          description: "The ID of the task to delete"
-      responses:
-        "204":
-          description: "Task deleted successfully"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
+  # /projects/{project_id}/tasks/{task_id}:
+  #   get:
+  #     tags:
+  #       - Task
+  #     summary: "Retrieve a specific task in the project"
+  #     description: "This route allows the user to retrieve detailed information about a specific task within a specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project containing the task"
+  #       - name: task_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/TaskId"
+  #         description: "The ID of the task to retrieve"
+  #     responses:
+  #       "200":
+  #         description: "Task details retrieved successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Task"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
+  #   put:
+  #     tags:
+  #       - Task
+  #     summary: "Update an existing task in the project"
+  #     description: "This route allows the user to update an existing task within a specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project containing the task"
+  #       - name: task_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/TaskId"
+  #         description: "The ID of the task to be updated"
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Task"
+  #           example:
+  #             name: "Updated Task Name"
+  #             description: "Updated task description"
+  #             status: "done"
+  #             date_completed: 1697558400000
+  #             relevant_contents:
+  #               [
+  #                 [
+  #                   { "type": "Page", "id": "page_id" },
+  #                   { "type": "Component", "id": "component_id" },
+  #                 ],
+  #               ]
+  #     responses:
+  #       "200":
+  #         description: "Task updated successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Task"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
+  #   delete:
+  #     tags:
+  #       - Task
+  #     summary: "Delete a specific task from a project"
+  #     description: "This route allows the user to delete a specific task from a project by its ID. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: []
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project from which to delete the task"
+  #       - name: task_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/TaskId"
+  #         description: "The ID of the task to delete"
+  #     responses:
+  #       "204":
+  #         description: "Task deleted successfully"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
 
-  ## Bug routes
-  /projects/{project_id}/bugs:
-    get:
-      tags:
-        - Bug
-      summary: "Retrieve all bugs in the project"
-      description: "This route allows the user to retrieve a list of all bugs associated with a specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project whose bugs will be retrieved"
-      responses:
-        "200":
-          description: "List of bugs retrieved successfully"
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Bug"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-    post:
-      tags:
-        - Bug
-      summary: "Create a new bug in the project"
-      description: "This route allows the user to create a new bug within a specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project where the bug will be created"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BugId"
-      responses:
-        "200":
-          description: "Bug created successfully"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: "Confirmation message"
-                    example: "Bug created successfully."
-                  bug_id:
-                    type: string
-                    description: "The unique ID of the newly created bug"
-                    example: "5f1d7f3e9b1a1b3b7d6d8f7e"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
+  # ## Bug routes
+  # /projects/{project_id}/bugs:
+  #   get:
+  #     tags:
+  #       - Bug
+  #     summary: "Retrieve all bugs in the project"
+  #     description: "This route allows the user to retrieve a list of all bugs associated with a specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project whose bugs will be retrieved"
+  #     responses:
+  #       "200":
+  #         description: "List of bugs retrieved successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: "#/components/schemas/Bug"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
+  #   post:
+  #     tags:
+  #       - Bug
+  #     summary: "Create a new bug in the project"
+  #     description: "This route allows the user to create a new bug within a specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project where the bug will be created"
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/BugId"
+  #     responses:
+  #       "200":
+  #         description: "Bug created successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 message:
+  #                   type: string
+  #                   description: "Confirmation message"
+  #                   example: "Bug created successfully."
+  #                 bug_id:
+  #                   type: string
+  #                   description: "The unique ID of the newly created bug"
+  #                   example: "5f1d7f3e9b1a1b3b7d6d8f7e"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
 
-  /projects/{project_id}/bugs/{bug_id}:
-    get:
-      tags:
-        - Bug
-      summary: "Retrieve a specific bug in the project"
-      description: "This route allows the user to retrieve detailed information about a specific bug within a specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project containing the bug"
-        - name: bug_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/BugId"
-          description: "The ID of the bug to retrieve"
-      responses:
-        "200":
-          description: "Bug details retrieved successfully"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Bug" # Returns the bug object
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-    put:
-      tags:
-        - Bug
-      summary: "Update a specific bug in the project"
-      description: "This route allows the user to update details of a specific bug within a specified project. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project containing the bug"
-        - name: bug_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/BugId"
-          description: "The ID of the bug to update"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Bug"
-      responses:
-        "200":
-          description: "Bug updated successfully"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Bug"
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
-    delete:
-      tags:
-        - Bug
-      summary: "Delete a specific bug from a project"
-      description: "This route allows the user to delete a specific bug from a project by its ID. Requires JWT authentication."
-      security:
-        - bearerAuth: [] # Requires JWT token for authentication
-      parameters:
-        - name: project_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/ProjectId"
-          description: "The ID of the project from which to delete the bug"
-        - name: bug_id
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/BugId"
-          description: "The ID of the bug to delete"
-      responses:
-        "204":
-          description: "Bug deleted successfully" # No content returned on success
-        "400":
-          $ref: "#/components/schemas/BadRequestError"
-        "401":
-          $ref: "#/components/schemas/UnauthorizedError"
-        "403":
-          $ref: "#/components/schemas/ForbiddenError"
-        "404":
-          $ref: "#/components/schemas/NotFoundError"
-        "500":
-          $ref: "#/components/schemas/InternalError"
+  # /projects/{project_id}/bugs/{bug_id}:
+  #   get:
+  #     tags:
+  #       - Bug
+  #     summary: "Retrieve a specific bug in the project"
+  #     description: "This route allows the user to retrieve detailed information about a specific bug within a specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project containing the bug"
+  #       - name: bug_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/BugId"
+  #         description: "The ID of the bug to retrieve"
+  #     responses:
+  #       "200":
+  #         description: "Bug details retrieved successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Bug" # Returns the bug object
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
+  #   put:
+  #     tags:
+  #       - Bug
+  #     summary: "Update a specific bug in the project"
+  #     description: "This route allows the user to update details of a specific bug within a specified project. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project containing the bug"
+  #       - name: bug_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/BugId"
+  #         description: "The ID of the bug to update"
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Bug"
+  #     responses:
+  #       "200":
+  #         description: "Bug updated successfully"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: "#/components/schemas/Bug"
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
+  #   delete:
+  #     tags:
+  #       - Bug
+  #     summary: "Delete a specific bug from a project"
+  #     description: "This route allows the user to delete a specific bug from a project by its ID. Requires JWT authentication."
+  #     security:
+  #       - bearerAuth: [] # Requires JWT token for authentication
+  #     parameters:
+  #       - name: project_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/ProjectId"
+  #         description: "The ID of the project from which to delete the bug"
+  #       - name: bug_id
+  #         in: path
+  #         required: true
+  #         schema:
+  #           $ref: "#/components/schemas/BugId"
+  #         description: "The ID of the bug to delete"
+  #     responses:
+  #       "204":
+  #         description: "Bug deleted successfully" # No content returned on success
+  #       "400":
+  #         $ref: "#/components/schemas/BadRequestError"
+  #       "401":
+  #         $ref: "#/components/schemas/UnauthorizedError"
+  #       "403":
+  #         $ref: "#/components/schemas/ForbiddenError"
+  #       "404":
+  #         $ref: "#/components/schemas/NotFoundError"
+  #       "500":
+  #         $ref: "#/components/schemas/InternalError"
 
   ## User routes
   /user/me:

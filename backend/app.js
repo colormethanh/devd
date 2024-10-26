@@ -5,16 +5,17 @@ const passport = require("passport");
 const logger = require("./utils/logging/logger");
 const morgan = require("morgan");
 const { extractProjectId } = require("./utils/middlewares");
-const errorRouter = require("./routers/errorRouter");
-
-// Sub Routers
-const userRouter = require("./routers/userRouter");
-const projectRouter = require("./routers/projectRouter");
 require("./services/passport");
-const authRouter = require("./routers/authRouter");
-const swaggerRouter = require("./routers/swaggerRouter");
-const pageRouter = require("./routers/pageRouter");
-const componentRouter = require("./routers/componentRouter");
+
+const {
+  userRouter,
+  projectRouter,
+  authRouter,
+  swaggerRouter,
+  pageRouter,
+  componentRouter,
+  errorRouter,
+} = require("./routers/index.js");
 
 const StartApp = ({
   authController,
@@ -27,6 +28,18 @@ const StartApp = ({
   const app = express();
 
   // App Level middleware setup
+  app.use((req, res, next) => {
+    req.metadata = {
+      request_id: crypto.randomUUID(),
+    };
+
+    logger.info({
+      message: `Request received - ${req.url} `,
+      request_id: req.metadata.request_id,
+    });
+
+    next();
+  });
   app.use(cors());
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -38,11 +51,6 @@ const StartApp = ({
       stream: { write: (message) => logger.info(message.trim()) },
     })
   );
-
-  app.use((req, res, next) => {
-    logger.info(`Request received - ${req.url}`);
-    next();
-  });
 
   // App routes
   router.use(
