@@ -188,6 +188,7 @@ describe("PROJECTS", () => {
         .send({
           name: "Cool project",
           description: "A cool project for a cool guy!",
+          features: ["brand new feature"],
         })
         .expect(200);
 

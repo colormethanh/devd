@@ -9,7 +9,7 @@ const projectSchema = new Schema({
   date_created: { type: Number, required: true },
   name: { type: String, required: true, unique: true },
   owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  features: [{ type: Schema.Types.ObjectId, ref: "Feature" }],
+  features: [{ type: String }],
   components: [{ type: Schema.Types.ObjectId, ref: "Component" }],
   pages: [{ type: Schema.Types.ObjectId, ref: "Page" }],
   tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],

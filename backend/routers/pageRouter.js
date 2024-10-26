@@ -4,6 +4,7 @@ const { createError } = require("../utils/errorHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
 const logger = require("../utils/logging/logger");
+const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
 
 const pageRoutes = function (pageController) {
   const router = express.Router();
@@ -157,6 +158,60 @@ const pageRoutes = function (pageController) {
       );
     } catch (err) {
       return next(err);
+    }
+  });
+
+  // update a page
+  // *user should only update name, description, features, visibility
+  router.put("/:page_id", requireAuth, extractRole, async (req, res, next) => {
+    try {
+      logger.info({
+        message: "initiating check for page update",
+        request_id: req.metadata.request_id,
+      });
+      const { page_id } = req.params;
+      const project = req.project;
+
+      // check to see if page exists
+      const originalPage = await pageController.getPage(page_id);
+      if (!originalPage) next(createError(404, "page could not be found"));
+      if (originalPage instanceof Error) next(originalPage);
+
+      // check to see if project contains page id
+      const projectContainsPage = await project.pages.find(
+        (page) => page.toString() === page_id
+      );
+      if (!projectContainsPage)
+        next(createError(400, `Project does not contain page ${page_id}`));
+
+      // check to see if user is authorized to modify page
+      const isAdmin = req.role === "admin";
+      if (!isAdmin)
+        return next(
+          createError(403, "Only admin may make changes to project pages")
+        );
+
+      // checking the request body
+
+      const allowedUpdates = ["name", "description", "features", "visibility"];
+
+      if (!hasOne(allowedUpdates, req.body))
+        next(createError(400, "Must update at least one property"));
+
+      const updates = fillObjectWithFromBody(
+        allowedUpdates,
+        req.body,
+        originalPage
+      );
+
+      const updatedPage = pageController.updatePage(page_id, updates);
+
+      if (!updatedPage) next(createError(500, "error when updating"));
+      if (updatedPage instanceof Error) next(updatedPage);
+
+      return res.send(createResponseObject({ updatedPage }));
+    } catch (err) {
+      next(createError(err.statusCode, err.message));
     }
   });
 

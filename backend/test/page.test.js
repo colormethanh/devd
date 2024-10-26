@@ -150,9 +150,11 @@ describe("PAGE", () => {
         .set("authorization", `Bearer ${tokens.token}`)
         .expect(200);
     });
+
+    it("should return an 400 error if page is not associated with project");
   });
 
-  describe("POST /project/:project_id/pages", () => {
+  describe("POST /projects/:project_id/pages", () => {
     it("should post a new page and return valid object id", async () => {
       const loginResponse = await superTestLogin();
       const token = loginResponse.body.payload.token;
@@ -229,5 +231,39 @@ describe("PAGE", () => {
         })
         .expect(401);
     });
+  });
+
+  describe("PUT /projects/:project_id/pages/:page_id", () => {
+    it("should update a page", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const putResponse = await supertest(StartApp(Controllers))
+        .put(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .send({
+          name: "Modified Page",
+          description: "A modified description",
+          features: ["amazing new feature"],
+          visibility: "public",
+        })
+        .expect(200);
+
+      const updatedProject = await models.PageModel.findById(
+        seedResults.testPage
+      );
+
+      expect(updatedProject).to.to.have.property("name", "Modified Page");
+    });
+
+    it("should correctly update features property");
+
+    it("should return 403 error if user is not admin or guest");
+
+    it("should return 400 error if page is not associated with page");
+
+    it("should return 400 error if request has not body");
   });
 });

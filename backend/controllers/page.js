@@ -45,3 +45,17 @@ exports.postPage = async (name, description, project) => {
     return createError(err.statusCode, err.message);
   }
 };
+
+exports.updatePage = async (pageId, updates) => {
+  try {
+    const updatedPage = await PageModel.findByIdAndUpdate(
+      pageId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    return updatedPage;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};

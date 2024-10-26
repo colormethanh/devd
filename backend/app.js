@@ -4,7 +4,7 @@ const cors = require("cors");
 const passport = require("passport");
 const logger = require("./utils/logging/logger");
 const morgan = require("morgan");
-const { extractProjectId } = require("./utils/middlewares");
+const { extractProjectId, extractProject } = require("./utils/middlewares");
 require("./services/passport");
 
 const {
@@ -63,6 +63,7 @@ const StartApp = ({
   router.use(
     "/projects/:project_id/pages",
     extractProjectId,
+    extractProject,
     pageRouter(pageController)
   );
   router.use(

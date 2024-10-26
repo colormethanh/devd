@@ -1,5 +1,6 @@
 const { createError } = require("./errorHelpers");
 const logger = require("./logging/logger");
+const { projectController } = require("../controllers/controllersIndex");
 
 const extractProjectId = (req, res, next) => {
   logger.info({
@@ -8,6 +9,24 @@ const extractProjectId = (req, res, next) => {
   });
   req.project_id = req.params.project_id;
   return next();
+};
+
+const extractProject = async (req, res, next) => {
+  logger.info({
+    message: "extracting project",
+    request_id: req.metadata.request_id,
+  });
+
+  let project;
+
+  if (req.project_id) {
+    project = await projectController.getProject(req.project_id);
+    if (!project) next(createError(404, "Project could not be found"));
+    req.project = project;
+    return next();
+  }
+
+  return next(createError(400, "project_id is required"));
 };
 
 const extractRole = (req, res, next) => {
@@ -37,4 +56,4 @@ const extractRole = (req, res, next) => {
   return next();
 };
 
-module.exports = { extractProjectId, extractRole };
+module.exports = { extractProjectId, extractRole, extractProject };
