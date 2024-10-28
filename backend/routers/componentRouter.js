@@ -3,6 +3,8 @@ const { requireAuth, requireProjectRole } = require("./authMiddleware");
 const { createError } = require("../utils/errorHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
+const logger = require("../utils/logging/logger");
+const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
 
 const componentRoutes = function (componentController, pageController) {
   const router = express.Router();
@@ -218,6 +220,127 @@ const componentRoutes = function (componentController, pageController) {
       next(createError(err.statusCode, err.message));
     }
   });
+
+  router.put(
+    "/:component_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "initiating check for component update",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { component_id } = req.params;
+
+        // checks user's role
+        const isAdmin = req.role === "admin";
+        if (!isAdmin) next(createError(403, "Only admins may delete pages"));
+
+        // check to see if component exists
+        const componentToUpdate = await componentController.getComponent(
+          component_id
+        );
+        if (componentToUpdate instanceof Error) next(componentToUpdate);
+        if (!componentToUpdate) next(404, "component does not exist");
+
+        // check to see if project contains component
+        const projectContainsComponent = await req.project.components.find(
+          (component) => component.toString() === component_id
+        );
+        if (!projectContainsComponent)
+          next(
+            createError(
+              400,
+              `Project does not contain component ${component_id}`
+            )
+          );
+
+        // check the request body
+        const allowedUpdates = [
+          "name",
+          "description",
+          "snippet",
+          "children",
+          "parents",
+          "status",
+          "images",
+          "visibility",
+        ];
+        if (!hasOne(allowedUpdates, req.body))
+          next(createError(400, "Must update at least one property"));
+
+        const updates = fillObjectWithFromBody(
+          allowedUpdates,
+          req.body,
+          componentToUpdate
+        );
+
+        const updatedComponent = await componentController.updateComponent(
+          component_id,
+          updates
+        );
+
+        if (!updatedComponent) next(createError(500, "error when updating"));
+        if (updatedComponent instanceof Error) next(updatedComponent);
+
+        return res.send(createResponseObject({ updatedComponent }));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
+
+  router.delete(
+    "/:component_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "Starting checks before component deletion",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { component_id } = req.params;
+
+        // check if admin
+        const isAdmin = req.role === "admin";
+        if (!isAdmin) next(createError(403, "Only admins way delete pages"));
+
+        // check if exists
+        const componentToDelete = await componentController.getComponent(
+          component_id
+        );
+
+        if (componentToDelete instanceof Error) next(componentToDelete);
+        if (!componentToDelete)
+          next(createError(404, "component could not be found"));
+
+        // check if component is part of project
+        const projectContainsComponent = await req.project.components.find(
+          (component) => component.toString() === component_id
+        );
+        if (!projectContainsComponent)
+          next(
+            createError(
+              400,
+              `Project does not contain component ${component_id}`
+            )
+          );
+
+        const deleteMessage = await componentController.deleteComponent(
+          component_id
+        );
+        res.send(createResponseObject(deleteMessage));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
 
   return router;
 };

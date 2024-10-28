@@ -4,6 +4,8 @@ const { createError } = require("../utils/errorHelpers");
 const { createResponseObject } = require("../utils/responseHelpers");
 const logger = require("../utils/logging/logger");
 
+const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
+
 const projectRoutes = function (projectController) {
   const router = express.Router();
 
@@ -89,6 +91,7 @@ const projectRoutes = function (projectController) {
 
       const isOwner =
         req.user._id.toString() === currentProject.owner.toString();
+
       if (!isOwner)
         next(
           createError(
@@ -97,13 +100,18 @@ const projectRoutes = function (projectController) {
           )
         );
 
-      if (!req.body.name && !req.body.description)
-        next(createError(400, "Must update at least 1 property"));
+      // todo: Add features to be updated
 
-      const updates = {};
+      const allowedUpdates = ["name", "description", "features"];
 
-      if (req.body.name) updates.name = req.body.name;
-      if (req.body.description) updates.description = req.body.description;
+      if (!hasOne(allowedUpdates, req.body))
+        next(createError(400, "Must update at lease one property"));
+
+      const updates = fillObjectWithFromBody(
+        allowedUpdates,
+        req.body,
+        currentProject
+      );
 
       const updatedProject = await projectController.updateProject(
         project_id,
@@ -128,6 +136,7 @@ const projectRoutes = function (projectController) {
     try {
       logger.info({
         message: "Starting check before project deletion",
+        user: req.user._id,
         request_id: req.metadata.request_id,
       });
       const { project_id } = req.params;
