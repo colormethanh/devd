@@ -1,6 +1,7 @@
 const PageModel = require("../models/Page");
 const ProjectModel = require("../models/Project");
 const { createError } = require("../utils/errorHelpers");
+const logger = require("../utils/logging/logger");
 
 exports.getPages = async (project_id) => {
   try {
@@ -55,6 +56,18 @@ exports.updatePage = async (pageId, updates) => {
     );
 
     return updatedPage;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};
+
+exports.deletePage = async (pageId) => {
+  try {
+    logger.info(`Initiating delete of page ${pageId}`);
+    await PageModel.findByIdAndDelete(pageId);
+    const successMessage = `successfully deleted page ${pageId}`;
+    logger.info(successMessage);
+    return successMessage;
   } catch (err) {
     return createError(err.statusCode, err.message);
   }

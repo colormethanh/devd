@@ -266,4 +266,61 @@ describe("COMPONENT", () => {
       );
     });
   });
+
+  describe("PUT /project/:project_id/components/:component_id", () => {
+    it("Should modify a component", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const putResponse = await supertest(StartApp(Controllers))
+        .put(
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .send({
+          name: "Modified Component",
+          description: "A modified component description",
+          status: "done",
+          visibility: "public",
+          children: [seedResults.testComponent2._id],
+        });
+      // .expect(200);
+
+      const updatedComponent = await models.ComponentModel.findById(
+        seedResults.testComponent._id
+      );
+
+      expect(updatedComponent).to.have.property("name", "Modified Component");
+      expect(updatedComponent.children).to.have.lengthOf(1);
+    });
+
+    it("should return 400 error if no body is provided");
+
+    it("Should return 403 error if not guest or admin");
+
+    it("should return 400 error if component is not associated with project");
+  });
+
+  describe("DELETE /project/:project_id/components/:component_id", () => {
+    it("should delete a component", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const deleteResponse = await supertest(StartApp(Controllers))
+        .delete(
+          `/projects/${seedResults.testProject._id}/components/${seedResults.testComponent._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+
+      const componentInDb = await models.ComponentModel.findById(
+        seedResults.testComponent._id
+      );
+      expect(!componentInDb);
+    });
+
+    it("should return 403 error if not guest or admin");
+
+    it("should return 400 error if component is not associated with project");
+  });
 });

@@ -69,6 +69,7 @@ const StartApp = ({
   router.use(
     "/projects/:project_id/components",
     extractProjectId,
+    extractProject,
     componentRouter(componentController, pageController)
   );
 

@@ -266,4 +266,29 @@ describe("PAGE", () => {
 
     it("should return 400 error if request has not body");
   });
+
+  describe("DELETE /projects/:project_id/pages/:page_id", () => {
+    it("should delete a page given an id", async () => {
+      const loginResponse = await superTestLogin();
+      const tokens = loginResponse.body.payload;
+
+      const deleteResponse = await supertest(StartApp(Controllers))
+        .delete(
+          `/projects/${seedResults.testProject._id}/pages/${seedResults.testPage._id}`
+        )
+        .set("authorization", `Bearer ${tokens.token}`)
+        .expect(200);
+
+      const pageInDb = await models.PageModel.findById(
+        seedResults.testPage._id
+      );
+      expect(!pageInDb);
+    });
+
+    it("should return 400 error if page is not associated with project");
+
+    it("should return 404 if project could not be found");
+
+    it("should return 403 if not associated with project");
+  });
 });

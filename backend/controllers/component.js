@@ -2,6 +2,7 @@ const ComponentModel = require("../models/Components");
 const ProjectModel = require("../models/Project");
 const PageModel = require("../models/Page");
 const { createError } = require("../utils/errorHelpers");
+const logger = require("../utils/logging/logger");
 
 exports.getComponentsFromProject = async (project_id) => {
   try {
@@ -69,6 +70,32 @@ exports.postComponent = async (
     );
 
     return newComponent;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};
+
+exports.updateComponent = async (componentId, updates) => {
+  try {
+    const updatedComponent = await ComponentModel.findByIdAndUpdate(
+      componentId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    return updatedComponent;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};
+
+exports.deleteComponent = async (componentId) => {
+  try {
+    logger.info(`Initiating delete of component ${componentId}`);
+    await ComponentModel.findByIdAndDelete(componentId);
+    const successMessage = `successfully deleted component ${componentId}`;
+    logger.info(successMessage);
+    return successMessage;
   } catch (err) {
     return createError(err.statusCode, err.message);
   }

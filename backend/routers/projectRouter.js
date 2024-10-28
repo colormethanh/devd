@@ -136,6 +136,7 @@ const projectRoutes = function (projectController) {
     try {
       logger.info({
         message: "Starting check before project deletion",
+        user: req.user._id,
         request_id: req.metadata.request_id,
       });
       const { project_id } = req.params;

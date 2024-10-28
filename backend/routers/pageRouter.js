@@ -167,6 +167,7 @@ const pageRoutes = function (pageController) {
     try {
       logger.info({
         message: "initiating check for page update",
+        user: req.user._id,
         request_id: req.metadata.request_id,
       });
       const { page_id } = req.params;
@@ -214,6 +215,42 @@ const pageRoutes = function (pageController) {
       next(createError(err.statusCode, err.message));
     }
   });
+
+  // delete a page
+  router.delete(
+    "/:page_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "Starting checks before page deletion",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { page_id } = req.params;
+
+        // check if admin
+        const isAdmin = req.role === "admin";
+        if (!isAdmin) next(createError(403, "Only admins may delete pages"));
+
+        // check if project exists
+        const pageToDelete = await pageController.getPage(page_id);
+
+        if (pageToDelete instanceof Error) next(pageToDelete);
+        if (!pageToDelete) next(createError(404, "Page could not be found"));
+
+        const deleteMessage = await pageController.deletePage(page_id);
+
+        if (deleteMessage instanceof Error) next(deleteMessage);
+
+        return res.send(createResponseObject(deleteMessage));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
 
   return router;
 };
