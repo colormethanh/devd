@@ -230,7 +230,9 @@ describe("PROJECTS", () => {
       expect(!projectInDb);
     });
 
-    it("should delete associated models on project deletion");
+    it(
+      "should delete associated models on project deletion such as pages, components, and user"
+    );
 
     it("should return error if no project_id is supplied");
 

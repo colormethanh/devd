@@ -36,11 +36,13 @@ const authRoutes = function (
 
       const { accessToken, refreshToken } = tokens;
 
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
       return res.send(
-        createResponseObject(
-          { token: accessToken, refreshToken },
-          "Login Successful"
-        )
+        createResponseObject({ token: accessToken }, "Login Successful")
       );
     } catch (err) {
       next(createError(err.statusCode, err.message));
@@ -64,8 +66,20 @@ const authRoutes = function (
 
       if (signupResponse instanceof Error) return next(signupResponse);
 
+      const accessTokenAndUserId = {
+        accessToken: signupResponse.accessToken,
+        user_id: signupResponse.user_id,
+      };
+
+      const refreshToken = signupResponse.refreshToken;
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
       return res.send(
-        createResponseObject(signupResponse, "signup successful")
+        createResponseObject(accessTokenAndUserId, "signup successful")
       );
     } catch (err) {
       next(createError(err.statusCode, err.message));
@@ -73,7 +87,8 @@ const authRoutes = function (
   });
 
   router.post("/refresh-token", async (req, res, next) => {
-    const { refreshToken } = req.body;
+    console.log(req.cookies);
+    const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
       return next(createError(400, "RefreshToken is required"));

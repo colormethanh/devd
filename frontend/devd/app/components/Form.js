@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Form({ onSubmit, title, children }) {
   return (
-    <div className="border min-h-80 w-full flex justify-center m-3">
+    <div className="min-h-80 w-full flex justify-center m-3">
       <form
         className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full space-y-6"
         onSubmit={onSubmit}

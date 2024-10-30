@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const passport = require("passport");
 const logger = require("./utils/logging/logger");
@@ -40,9 +41,18 @@ const StartApp = ({
 
     next();
   });
-  app.use(cors());
+
+  const corsOptions = {
+    origin: "http://localhost:3001", // Specify the allowed origin
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // Enable credentials
+  };
+
+  app.use(cors(corsOptions));
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+  app.use(cookieParser({ credentials: true }));
   app.use(passport.initialize());
   const router = express.Router();
 
