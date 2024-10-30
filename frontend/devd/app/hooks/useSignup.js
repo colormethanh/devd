@@ -23,13 +23,11 @@ export default function useSignup() {
       if (!setSignupFormData.password === setSignupFormData.password2)
         throw Error("passwords don't match");
 
-      debugger;
       // send login info
       const response = await axiosSignup(signupFormData);
       // set response as cookie
       debugger;
       console.log("signup success!");
-      console.log(response.data.payload);
 
       // Reset form
       setSignupFormData(defaultFormData);

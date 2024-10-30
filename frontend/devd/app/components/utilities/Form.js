@@ -7,7 +7,7 @@ export default function Form({ onSubmit, title, children }) {
         className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full space-y-6"
         onSubmit={onSubmit}
       >
-        <h1 className="text-2xl font-bold text-center ">{title}</h1>
+        <h1 className="text-2xl text-black font-bold text-center ">{title}</h1>
         {children}
         <button
           type="submit"

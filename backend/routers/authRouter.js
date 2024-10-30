@@ -42,7 +42,10 @@ const authRoutes = function (
       });
 
       return res.send(
-        createResponseObject({ token: accessToken }, "Login Successful")
+        createResponseObject(
+          { accessToken, user_id: refreshToken.user_id },
+          "Login Successful"
+        )
       );
     } catch (err) {
       next(createError(err.statusCode, err.message));

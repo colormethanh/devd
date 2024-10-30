@@ -1,4 +1,4 @@
-import Form from "./Form";
+import Form from "./utilities/Form";
 
 export default function SignupForm({ formData, setFormData, handleSubmit }) {
   const handleInputChange = (e) => {

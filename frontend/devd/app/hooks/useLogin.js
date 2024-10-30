@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
 import useAxios from "./useAxios";
 
 const defaultFormData = {
@@ -20,25 +19,19 @@ export default function useLogin() {
 
       // send login info
       const response = await axiosLogin(loginFormData);
+      debugger;
+
       // set response as cookie
       console.log("Login success!");
       console.log("setting tokens...");
-      console.log(response.data.payload);
+      console.log(response.payload);
 
-      localStorage.setItem("accessToken", response.data.payload.token);
+      localStorage.setItem("accessToken", response.payload.accessToken);
 
       // Reset form
       setLoginFormData(defaultFormData);
 
-      // redirect
-
-      // testing refresh token
-      // const response2 = await axios.post(
-      //   "http://localhost:3000/auth/refresh-token",
-      //   {},
-      //   { withCredentials: true }
-      // );
-      // console.log(response2);
+      // todo: redirect
     } catch (err) {
       console.log(err);
     }

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Form from "./Form";
+import Form from "./utilities/Form";
 
 export default function LoginForm({ formData, setFormData, handleSubmit }) {
   const handleInputChange = (e) => {
