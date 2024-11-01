@@ -8,20 +8,19 @@ export default function Home() {
   return (
     <div className="flex flex-col h-full w-100 text-center justify-center">
       <div className="">
-        <p> A app for all things... </p>
+        <p> An app for all things... </p>
         <h1 className="text-6xl font-bold"> Devd </h1>
       </div>
       <div className="home-options flex flex-col items-center mt-3">
         <Button
           clickCallback={() => {
-            console.log("going to projects page clicked");
+            router.push("/projects");
           }}
         >
           Enter as guest
         </Button>
         <Button
           clickCallback={() => {
-            console.log("Going to Login page clicked");
             router.push("/auth");
           }}
           addStyle="mt-3"
@@ -30,7 +29,7 @@ export default function Home() {
         </Button>
         <Button
           clickCallback={() => {
-            console.log("Going to signup page clicked");
+            router.push("/auth/signup");
           }}
           addStyle="mt-3"
         >

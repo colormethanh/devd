@@ -3,7 +3,7 @@ import React from "react";
 import SignupForm from "../../components/SignupForm";
 import useSignup from "../../hooks/useSignup";
 
-export default function AuthPage() {
+export default function SignupPage() {
   const { signupFormData, setSignupFormData, handleSignup } = useSignup();
 
   return (

@@ -55,7 +55,6 @@ const projectRoutes = function (projectController) {
       const { name, description } = req.body;
       if (!name || !description || !req.user._id)
         return next(createError(400, "Name and Description is required"));
-
       logger.info({
         message: "Attempting to post new project to DB",
         request_id: req.metadata.request_id,
