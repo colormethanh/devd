@@ -17,7 +17,10 @@ export default function Home() {
             router.push("/projects");
           }}
         >
-          Enter as guest
+          <div className="w-full flex justify-between">
+            Enter as guest
+            <div className="mr-3 grid place-items-center">{">"} </div>
+          </div>
         </Button>
         <Button
           clickCallback={() => {
@@ -25,7 +28,10 @@ export default function Home() {
           }}
           addStyle="mt-3"
         >
-          Login
+          <div className="w-full flex justify-between">
+            Login
+            <div className="mr-3 grid place-items-center">{">"} </div>
+          </div>
         </Button>
         <Button
           clickCallback={() => {
@@ -33,7 +39,10 @@ export default function Home() {
           }}
           addStyle="mt-3"
         >
-          Signup
+          <div className="w-full flex justify-between">
+            Signup
+            <div className="mr-3 grid place-items-center">{">"} </div>
+          </div>
         </Button>
       </div>
     </div>

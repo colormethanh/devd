@@ -27,8 +27,7 @@ export default function Button({
         ${addStyle}`}
     >
       <div className="w-full flex flex-row justify-between">
-        <div>{children}</div>
-        <div className="mr-3">{">"} </div>
+        <div className="w-full">{children}</div>
       </div>
     </button>
   );

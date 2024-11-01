@@ -19,15 +19,22 @@ export default function useAxios() {
 
   const axiosGetProjects = async () => {
     try {
-      console.log(BASE_URL);
       const response = await axios.get(`${BASE_URL}/projects`);
       return response.data.payload;
     } catch (err) {
       console.error(err);
     }
-
     // todo: check if user is authorized
   };
 
-  return { axiosLogin, axiosSignup, axiosGetProjects };
+  const axiosGetProject = async (project_id) => {
+    try {
+      const response = await axios.get(`${BASE_URL}/projects/${project_id}`);
+      return response.data.payload;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return { axiosLogin, axiosSignup, axiosGetProjects, axiosGetProject };
 }
