@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { signup, login } from "../store/slices/authSlice";
+import { getProject } from "../store/slices/projectSlice";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -29,8 +30,10 @@ export default function useAxios() {
 
   const axiosGetProject = async (project_id) => {
     try {
-      const response = await axios.get(`${BASE_URL}/projects/${project_id}`);
-      return response.data.payload;
+      // const response = await axios.get(`${BASE_URL}/projects/${project_id}`);
+      // return response.data.payload;
+      const response = dispatch(getProject(project_id));
+      return response;
     } catch (err) {
       console.log(err);
     }

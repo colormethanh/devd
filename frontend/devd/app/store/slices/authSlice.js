@@ -27,6 +27,7 @@ export const login = createAsyncThunk(
         withCredentials: true,
       });
 
+      // todo: remove
       !isServer && localStorage.setItem("token", response.data.payload.token);
       return response.data.payload;
     } catch (err) {

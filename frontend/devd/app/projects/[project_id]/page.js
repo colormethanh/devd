@@ -3,19 +3,25 @@ import React, { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import useProjectDetails from "@/app/hooks/useProjectDetails";
 import SideBar from "@/app/components/utilities/SideBar";
+import ProjectTasks from "@/app/components/ProjectTasks";
 
 export default function ProjectDetails() {
   const router = useRouter();
   const { project_id } = useParams();
-  const { project, isLoading } = useProjectDetails(project_id);
+  const { project, isLoading, isViewing, changeViewTo } =
+    useProjectDetails(project_id);
 
   useEffect(() => {
     console.log(project_id);
   }, []);
 
   return (
-    <div className="h-full w-full border border-red-500">
-      <SideBar />
+    <div className="flex h-full w-full">
+      <SideBar onItemClick={changeViewTo} />
+      <div className="w-full">
+        {/* <h1 className="text-white"> {`Currently Viewing: ${isViewing}`} </h1> */}
+        {isViewing === "tasks" && <ProjectTasks />}
+      </div>
     </div>
   );
 }

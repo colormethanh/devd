@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
 
-export default function SideBarItem({ src, onHoverSrc, isOpen, children }) {
+export default function SideBarItem({
+  src,
+  onHoverSrc,
+  isOpen,
+  children,
+  onClickCallback,
+}) {
   const [hover, setHover] = useState(false);
 
   const handleHover = () => {
@@ -15,8 +21,8 @@ export default function SideBarItem({ src, onHoverSrc, isOpen, children }) {
 
   return (
     <li onMouseEnter={handleHover} onMouseLeave={handleExit}>
-      <Button addStyle="w-full">
-        <div className="flex flex-row">
+      <Button addStyle="w-full" clickCallback={onClickCallback}>
+        <div className={`flex flex-row ${!isOpen && "justify-center"}`}>
           {" "}
           <div className={`flex justify-center w-8 h-7 ${isOpen && "mr-3"}`}>
             <Image
