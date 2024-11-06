@@ -16,6 +16,7 @@ const {
   pageRouter,
   componentRouter,
   errorRouter,
+  taskRouter,
 } = require("./routers/index.js");
 
 const StartApp = ({
@@ -25,6 +26,7 @@ const StartApp = ({
   pageController,
   componentController,
   refreshTokenController,
+  taskController,
 }) => {
   const app = express();
 
@@ -75,6 +77,12 @@ const StartApp = ({
     extractProjectId,
     extractProject,
     pageRouter(pageController)
+  );
+  router.use(
+    "/projects/:project_id/tasks",
+    extractProjectId,
+    extractProject,
+    taskRouter(taskController)
   );
   router.use(
     "/projects/:project_id/components",

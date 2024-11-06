@@ -16,6 +16,20 @@ export const getProject = createAsyncThunk(
   }
 );
 
+export const getTask = createAsyncThunk(
+  "project/getTask",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/projects/${params.project_id}/tasks/${params.task_id}`
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState: {
@@ -29,9 +43,15 @@ const projectSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getProject.fulfilled, (state, action) => {
-        state.project = action.payload.project;
+        state.project = action.payload;
       })
       .addCase(getProject.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+      })
+      .addCase(getTask.fulfilled, (state, action) => {
+        state.task = action.payload.task;
+      })
+      .addCase(getTask.rejected, (state, action) => {
         state.errorMessage = action.payload;
       });
   },

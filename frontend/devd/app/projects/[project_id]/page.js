@@ -13,14 +13,16 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     console.log(project_id);
-  }, []);
+  }, [project]);
 
   return (
     <div className="flex h-full w-full">
       <SideBar onItemClick={changeViewTo} />
       <div className="w-full">
         {/* <h1 className="text-white"> {`Currently Viewing: ${isViewing}`} </h1> */}
-        {isViewing === "tasks" && <ProjectTasks />}
+        {isViewing === "tasks" && (
+          <ProjectTasks project={project} isLoading={isLoading} />
+        )}
       </div>
     </div>
   );

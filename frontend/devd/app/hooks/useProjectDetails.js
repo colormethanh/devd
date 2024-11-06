@@ -15,7 +15,7 @@ export default function useProjectDetails(project_id) {
     setIsLoading(true);
     try {
       const retrievedProject = await axiosGetProject(project_id);
-      console.log(retrievedProject.payload);
+      return retrievedProject;
     } catch (error) {
       console.error("Failed to fetch projects", error);
     } finally {
@@ -31,7 +31,7 @@ export default function useProjectDetails(project_id) {
 
   useEffect(() => {
     refreshProject(project_id);
-  }, [project, project_id]);
+  }, []);
 
   return { project, isLoading, isViewing, changeViewTo };
 }

@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function TaskDetailPanel({ task }) {
+  useEffect(() => {
+    console.log(task);
+  }, [task]);
+
   return (
     <div className="border-l h-full w-full">
       <div className=" mx-3 h-full flex flex-col justify-around">
         <div className="w-full flex flex-col">
-          <h1 className="text-4xl"> Task name </h1>
+          <h1 className="text-4xl"> {task.name} </h1>
           <hr className="my-2"></hr>
           <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
             <div className="mr-3">
@@ -32,11 +36,7 @@ export default function TaskDetailPanel({ task }) {
         <div>
           <h5 className="text-xl font-bold">Description:</h5>
           <div className="max-h-28 w-1/2 sm:w-full overflow-auto">
-            <p className="text-lg ms-3 overflow-auto">
-              {
-                "ldfad sfdsfasd fdsafdsfsdafsad fdsafsdafsdaf asdfsadsadf asdfasdfasdkjfgdsl;kfj;lsdakf;lkasdl;fk;lsdkaf;lkasd;lfk skdl;fkas';flkas;"
-              }
-            </p>
+            <p className="text-lg ms-3 overflow-auto">{task.description}</p>
           </div>
         </div>
 

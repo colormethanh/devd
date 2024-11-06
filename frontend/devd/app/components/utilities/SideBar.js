@@ -21,8 +21,8 @@ export default function SideBar({ onItemClick }) {
           <Image
             src={"/static/agile-Icon.png"}
             alt="app logo"
-            height={"30"}
-            width={"40"}
+            height={30}
+            width={40}
           />
         </div>
 
@@ -79,8 +79,8 @@ export default function SideBar({ onItemClick }) {
         <Image
           className="transition-all duration-300"
           src={"/static/sidebar-toggle.png"}
-          height={"30"}
-          width={"30"}
+          height={30}
+          width={30}
           alt={"sidebar toggle"}
           style={{ transform: `rotate(${isOpen ? "0" : "180"}deg)` }}
         />

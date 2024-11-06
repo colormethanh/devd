@@ -28,8 +28,8 @@ export default function SideBarItem({
             <Image
               src={hover ? onHoverSrc : src}
               alt={"Components Icon"}
-              height={"20"}
-              width={"25"}
+              height={20}
+              width={25}
             />
           </div>
           <div className="grid place-items-center">{isOpen && children}</div>

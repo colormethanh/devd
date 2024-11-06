@@ -3,7 +3,7 @@ const { Controllers } = require("../../database");
 const StartApp = require("../../app.js");
 
 const UserModel = require("../../models/User");
-const ProjectModel = require("../../models/Project");
+const ProjectModel = require("../../models/Project.js");
 const PageModel = require("../../models/Page");
 const ComponentModel = require("../../models/Components");
 const RefreshTokenModel = require("../../models/RefreshToken.js");

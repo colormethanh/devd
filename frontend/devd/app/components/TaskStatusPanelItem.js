@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-export default function TaskPanelItem({ children, isSelected = false }) {
+export default function TaskPanelItem({ task, isSelected = false }) {
   const [isHover, setIsHover] = useState(false);
 
   const handleMouseEnter = () => {
@@ -11,6 +11,10 @@ export default function TaskPanelItem({ children, isSelected = false }) {
     setIsHover(false);
   };
 
+  useEffect(() => {
+    console.log(task);
+  }, []);
+
   return (
     <div
       onMouseEnter={handleMouseEnter}
@@ -20,9 +24,7 @@ export default function TaskPanelItem({ children, isSelected = false }) {
       } text-md p-1 my-3 flex overflow-hidden`}
     >
       <div className="w-4">{isSelected && ">"}</div>{" "}
-      <p className="w-28 text-nowrap overflow-ellipsis">
-        Task Status Panel Item
-      </p>
+      <p className="w-28 text-nowrap overflow-ellipsis">{task.name}</p>
     </div>
   );
 }

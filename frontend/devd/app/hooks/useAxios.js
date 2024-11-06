@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { signup, login } from "../store/slices/authSlice";
-import { getProject } from "../store/slices/projectSlice";
+import { getProject, getTask } from "../store/slices/projectSlice";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -39,5 +39,21 @@ export default function useAxios() {
     }
   };
 
-  return { axiosLogin, axiosSignup, axiosGetProjects, axiosGetProject };
+  const getTaskDetails = async (task_id) => {
+    try {
+      const response = await dispatch(getTask(task_id));
+      // debugger;
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return {
+    axiosLogin,
+    axiosSignup,
+    axiosGetProjects,
+    axiosGetProject,
+    getTaskDetails,
+  };
 }
