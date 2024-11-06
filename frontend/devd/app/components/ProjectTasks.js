@@ -5,7 +5,8 @@ import TaskDetailPanel from "./TaskDetailPanel";
 import useTasks from "../hooks/useTasks";
 
 export default function ProjectTasks({ project, isLoading }) {
-  const { task, setTask, updateTaskStatus } = useTasks(project);
+  const { task, setTask, updateTaskStatus, updateTaskDescription } =
+    useTasks(project);
   let currentTaskId = task._id || null;
 
   // debugger;
@@ -26,7 +27,11 @@ export default function ProjectTasks({ project, isLoading }) {
           </TasksPanel>
         </div>
         <div className="w-3/4 h-full">
-          <TaskDetailPanel task={task} updateTaskStatus={updateTaskStatus} />
+          <TaskDetailPanel
+            task={task}
+            updateTaskStatus={updateTaskStatus}
+            updateTaskDescription={updateTaskDescription}
+          />
         </div>
       </div>
     </div>

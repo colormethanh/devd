@@ -34,7 +34,6 @@ export const updateTaskInDB = createAsyncThunk(
   "project/updateTask",
   async (params, { rejectWithValue }) => {
     try {
-      debugger;
       const response = await axios.put(
         `${BASE_URL}/projects/${params.project_id}/tasks/${params.task_id}`,
         params.updates,

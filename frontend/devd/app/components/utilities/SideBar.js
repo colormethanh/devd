@@ -4,7 +4,7 @@ import Image from "next/image";
 import SideBarItem from "./SideBarItem";
 
 export default function SideBar({ onItemClick }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggleNav = () => {
     setIsOpen((prev) => !prev);

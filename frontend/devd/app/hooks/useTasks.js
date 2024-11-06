@@ -32,10 +32,23 @@ export default function useTasks(project) {
     }
   };
 
+  const updateTaskDescription = async (task, description) => {
+    try {
+      const updatedTask = await updateTask({
+        project_id: project._id,
+        task_id: task._id,
+        updates: { description: description },
+      });
+      return updatedTask;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     // debugger;
     if (project._id) setTask(project.tasks[0]);
   }, [project]);
 
-  return { task, setTask, updateTaskStatus };
+  return { task, setTask, updateTaskStatus, updateTaskDescription };
 }
