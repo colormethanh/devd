@@ -5,7 +5,9 @@ import TaskDetailPanel from "./TaskDetailPanel";
 import useTasks from "../hooks/useTasks";
 
 export default function ProjectTasks({ project, isLoading }) {
-  const { task } = useTasks(project);
+  const { task, setTask, updateTaskStatus } = useTasks(project);
+  let currentTaskId = task._id || null;
+
   // debugger;
   return (
     <div className="h-4/5 border border-white mr-1 mt-4">
@@ -14,12 +16,17 @@ export default function ProjectTasks({ project, isLoading }) {
           <TasksPanel>
             {project.tasks !== undefined &&
               project.tasks.map((task) => (
-                <TaskPanelItem key={`${task._id}`} task={task} />
+                <TaskPanelItem
+                  key={`${task._id}`}
+                  task={task}
+                  isSelected={task._id === currentTaskId}
+                  clickCallback={() => setTask(task)}
+                />
               ))}
           </TasksPanel>
         </div>
         <div className="w-3/4 h-full">
-          <TaskDetailPanel task={task} />
+          <TaskDetailPanel task={task} updateTaskStatus={updateTaskStatus} />
         </div>
       </div>
     </div>

@@ -52,6 +52,63 @@ const taskRoutes = function (taskController) {
     }
   });
 
+  router.put("/:task_id", async (req, res, next) => {
+    try {
+      const { task_id } = req.params;
+      const project = req.project;
+
+      logger.info({
+        message: `Initiating task update for task ${task_id}`,
+        request_id: req.metadata.request_id,
+      });
+
+      const projectContainsTask = await project.tasks.find(
+        (task) => task._id.toString() === task_id
+      );
+      if (!projectContainsTask)
+        return next(
+          createError(400, `Project does not contain task ${task_id}`)
+        );
+
+      // Todo: add require auth to this route
+
+      // const isAdmin = req.role === "admin";
+      // if (!isAdmin)
+      //   return next(
+      //     createError(403, "Only admin may make changes to project pages")
+      //   );
+
+      // check to see if task exists
+      const originalTask = await taskController.getTask(task_id);
+      if (!originalTask) next(createError(404, "Task could not be found"));
+      if (originalTask instanceof Error) next(originalTask);
+
+      const allowedUpdates = [
+        "name",
+        "description",
+        "status",
+        "relevant_contents",
+      ];
+
+      if (!hasOne(allowedUpdates, req.body))
+        next(createError(400, "Must update at least one property"));
+
+      const updates = fillObjectWithFromBody(
+        allowedUpdates,
+        req.body,
+        originalTask
+      );
+
+      const updatedTask = await taskController.updateTask(task_id, updates);
+      if (!updatedTask) next(createError(500, "error when updating"));
+      if (updatedTask instanceof Error) next(updatedTask);
+
+      return res.send(createResponseObject({ updatedTask }));
+    } catch (err) {
+      next(createError(err.statusCode, err.message));
+    }
+  });
+
   router.post("/", requireAuth, extractRole, async (req, res, next) => {
     try {
       const project_id = req.project_id;

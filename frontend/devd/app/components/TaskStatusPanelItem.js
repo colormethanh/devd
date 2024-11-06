@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-export default function TaskPanelItem({ task, isSelected = false }) {
+export default function TaskPanelItem({
+  task,
+  clickCallback,
+  isSelected = false,
+}) {
   const [isHover, setIsHover] = useState(false);
 
   const handleMouseEnter = () => {
@@ -11,14 +15,15 @@ export default function TaskPanelItem({ task, isSelected = false }) {
     setIsHover(false);
   };
 
-  useEffect(() => {
-    console.log(task);
-  }, []);
+  const handleClick = () => {
+    clickCallback();
+  };
 
   return (
     <div
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseExit}
+      onClick={handleClick}
       className={`${
         isHover || isSelected ? "bg-white text-black" : ""
       } text-md p-1 my-3 flex overflow-hidden`}

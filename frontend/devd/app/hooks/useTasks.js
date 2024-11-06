@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
   // debugger;
-  const { getTaskDetails } = useAxios();
+  const { getTaskDetails, updateTask } = useAxios();
   const task = useSelector((state) => state.project.task);
 
-  const refreshTask = async (task) => {
+  const setTask = async (task) => {
     try {
       const retrievedTask = await getTaskDetails({
         project_id: project._id,
@@ -19,10 +19,23 @@ export default function useTasks(project) {
     }
   };
 
+  const updateTaskStatus = async (task, status) => {
+    try {
+      const updatedTask = await updateTask({
+        project_id: project._id,
+        task_id: task._id,
+        updates: { status: status },
+      });
+      return updatedTask;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     // debugger;
-    if (project._id) refreshTask(project.tasks[0]);
+    if (project._id) setTask(project.tasks[0]);
   }, [project]);
 
-  return { task };
+  return { task, setTask, updateTaskStatus };
 }

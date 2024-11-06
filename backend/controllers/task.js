@@ -46,3 +46,16 @@ exports.postNewTask = async (name, description, project_id) => {
     return createError(err.statusCode, err.message);
   }
 };
+
+exports.updateTask = async (task_id, updates) => {
+  try {
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      task_id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+    return updatedTask;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};

@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 
-export default function TaskDetailPanel({ task }) {
+export default function TaskDetailPanel({ task, updateTaskStatus }) {
+  const [selectedStatus, setSelectedStatus] = useState("backlog");
+
+  const handleStatusChange = (e) => {
+    debugger;
+    updateTaskStatus(task, e.target.value);
+  };
+
   useEffect(() => {
     console.log(task);
+    setSelectedStatus(task.status);
   }, [task]);
 
   return (
@@ -17,10 +25,12 @@ export default function TaskDetailPanel({ task }) {
                 id="status"
                 name="status"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs text-xs"
+                value={selectedStatus}
+                onChange={handleStatusChange}
               >
-                <option>Backlog</option>
-                <option>In progress</option>
-                <option>Done</option>
+                <option value={"backlog"}>Backlog</option>
+                <option value={"inProgress"}>In progress</option>
+                <option value={"done"}>Done</option>
               </select>
             </div>
             <div className="border-l border-white mr-3"></div>

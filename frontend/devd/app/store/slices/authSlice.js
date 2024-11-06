@@ -26,9 +26,6 @@ export const login = createAsyncThunk(
       const response = await axios.post(`${BASE_URL}/auth/login`, formProps, {
         withCredentials: true,
       });
-
-      // todo: remove
-      !isServer && localStorage.setItem("token", response.data.payload.token);
       return response.data.payload;
     } catch (err) {
       return rejectWithValue(err);

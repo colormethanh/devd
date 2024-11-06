@@ -30,6 +30,23 @@ export const getTask = createAsyncThunk(
   }
 );
 
+export const updateTaskInDB = createAsyncThunk(
+  "project/updateTask",
+  async (params, { rejectWithValue }) => {
+    try {
+      debugger;
+      const response = await axios.put(
+        `${BASE_URL}/projects/${params.project_id}/tasks/${params.task_id}`,
+        params.updates,
+        { withCredentials: true }
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState: {
@@ -52,6 +69,12 @@ const projectSlice = createSlice({
         state.task = action.payload.task;
       })
       .addCase(getTask.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+      })
+      .addCase(updateTaskInDB.fulfilled, (state, action) => {
+        state.task = action.payload.updatedTask;
+      })
+      .addCase(updateTaskInDB.rejected, (state, action) => {
         state.errorMessage = action.payload;
       });
   },

@@ -1,6 +1,10 @@
 import { useDispatch } from "react-redux";
 import { signup, login } from "../store/slices/authSlice";
-import { getProject, getTask } from "../store/slices/projectSlice";
+import {
+  getProject,
+  getTask,
+  updateTaskInDB,
+} from "../store/slices/projectSlice";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -39,10 +43,21 @@ export default function useAxios() {
     }
   };
 
-  const getTaskDetails = async (task_id) => {
+  const getTaskDetails = async (params) => {
     try {
-      const response = await dispatch(getTask(task_id));
+      const response = dispatch(getTask(params));
       // debugger;
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updateTask = async ({ task_id, project_id, updates }) => {
+    try {
+      const response = dispatch(
+        updateTaskInDB({ task_id, project_id, updates })
+      );
       return response;
     } catch (err) {
       console.log(err);
@@ -55,5 +70,6 @@ export default function useAxios() {
     axiosGetProjects,
     axiosGetProject,
     getTaskDetails,
+    updateTask,
   };
 }

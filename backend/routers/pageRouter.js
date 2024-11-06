@@ -205,7 +205,7 @@ const pageRoutes = function (pageController) {
         originalPage
       );
 
-      const updatedPage = pageController.updatePage(page_id, updates);
+      const updatedPage = await pageController.updatePage(page_id, updates);
 
       if (!updatedPage) next(createError(500, "error when updating"));
       if (updatedPage instanceof Error) next(updatedPage);
