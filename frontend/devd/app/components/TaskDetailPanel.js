@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DescriptionContainer from "./DescriptionContainer";
+import useHelpers from "../hooks/useHelpers";
+import TaskUtilitiesDropdown from "./TaskUtilitiesDropdown";
 
 export default function TaskDetailPanel({
   task,
@@ -8,6 +10,7 @@ export default function TaskDetailPanel({
 }) {
   const [selectedStatus, setSelectedStatus] = useState("backlog");
   const [description, setDescription] = useState("");
+  const { formatDate } = useHelpers();
 
   const handleStatusChange = (e) => {
     updateTaskStatus(task, e.target.value);
@@ -30,12 +33,23 @@ export default function TaskDetailPanel({
           <h1 className="text-4xl"> {task.name} </h1>
           <hr className="my-2"></hr>
           <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
+            {/* Posted date */}
+            <div className="mr-3 ">
+              <div className="flex flex-col sm:flex-row">
+                <span className="text-s">
+                  {" "}
+                  Created: {formatDate(task.date_created)}{" "}
+                </span>
+              </div>
+            </div>
+            <div className="border-l border-white mr-3"></div>
+
             {/* Task status */}
             <div className="mr-3 ">
               <select
                 id="status"
                 name="status"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs text-xs hover:cursor-pointer"
+                className="block w-full border border-black hover:border-white py-1.5 bg-black text-white focus:outline-none focus:ring-0 focus:ring-inset focus:ring-gray-500 sm:max-w-xs text-xs hover:cursor-pointer"
                 value={selectedStatus}
                 onChange={handleStatusChange}
               >
@@ -44,14 +58,12 @@ export default function TaskDetailPanel({
                 <option value={"done"}>Done</option>
               </select>
             </div>
+
             <div className="border-l border-white mr-3"></div>
 
-            {/* Completion date */}
-            <div className="mr-3 ">
-              <div className="flex flex-col sm:flex-row">
-                <h5 className="text-s"> Complete By:</h5>
-                <input className="text-black sm:ml-3" type="date" />{" "}
-              </div>
+            {/* options dropdown */}
+            <div>
+              <TaskUtilitiesDropdown />
             </div>
           </div>
         </div>
@@ -59,7 +71,7 @@ export default function TaskDetailPanel({
         {/* Task Description */}
         <DescriptionContainer
           description={description}
-          classString={"h-28 w-1/2 sm:w-full overflow-auto"}
+          classString={"h-36 w-1/2 sm:w-full overflow-auto"}
           updateCallback={handleDescriptionUpdate}
         />
 

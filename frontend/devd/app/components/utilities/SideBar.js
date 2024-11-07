@@ -15,7 +15,7 @@ export default function SideBar({ onItemClick }) {
       <div
         className={`${
           isOpen ? "w-60" : "w-20"
-        } flex flex-col items-center h-full border border-white transition-all duration-200 `}
+        } flex flex-col items-center h-full border-l border-r border-b border-white transition-all duration-200 `}
       >
         <div className="border border-white h-10 w-full text-center flex justify-center">
           <Image

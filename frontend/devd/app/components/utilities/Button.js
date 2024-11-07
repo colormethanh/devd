@@ -19,11 +19,12 @@ export default function Button({
       }}
       className={`bg-[#000000] 
         text-white border 
-        border-white p-3 
+        border-white 
         hover:bg-white 
         hover:text-black 
         focus:outline-black 
         w-48 
+        p-3
         ${addStyle}`}
     >
       <div className="w-full flex flex-row justify-between">

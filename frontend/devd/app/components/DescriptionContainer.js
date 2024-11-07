@@ -32,14 +32,14 @@ export default function DescriptionContainer({
           <div>
             <textarea
               ref={textAreaRef}
-              className="bg-black w-full border border-gray-500 focus:outline-none focus:ring-0 resize-none"
+              className="bg-black w-full border border-gray-500 focus:outline-none focus:ring-0 resize-none px-3  text-lg"
               name="description-textarea"
               rows={"3"}
               defaultValue={description}
             />
             <div className="flex justify-end">
               <Button
-                addStyle="p-0 mr-3"
+                addStyle={"py-0 mr-3"}
                 clickCallback={() => {
                   setIsEdit(false);
                 }}
@@ -47,7 +47,7 @@ export default function DescriptionContainer({
                 {" "}
                 cancel{" "}
               </Button>
-              <Button addStyle="p-0" clickCallback={handleDescriptionUpdate}>
+              <Button addStyle={"py-0"} clickCallback={handleDescriptionUpdate}>
                 {" "}
                 Submit{" "}
               </Button>
