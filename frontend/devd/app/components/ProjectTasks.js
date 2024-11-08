@@ -1,12 +1,10 @@
 import TasksPanel from "./TasksPanel";
-import TaskPanelItem from "./TaskStatusPanelItem";
 import TaskDetailPanel from "./TaskDetailPanel";
 import useTasks from "../hooks/useTasks";
-import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddTaskPanel from "./AddTaskPanel";
 
-export default function ProjectTasks({ project, isLoading }) {
+export default function ProjectTasks({ project }) {
   const [isAddTaskView, setIsAddTaskView] = useState(false);
 
   const {
@@ -24,9 +22,19 @@ export default function ProjectTasks({ project, isLoading }) {
     setIsAddTaskView((prev) => !prev);
   };
 
+  useEffect(() => {
+    if (project.tasks) {
+      if (project.tasks.length === 0) {
+        setIsAddTaskView(true);
+      } else {
+        setIsAddTaskView(false);
+      }
+    }
+  }, [project]);
+
   // debugger;
   return (
-    <div className="h-4/5 border border-white mr-1 mt-4">
+    <div className="h-5/6 border border-white mr-1 mt-4">
       <div className="flex h-full">
         <div className="flex flex-col w-1/6 h-full">
           <div className="flex w-full justify-end p-1 h-8 border-b border-gray-500">

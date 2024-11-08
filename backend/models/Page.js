@@ -17,7 +17,7 @@ pageSchema = new Schema({
   project: { type: Schema.Types.ObjectId, ref: "Project", required: true },
   features: [{ type: String }],
   components: [{ type: Schema.Types.ObjectId, ref: "Component" }],
-  images: [{ type: String }],
+  images: [{ title: { type: String }, url: { type: String } }],
   visibility: { type: String, enum: ["private", "public"], required: true },
 });
 

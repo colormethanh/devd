@@ -1,6 +1,10 @@
+"use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
+
   return (
     <nav className="bg-black border-b border-white p-4 mr-1">
       <div className="container mx-auto flex items-center justify-center">
@@ -8,30 +12,38 @@ export default function Navbar() {
           <div className="text-center">Devd</div>
 
           <div className="md:flex text-xs">
-            <a
-              href="#home"
-              className="text-white mx-3 hover:underline underline-offset-4"
+            <div
+              onClick={() => {
+                router.push("/");
+              }}
+              className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
             >
               Home
-            </a>
-            <a
-              href="#about"
-              className="text-white mx-3 hover:underline underline-offset-4"
+            </div>
+            <div
+              onClick={() => {
+                router.push("/auth");
+              }}
+              className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
             >
-              About
-            </a>
-            <a
-              href="#services"
-              className="text-white mx-3 hover:underline underline-offset-4"
+              Login
+            </div>
+            <div
+              onClick={() => {
+                router.push("/auth/signup");
+              }}
+              className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
             >
-              Services
-            </a>
-            <a
-              href="#contact"
-              className="text-white mx-3 hover:underline underline-offset-4"
+              Signup
+            </div>
+            <div
+              onClick={() => {
+                router.push("/");
+              }}
+              className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
             >
               Contact
-            </a>
+            </div>
           </div>
         </div>
       </div>

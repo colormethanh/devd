@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import SideBarItem from "./SideBarItem";
 
-export default function SideBar({ onItemClick }) {
+export default function SideBar({ onItemClick, isViewing }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNav = () => {
@@ -14,10 +14,10 @@ export default function SideBar({ onItemClick }) {
     <div className={`flex h-full bg-black text-white`}>
       <div
         className={`${
-          isOpen ? "w-60" : "w-20"
-        } flex flex-col items-center h-full border-l border-r border-b border-white transition-all duration-200 `}
+          isOpen ? "w-60" : "w-14"
+        } flex flex-col items-center h-full border-r transition-all duration-200 `}
       >
-        <div className="border border-white h-10 w-full text-center flex justify-center">
+        <div className="border-b border-white h-10 w-full text-center flex justify-center">
           <Image
             src={"/static/agile-Icon.png"}
             alt="app logo"
@@ -34,6 +34,7 @@ export default function SideBar({ onItemClick }) {
               onItemClick("tasks");
             }}
             isOpen={isOpen}
+            isSelected={isViewing === "tasks"}
           >
             Tasks
           </SideBarItem>
@@ -44,6 +45,7 @@ export default function SideBar({ onItemClick }) {
               onItemClick("pages");
             }}
             isOpen={isOpen}
+            isSelected={isViewing === "pages"}
           >
             Pages
           </SideBarItem>
@@ -54,6 +56,7 @@ export default function SideBar({ onItemClick }) {
               onItemClick("components");
             }}
             isOpen={isOpen}
+            isSelected={isViewing === "components"}
           >
             Components
           </SideBarItem>
@@ -64,6 +67,7 @@ export default function SideBar({ onItemClick }) {
               onItemClick("team");
             }}
             isOpen={isOpen}
+            isSelected={isViewing === "team"}
           >
             Team
           </SideBarItem>

@@ -4,6 +4,7 @@ import {
   getProject,
   getTask,
   updateTaskInDB,
+  getPage,
 } from "../store/slices/projectSlice";
 import axios from "axios";
 
@@ -80,6 +81,15 @@ export default function useAxios() {
     }
   };
 
+  const getPageDetails = async ({ project_id, task_id }) => {
+    try {
+      const response = dispatch(getPage({ project_id, task_id }));
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return {
     axiosLogin,
     axiosSignup,
@@ -88,5 +98,6 @@ export default function useAxios() {
     getTaskDetails,
     updateTask,
     postTask,
+    getPageDetails,
   };
 }

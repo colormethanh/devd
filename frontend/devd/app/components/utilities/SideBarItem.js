@@ -8,6 +8,7 @@ export default function SideBarItem({
   isOpen,
   children,
   onClickCallback,
+  isSelected,
 }) {
   const [hover, setHover] = useState(false);
 
@@ -22,7 +23,7 @@ export default function SideBarItem({
   return (
     <li onMouseEnter={handleHover} onMouseLeave={handleExit}>
       <Button
-        addStyle="w-full border-l-0 border-r-0"
+        addStyle={`w-full  ${isSelected ? "border" : "border-0"}`}
         clickCallback={onClickCallback}
       >
         <div className={`flex flex-row ${!isOpen && "justify-center"}`}>

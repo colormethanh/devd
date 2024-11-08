@@ -46,6 +46,20 @@ export const updateTaskInDB = createAsyncThunk(
   }
 );
 
+export const getPage = createAsyncThunk(
+  "project/getPage",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}`
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState: {
@@ -74,6 +88,12 @@ const projectSlice = createSlice({
         state.task = action.payload.updatedTask;
       })
       .addCase(updateTaskInDB.rejected, (state, action) => {
+        state.errorMessage = action.payload;
+      })
+      .addCase(getPage.fulfilled, (state, action) => {
+        state.page = action.payload.page;
+      })
+      .addCase(getPage.rejected, (state, action) => {
         state.errorMessage = action.payload;
       });
   },

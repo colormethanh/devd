@@ -6,7 +6,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col h-full w-100 text-center justify-center">
+    <div className="flex flex-col h-2/3 w-100 text-center justify-center">
       <div className="">
         <p> An app for all things... </p>
         <h1 className="text-6xl font-bold"> Devd </h1>

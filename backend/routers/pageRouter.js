@@ -5,6 +5,7 @@ const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
 const logger = require("../utils/logging/logger");
 const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
+const upload = require("../services/cloudinary");
 
 const pageRoutes = function (pageController) {
   const router = express.Router();
@@ -193,7 +194,6 @@ const pageRoutes = function (pageController) {
         );
 
       // checking the request body
-
       const allowedUpdates = ["name", "description", "features", "visibility"];
 
       if (!hasOne(allowedUpdates, req.body))
@@ -215,6 +215,78 @@ const pageRoutes = function (pageController) {
       next(createError(err.statusCode, err.message));
     }
   });
+
+  router.put(
+    "/:page_id/image",
+    requireAuth,
+    extractRole,
+    upload.single("image"),
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "initiating check for page update",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { page_id } = req.params;
+        const project = req.project;
+
+        // check to see if page exists
+        const originalPage = await pageController.getPage(page_id);
+        if (!originalPage) next(createError(404, "page could not be found"));
+        if (originalPage instanceof Error) next(originalPage);
+
+        // check to see if project contains page id
+        const projectContainsPage = await project.pages.find(
+          (page) => page._id.toString() === page_id
+        );
+        if (!projectContainsPage)
+          next(createError(400, `Project does not contain page ${page_id}`));
+
+        // check to see if user is authorized to modify page
+        const isAdmin = req.role === "admin";
+        if (!isAdmin)
+          return next(
+            createError(403, "Only admin may make changes to project pages")
+          );
+
+        // check that there is an image in req.file.path
+        const image_url = req.file.path;
+        if (!image_url)
+          next(createError(500, "there was an error uploading the image"));
+
+        // check there is an image title field in body
+        const image_title = req.body.title;
+        if (!image_title) next(createError(400, "Must provide image title"));
+
+        // create the updates object {title: "image title", url: "cloudinary url"}
+
+        const updatedImagesArray = [
+          ...originalPage.images,
+          { title: image_title, url: image_url },
+        ];
+
+        const updates = { images: updatedImagesArray };
+
+        // update the the page and return page
+        // const updates = fillObjectWithFromBody(
+        //   ["images"],
+        //   updateObject,
+        //   originalPage
+        // );
+
+        const updatedPage = await pageController.updatePage(page_id, updates);
+
+        if (!updatedPage) next(createError(500, "error when updating"));
+        if (updatedPage instanceof Error) next(updatedPage);
+
+        return res.send(createResponseObject({ updatedPage }));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
 
   // delete a page
   router.delete(
