@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import usePages from "../hooks/usePages";
 import ListPanel from "./utilities/ListPanel";
 
-export default function ProjectPages({ project }) {
+export default function ProjectPages({ project, accessToken }) {
   const [isAddPageView, setIsAddTaskView] = useState(false);
-  const { page, setPage } = usePages(project);
+  const { page, setPage } = usePages(project, accessToken);
   const currentPageId = page._id || null;
 
   return (

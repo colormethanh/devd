@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
-export default function usePages(project) {
+export default function usePages(project, accessToken) {
   const { getPageDetails } = useAxios();
 
   const page = useSelector((state) => state.project.page);
@@ -12,6 +12,7 @@ export default function usePages(project) {
       const retrievedPage = await getPageDetails({
         project_id: project._id,
         page_id: page._id,
+        access_token: accessToken,
       });
       return retrievedPage;
     } catch (err) {
@@ -20,7 +21,7 @@ export default function usePages(project) {
   };
 
   useEffect(() => {
-    if (project._id) setPage(project.tasks[0]);
+    if (project._id) setPage(project.pages[0]);
   }, [project]);
 
   return { page, setPage };

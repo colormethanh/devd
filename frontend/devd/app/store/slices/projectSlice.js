@@ -51,7 +51,12 @@ export const getPage = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}`
+        `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
       );
       return response.data.payload;
     } catch (err) {

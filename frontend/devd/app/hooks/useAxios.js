@@ -81,9 +81,9 @@ export default function useAxios() {
     }
   };
 
-  const getPageDetails = async ({ project_id, task_id }) => {
+  const getPageDetails = async ({ project_id, page_id, access_token }) => {
     try {
-      const response = dispatch(getPage({ project_id, task_id }));
+      const response = dispatch(getPage({ project_id, page_id, access_token }));
       return response;
     } catch (err) {
       console.log(err);
