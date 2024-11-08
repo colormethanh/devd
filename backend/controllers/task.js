@@ -42,6 +42,8 @@ exports.postNewTask = async (name, description, project_id) => {
 
     project.tasks.push(newTask._id);
     await project.save();
+
+    return newTask;
   } catch (err) {
     return createError(err.statusCode, err.message);
   }

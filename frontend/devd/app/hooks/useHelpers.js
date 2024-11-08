@@ -7,5 +7,9 @@ export default function useHelpers() {
     return date.toDateString();
   };
 
-  return { formatDate };
+  const ellipsifyString = (string, length) => {
+    return `${string.slice(0, length - 1)}...`;
+  };
+
+  return { formatDate, ellipsifyString };
 }

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
   // debugger;
-  const { getTaskDetails, updateTask } = useAxios();
+  const { getTaskDetails, updateTask, postTask } = useAxios();
   const task = useSelector((state) => state.project.task);
 
   const setTask = async (task) => {
@@ -45,10 +45,25 @@ export default function useTasks(project) {
     }
   };
 
+  const postNewTask = async (project_id, formData) => {
+    try {
+      const newTask = await postTask(project_id, formData);
+      return newTask;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     // debugger;
     if (project._id) setTask(project.tasks[0]);
   }, [project]);
 
-  return { task, setTask, updateTaskStatus, updateTaskDescription };
+  return {
+    task,
+    setTask,
+    updateTaskStatus,
+    updateTaskDescription,
+    postNewTask,
+  };
 }

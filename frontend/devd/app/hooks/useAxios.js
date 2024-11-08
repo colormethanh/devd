@@ -64,6 +64,22 @@ export default function useAxios() {
     }
   };
 
+  const postTask = async (project_id, formData) => {
+    try {
+      // post task
+      await axios.post(`${BASE_URL}/projects/${project_id}/tasks`, formData, {
+        withCredentials: true,
+      });
+
+      // update project to contain task
+      const response = dispatch(getProject(project_id));
+
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return {
     axiosLogin,
     axiosSignup,
@@ -71,5 +87,6 @@ export default function useAxios() {
     axiosGetProject,
     getTaskDetails,
     updateTask,
+    postTask,
   };
 }

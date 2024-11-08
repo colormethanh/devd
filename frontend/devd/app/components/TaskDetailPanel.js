@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import DescriptionContainer from "./DescriptionContainer";
 import useHelpers from "../hooks/useHelpers";
 import TaskUtilitiesDropdown from "./TaskUtilitiesDropdown";
+import Button from "./utilities/Button";
+import RelevantContentsItem from "./RelevantContentsItem";
+import RelevantContentsContainer from "./RelevantContentsContainer";
 
 export default function TaskDetailPanel({
   task,
@@ -31,7 +34,7 @@ export default function TaskDetailPanel({
       <div className=" mx-3 h-full flex flex-col justify-around">
         <div className="w-full flex flex-col">
           <h1 className="text-4xl"> {task.name} </h1>
-          <hr className="my-2"></hr>
+          <hr className="my-2 "></hr>
           <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
             {/* Posted date */}
             <div className="mr-3 ">
@@ -62,28 +65,23 @@ export default function TaskDetailPanel({
             <div className="border-l border-white mr-3"></div>
 
             {/* options dropdown */}
-            <div>
-              <TaskUtilitiesDropdown />
-            </div>
+
+            <TaskUtilitiesDropdown />
           </div>
         </div>
 
         {/* Task Description */}
         <DescriptionContainer
           description={description}
-          classString={"h-36 w-1/2 sm:w-full overflow-auto"}
+          classString={"h-1/3"}
           updateCallback={handleDescriptionUpdate}
         />
 
+        <div className="border-b border-gray-500 mr-3 w-full"></div>
+
         {/* Relevant contents */}
         <div className="flex flex-col h-2/5">
-          <h5 className="text-xl font-bold"> Relevant contents:</h5>
-          <div className="w-1/3 h-full border overflow-auto border-gray-500">
-            <p> Blah </p>
-            <p> Blah </p>
-            <p> Blah </p>
-            <p> Blah </p>
-          </div>
+          <RelevantContentsContainer contents={""} />
         </div>
       </div>
     </div>

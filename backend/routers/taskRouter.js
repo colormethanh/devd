@@ -109,21 +109,22 @@ const taskRoutes = function (taskController) {
     }
   });
 
-  router.post("/", requireAuth, extractRole, async (req, res, next) => {
+  router.post("/", async (req, res, next) => {
     try {
       const project_id = req.project_id;
       if (!project_id) return next(createError(400, "project_id is required"));
 
-      const user = req.user;
-      if (!user) return next(createError(401));
+      // const user = req.user;
+      // if (!user) return next(createError(401));
 
       console.log(req.body);
       const { name, description } = req.body;
 
-      const isOwner = req.role === "admin";
+      // todo: Add require auth
+      // const isOwner = req.role === "admin";
 
-      if (!isOwner)
-        return next(createError(403, "admin rights required to make changes"));
+      // if (!isOwner)
+      //   return next(createError(403, "admin rights required to make changes"));
 
       logger.info({
         message: "attempting to post new page to DB",

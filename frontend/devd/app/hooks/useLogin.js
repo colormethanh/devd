@@ -11,15 +11,13 @@ export default function useLogin() {
   const [loginFormData, setLoginFormData] = useState(defaultFormData);
   const { axiosLogin } = useAxios();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     try {
       console.log("Submitting Form: ");
       console.log(loginFormData);
 
       // send login info
       const response = await axiosLogin(loginFormData);
-      debugger;
 
       // set response as cookie
       console.log("Login success!");

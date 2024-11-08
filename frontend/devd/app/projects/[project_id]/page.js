@@ -6,14 +6,9 @@ import SideBar from "@/app/components/utilities/SideBar";
 import ProjectTasks from "@/app/components/ProjectTasks";
 
 export default function ProjectDetails() {
-  const router = useRouter();
   const { project_id } = useParams();
   const { project, isLoading, isViewing, changeViewTo } =
     useProjectDetails(project_id);
-
-  useEffect(() => {
-    console.log(project_id);
-  }, [project]);
 
   return (
     <div className="flex h-full w-full">

@@ -25,9 +25,9 @@ export default function DescriptionContainer({
   }, [description]);
 
   return (
-    <div>
+    <div className={`${classString}`}>
       <h5 className="text-xl font-bold">Description: </h5>
-      <div className={` ${classString}`}>
+      <div className={`sm:w-full overflow-auto`}>
         {isEdit ? (
           <div>
             <textarea
