@@ -28,7 +28,7 @@ export default function ProjectDetails() {
       {needsLogin === true ? (
         <div className="w-full"> Please login to continue </div>
       ) : (
-        <div className="w-full">
+        <div className="w-full overflow-hidden">
           {isViewing === "tasks" && <ProjectTasks project={project} />}
 
           {isViewing === "pages" && (

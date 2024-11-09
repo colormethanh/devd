@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
 import { getProject } from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
-import { getPage } from "../store/slices/pageSlice";
+import { getPage, updatePageInDB } from "../store/slices/pageSlice";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -83,6 +83,17 @@ export default function useAxios() {
     }
   };
 
+  const updatePage = async ({ page_id, project_id, updates, access_token }) => {
+    try {
+      const response = dispatch(
+        updatePageInDB({ page_id, project_id, access_token, updates })
+      );
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getPageDetails = async ({ project_id, page_id, access_token }) => {
     try {
       const response = dispatch(getPage({ project_id, page_id, access_token }));
@@ -102,5 +113,6 @@ export default function useAxios() {
     updateTask,
     postTask,
     getPageDetails,
+    updatePage,
   };
 }

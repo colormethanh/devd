@@ -181,7 +181,7 @@ const pageRoutes = function (pageController) {
 
       // check to see if project contains page id
       const projectContainsPage = await project.pages.find(
-        (page) => page.toString() === page_id
+        (page) => page._id.toString() === page_id
       );
       if (!projectContainsPage)
         next(createError(400, `Project does not contain page ${page_id}`));

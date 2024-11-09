@@ -4,11 +4,31 @@ import axios from "axios";
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getPage = createAsyncThunk(
-  "project/getPage",
+  "page/getPage",
   async (params, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
+export const updatePageInDB = createAsyncThunk(
+  "page/updatePage",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/projects/${[params.project_id]}/pages/${params.page_id}`,
+        params.updates,
         {
           headers: {
             Authorization: `Bearer ${params.access_token}`,
@@ -40,6 +60,17 @@ const pageSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getPage.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updatePageInDB.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updatePageInDB.fulfilled, (state, action) => {
+        state.page = action.payload.updatedPage;
+        state.isLoading = false;
+      })
+      .addCase(updatePageInDB.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
       });
