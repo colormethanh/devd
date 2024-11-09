@@ -11,7 +11,7 @@ export const getProject = createAsyncThunk(
       const response = await axios.get(`${BASE_URL}/projects/${project_id}`);
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue({ status: err.status, message: err.message });
     }
   }
 );
@@ -21,11 +21,16 @@ export const getTask = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/projects/${params.project_id}/tasks/${params.task_id}`
+        `${BASE_URL}/projects/${params.project_id}/tasks/${params.task_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
       );
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue({ status: err.status, message: err.message });
     }
   }
 );
@@ -41,7 +46,7 @@ export const updateTaskInDB = createAsyncThunk(
       );
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue({ status: err.status, message: err.message });
     }
   }
 );
@@ -60,7 +65,7 @@ export const getPage = createAsyncThunk(
       );
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue({ status: err.status, message: err.message });
     }
   }
 );
@@ -69,7 +74,7 @@ const projectSlice = createSlice({
   name: "project",
   initialState: {
     project: {},
-    error: "",
+    error: {},
     component: {},
     page: {},
     task: {},
@@ -81,25 +86,25 @@ const projectSlice = createSlice({
         state.project = action.payload;
       })
       .addCase(getProject.rejected, (state, action) => {
-        state.errorMessage = action.payload.message;
+        state.error = action.payload;
       })
       .addCase(getTask.fulfilled, (state, action) => {
         state.task = action.payload.task;
       })
       .addCase(getTask.rejected, (state, action) => {
-        state.errorMessage = action.payload.message;
+        state.error = action.payload;
       })
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
         state.task = action.payload.updatedTask;
       })
       .addCase(updateTaskInDB.rejected, (state, action) => {
-        state.errorMessage = action.payload.message;
+        state.errorMessage = action.payload;
       })
       .addCase(getPage.fulfilled, (state, action) => {
         state.page = action.payload.page;
       })
       .addCase(getPage.rejected, (state, action) => {
-        state.errorMessage = action.payload.message;
+        state.error = action.payload;
       });
   },
 });

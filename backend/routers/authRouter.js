@@ -90,7 +90,7 @@ const authRoutes = function (
   });
 
   router.post("/refresh-token", async (req, res, next) => {
-    console.log(req.cookies);
+    // console.log(req.cookies);
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
@@ -115,10 +115,13 @@ const authRoutes = function (
 
       if (!userInDB) return next(401, "invalid user ID");
 
-      const accessToken = tokenForUser(refreshToken);
+      const accessToken = tokenForUser(userInDB);
 
       return res.send(
-        createResponseObject({ accessToken }, "successfully refreshed token")
+        createResponseObject(
+          { accessToken, user_id: userInDB._id },
+          "successfully refreshed token"
+        )
       );
     } catch (err) {
       return next(err.statusCode, err.message);

@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { signup, login } from "../store/slices/authSlice";
+import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
 import {
   getProject,
   getTask,
@@ -20,6 +20,11 @@ export default function useAxios() {
 
   const axiosSignup = async (formData) => {
     const response = dispatch(signup(formData));
+    return response;
+  };
+
+  const refreshToken = async () => {
+    const response = dispatch(refreshAccessToken());
     return response;
   };
 
@@ -46,8 +51,8 @@ export default function useAxios() {
 
   const getTaskDetails = async (params) => {
     try {
-      const response = dispatch(getTask(params));
       // debugger;
+      const response = dispatch(getTask(params));
       return response;
     } catch (err) {
       console.log(err);
@@ -93,6 +98,7 @@ export default function useAxios() {
   return {
     axiosLogin,
     axiosSignup,
+    refreshToken,
     axiosGetProjects,
     axiosGetProject,
     getTaskDetails,

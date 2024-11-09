@@ -114,8 +114,8 @@ const taskRoutes = function (taskController) {
       const project_id = req.project_id;
       if (!project_id) return next(createError(400, "project_id is required"));
 
-      // const user = req.user;
-      // if (!user) return next(createError(401));
+      const user = req.user;
+      if (!user) return next(createError(401));
 
       console.log(req.body);
       const { name, description } = req.body;

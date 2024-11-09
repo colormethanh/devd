@@ -1,9 +1,19 @@
 "use client";
 import Button from "./components/utilities/Button";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import useAuth from "./hooks/useAuth";
 
 export default function Home() {
   const router = useRouter();
+  const { accessToken, checkAndRefreshToken } = useAuth();
+
+  useEffect(() => {
+    if (accessToken !== undefined) {
+      checkAndRefreshToken(accessToken);
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-2/3 w-100 text-center justify-center">
