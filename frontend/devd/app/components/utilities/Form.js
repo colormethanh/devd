@@ -1,16 +1,31 @@
 import React from "react";
-import Button from "./Button";
 
 export default function Form({ onSubmit, title, children }) {
   return (
     <div className="min-h-80 w-full flex justify-center text-white ">
-      <form className="bg-black p-4 w-full space-y-6" onSubmit={onSubmit}>
+      <form
+        className="bg-black p-4 w-full space-y-6"
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+      >
         <h1 className="text-2xl text-white font-bold">{title}</h1>
         {children}
         <div className="w-full flex justify-end">
-          <Button type="submit" clickCallback={onSubmit} addStyle=" py-0">
+          <button
+            className="bg-[#000000] 
+                text-white border 
+                border-white 
+                hover:bg-white 
+                hover:text-black 
+                focus:outline-black 
+                w-48 
+                p-3 py-0"
+            type="submit"
+          >
             Submit
-          </Button>
+          </button>
         </div>
       </form>
     </div>

@@ -3,7 +3,6 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
-  // debugger;
   const { getTaskDetails, updateTask, postTask } = useAxios();
   const task = useSelector((state) => state.project.task);
 

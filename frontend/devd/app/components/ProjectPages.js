@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import usePages from "../hooks/usePages";
 import ListPanel from "./utilities/ListPanel";
+import PageDetailsPanel from "./PageDetailsPanel";
 
 export default function ProjectPages({ project, accessToken }) {
   const [isAddPageView, setIsAddTaskView] = useState(false);
@@ -8,7 +9,7 @@ export default function ProjectPages({ project, accessToken }) {
   const currentPageId = page._id || null;
 
   return (
-    <div className={"h-5/6 border border-white mr-1 mt-4"}>
+    <div className="h-5/6 border border-white mr-1 mt-4">
       <div className="flex h-full">
         <div className="flex flex-col w-1/6 h-full">
           <div className="flex w-full justify-end p-1 h-8 border-b border-gray-500">
@@ -27,6 +28,9 @@ export default function ProjectPages({ project, accessToken }) {
             setIsAddItemView={setIsAddTaskView}
             itemName={"pages"}
           />
+        </div>
+        <div className="w-5/6 h-full">
+          <PageDetailsPanel page={page} />
         </div>
       </div>
     </div>

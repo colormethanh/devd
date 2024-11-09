@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Form from "./utilities/Form";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm({ formData, setFormData, handleSubmit }) {
   const handleInputChange = (e) => {
@@ -9,41 +10,43 @@ export default function LoginForm({ formData, setFormData, handleSubmit }) {
   };
 
   return (
-    <Form onSubmit={handleSubmit} title={"Sign In"}>
-      <div>
-        <label
-          htmlFor="username"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Username
-        </label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          value={formData["username"]}
-          onChange={handleInputChange}
-          required
-          className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
-        >
-          password
-        </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          value={formData["password"]}
-          onChange={handleInputChange}
-          required
-          className="mt-1 w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-    </Form>
+    <div className="w-1/2">
+      <Form onSubmit={handleSubmit} title={"Sign In"}>
+        <div>
+          <label
+            htmlFor="username"
+            className="block text-sm font-medium text-gray-300"
+          >
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData["username"]}
+            onChange={handleInputChange}
+            required
+            className="mt-1 w-full p-2 border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-300"
+          >
+            password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData["password"]}
+            onChange={handleInputChange}
+            required
+            className="mt-1 w-full p-2 border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
+          />
+        </div>
+      </Form>
+    </div>
   );
 }

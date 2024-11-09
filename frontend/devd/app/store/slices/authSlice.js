@@ -48,14 +48,14 @@ const authSlice = createSlice({
         state.user_id = action.payload.user_id;
       })
       .addCase(signup.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload.message;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.token = action.payload.accessToken;
         state.user_id = action.payload.user_id;
       })
       .addCase(login.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload.message;
       });
   },
 });

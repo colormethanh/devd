@@ -6,7 +6,7 @@ export default function AuthPage() {
   const { loginFormData, setLoginFormData, handleLogin } = useLogin();
 
   return (
-    <div className="p-1">
+    <div className="p-1 w-full flex justify-center">
       <LoginForm
         formData={loginFormData}
         setFormData={setLoginFormData}

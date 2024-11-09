@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import DescriptionContainer from "./DescriptionContainer";
 import useHelpers from "../hooks/useHelpers";
 import TaskUtilitiesDropdown from "./TaskUtilitiesDropdown";
-import Button from "./utilities/Button";
-import RelevantContentsItem from "./RelevantContentsItem";
 import RelevantContentsContainer from "./RelevantContentsContainer";
 
 export default function TaskDetailPanel({
@@ -24,14 +22,13 @@ export default function TaskDetailPanel({
   };
 
   useEffect(() => {
-    console.log(task);
     setSelectedStatus(task.status);
     setDescription(task.description);
   }, [task]);
 
   return (
     <div className="border-l h-full w-full">
-      <div className=" mx-3 h-full flex flex-col justify-around">
+      <div className="mx-3 h-full flex flex-col justify-around">
         <div className="w-full flex flex-col">
           <h1 className="text-4xl"> {task.name} </h1>
           <hr className="my-2 "></hr>
@@ -65,7 +62,6 @@ export default function TaskDetailPanel({
             <div className="border-l border-white mr-3"></div>
 
             {/* options dropdown */}
-
             <TaskUtilitiesDropdown />
           </div>
         </div>

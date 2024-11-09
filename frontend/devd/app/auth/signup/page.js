@@ -7,7 +7,7 @@ export default function SignupPage() {
   const { signupFormData, setSignupFormData, handleSignup } = useSignup();
 
   return (
-    <div className="p-1">
+    <div className="p-1 w-full flex justify-center">
       <SignupForm
         formData={signupFormData}
         setFormData={setSignupFormData}

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import useAxios from "./useAxios";
+import { useRouter } from "next/navigation";
 
 const defaultFormData = {
   username: "",
@@ -10,26 +11,18 @@ const defaultFormData = {
 export default function useLogin() {
   const [loginFormData, setLoginFormData] = useState(defaultFormData);
   const { axiosLogin } = useAxios();
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      console.log("Submitting Form: ");
-      console.log(loginFormData);
-
       // send login info
-      const response = await axiosLogin(loginFormData);
-
-      // set response as cookie
-      console.log("Login success!");
-      console.log("setting tokens...");
-      console.log(response.payload);
-
-      localStorage.setItem("accessToken", response.payload.accessToken);
+      await axiosLogin(loginFormData);
 
       // Reset form
       setLoginFormData(defaultFormData);
 
       // todo: redirect
+      router.push("/projects");
     } catch (err) {
       console.log(err);
     }

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import useAxios from "./useAxios";
+import { useRouter } from "next/navigation";
 
 const defaultFormData = {
   email: "",
@@ -12,9 +13,9 @@ const defaultFormData = {
 export default function useSignup() {
   const [signupFormData, setSignupFormData] = useState(defaultFormData);
   const { axiosSignup } = useAxios();
+  const router = useRouter();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const handleSignup = async () => {
     try {
       console.log("Submitting Form: ");
       console.log(signupFormData);
@@ -26,13 +27,13 @@ export default function useSignup() {
       // send login info
       const response = await axiosSignup(signupFormData);
       // set response as cookie
-      debugger;
       console.log("signup success!");
 
       // Reset form
       setSignupFormData(defaultFormData);
 
       // redirect
+      router.push("/projects");
     } catch (err) {
       console.log(err);
     }
