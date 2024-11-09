@@ -81,25 +81,25 @@ const projectSlice = createSlice({
         state.project = action.payload;
       })
       .addCase(getProject.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload.message;
       })
       .addCase(getTask.fulfilled, (state, action) => {
         state.task = action.payload.task;
       })
       .addCase(getTask.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload.message;
       })
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
         state.task = action.payload.updatedTask;
       })
       .addCase(updateTaskInDB.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload.message;
       })
       .addCase(getPage.fulfilled, (state, action) => {
         state.page = action.payload.page;
       })
       .addCase(getPage.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.errorMessage = action.payload.message;
       });
   },
 });

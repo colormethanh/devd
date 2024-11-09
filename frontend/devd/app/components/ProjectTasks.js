@@ -1,8 +1,8 @@
-import TasksPanel from "./TasksPanel";
 import TaskDetailPanel from "./TaskDetailPanel";
 import useTasks from "../hooks/useTasks";
 import { useState, useEffect } from "react";
 import AddTaskPanel from "./AddTaskPanel";
+import ListPanel from "./utilities/ListPanel";
 
 export default function ProjectTasks({ project }) {
   const [isAddTaskView, setIsAddTaskView] = useState(false);
@@ -30,7 +30,7 @@ export default function ProjectTasks({ project }) {
         setIsAddTaskView(false);
       }
     }
-  }, [project]);
+  }, []);
 
   // debugger;
   return (
@@ -45,11 +45,12 @@ export default function ProjectTasks({ project }) {
               {"+"}
             </div>
           </div>
-          <TasksPanel
+          <ListPanel
             project={project}
-            currentTaskId={currentTaskId}
-            setTask={setTask}
-            setIsAddTaskView={setIsAddTaskView}
+            currentItemId={currentTaskId}
+            setItem={setTask}
+            setIsAddItemView={setIsAddTaskView}
+            itemName={"tasks"}
           />
         </div>
         <div className="w-5/6 h-full">
