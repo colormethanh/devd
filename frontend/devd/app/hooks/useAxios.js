@@ -10,12 +10,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function useAxios() {
   const dispatch = useDispatch();
 
-  const axiosLogin = async (formData) => {
+  const login = async (formData) => {
     const response = dispatch(login(formData));
     return response;
   };
 
-  const axiosSignup = async (formData) => {
+  const signup = async (formData) => {
     const response = dispatch(signup(formData));
     return response;
   };
@@ -25,7 +25,7 @@ export default function useAxios() {
     return response;
   };
 
-  const axiosGetProjects = async () => {
+  const getProjects = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/projects`);
       return response.data.payload;
@@ -35,10 +35,8 @@ export default function useAxios() {
     // todo: check if user is authorized
   };
 
-  const axiosGetProject = async (project_id) => {
+  const getProjectDetails = async (project_id) => {
     try {
-      // const response = await axios.get(`${BASE_URL}/projects/${project_id}`);
-      // return response.data.payload;
       const response = dispatch(getProject(project_id));
       return response;
     } catch (err) {
@@ -46,20 +44,19 @@ export default function useAxios() {
     }
   };
 
-  const getTaskDetails = async (params) => {
+  const getTaskDetails = async ({ project_id, task_id, access_token }) => {
     try {
-      // debugger;
-      const response = dispatch(getTask(params));
+      const response = dispatch(getTask({ project_id, task_id, access_token }));
       return response;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const updateTask = async ({ task_id, project_id, updates }) => {
+  const updateTask = async ({ task_id, project_id, updates, access_token }) => {
     try {
       const response = dispatch(
-        updateTaskInDB({ task_id, project_id, updates })
+        updateTaskInDB({ task_id, project_id, updates, access_token })
       );
       return response;
     } catch (err) {
@@ -67,11 +64,13 @@ export default function useAxios() {
     }
   };
 
-  const postTask = async (project_id, formData) => {
+  const postTask = async (project_id, formData, accessToken) => {
     try {
       // post task
       await axios.post(`${BASE_URL}/projects/${project_id}/tasks`, formData, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       // update project to contain task
@@ -104,11 +103,11 @@ export default function useAxios() {
   };
 
   return {
-    axiosLogin,
-    axiosSignup,
+    login,
+    signup,
     refreshToken,
-    axiosGetProjects,
-    axiosGetProject,
+    getProjects,
+    getProjectDetails,
     getTaskDetails,
     updateTask,
     postTask,

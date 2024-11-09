@@ -22,7 +22,7 @@ const taskRoutes = function (taskController) {
     }
   });
 
-  router.get("/:task_id", async (req, res, next) => {
+  router.get("/:task_id", requireAuth, extractRole, async (req, res, next) => {
     try {
       const task_id = req.params.task_id;
 
@@ -33,10 +33,10 @@ const taskRoutes = function (taskController) {
 
       // todo: Add require Auth
 
-      // const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
+      const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
 
-      // if (!isOwnerOrGuest)
-      //   return next(createError(403, "Must be guest or owner to view tasks"));
+      if (!isOwnerOrGuest)
+        return next(createError(403, "Must be guest or owner to view tasks"));
 
       const task = await taskController.getTask(task_id);
 
@@ -52,7 +52,7 @@ const taskRoutes = function (taskController) {
     }
   });
 
-  router.put("/:task_id", async (req, res, next) => {
+  router.put("/:task_id", requireAuth, extractRole, async (req, res, next) => {
     try {
       const { task_id } = req.params;
       const project = req.project;
@@ -72,11 +72,11 @@ const taskRoutes = function (taskController) {
 
       // Todo: add require auth to this route
 
-      // const isAdmin = req.role === "admin";
-      // if (!isAdmin)
-      //   return next(
-      //     createError(403, "Only admin may make changes to project pages")
-      //   );
+      const isAdmin = req.role === "admin";
+      if (!isAdmin)
+        return next(
+          createError(403, "Only admin may make changes to project pages")
+        );
 
       // check to see if task exists
       const originalTask = await taskController.getTask(task_id);
@@ -109,7 +109,7 @@ const taskRoutes = function (taskController) {
     }
   });
 
-  router.post("/", async (req, res, next) => {
+  router.post("/", requireAuth, extractRole, async (req, res, next) => {
     try {
       const project_id = req.project_id;
       if (!project_id) return next(createError(400, "project_id is required"));
@@ -121,10 +121,10 @@ const taskRoutes = function (taskController) {
       const { name, description } = req.body;
 
       // todo: Add require auth
-      // const isOwner = req.role === "admin";
+      const isOwner = req.role === "admin";
 
-      // if (!isOwner)
-      //   return next(createError(403, "admin rights required to make changes"));
+      if (!isOwner)
+        return next(createError(403, "admin rights required to make changes"));
 
       logger.info({
         message: "attempting to post new page to DB",

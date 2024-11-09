@@ -29,7 +29,11 @@ export const updateTaskInDB = createAsyncThunk(
       const response = await axios.put(
         `${BASE_URL}/projects/${params.project_id}/tasks/${params.task_id}`,
         params.updates,
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
       );
       return response.data.payload;
     } catch (err) {
