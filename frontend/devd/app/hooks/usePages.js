@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 export default function usePages(project, accessToken) {
   const { getPageDetails } = useAxios();
 
-  const page = useSelector((state) => state.project.page);
+  const page = useSelector((state) => state.page.page);
 
   const setPage = async (page) => {
     try {

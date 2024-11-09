@@ -1,11 +1,8 @@
 import { useDispatch } from "react-redux";
 import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
-import {
-  getProject,
-  getTask,
-  updateTaskInDB,
-  getPage,
-} from "../store/slices/projectSlice";
+import { getProject } from "../store/slices/projectSlice";
+import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
+import { getPage } from "../store/slices/pageSlice";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;

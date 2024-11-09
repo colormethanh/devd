@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
   const { getTaskDetails, updateTask, postTask } = useAxios();
-  const task = useSelector((state) => state.project.task);
+  const task = useSelector((state) => state.task.task);
   const access_token = useSelector((state) => state.auth.access_token);
 
   const setTask = async (task) => {

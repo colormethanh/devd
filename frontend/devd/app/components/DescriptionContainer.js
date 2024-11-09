@@ -32,7 +32,7 @@ export default function DescriptionContainer({
           <div>
             <textarea
               ref={textAreaRef}
-              className="bg-black w-full border border-gray-500 focus:outline-none focus:ring-0 resize-none px-3  text-lg"
+              className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
               name="description-textarea"
               rows={"3"}
               defaultValue={description}

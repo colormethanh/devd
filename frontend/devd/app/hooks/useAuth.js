@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 export default function useAuth() {
   const { refreshToken } = useAxios();
   const accessToken = useSelector((state) => state.auth.token);
-  const needsLogin = useSelector((state) => state.auth.needsLogin);
+  const needsLogin = useSelector((state) => state.auth.needs_login);
 
   const checkIfTokenIsExpired = (token) => {
     try {

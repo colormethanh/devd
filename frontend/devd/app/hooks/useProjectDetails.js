@@ -1,31 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
-
-const validViews = ["tasks", "components", "pages", "team"];
 
 export default function useProjectDetails(project_id) {
   const { axiosGetProject } = useAxios();
   const project = useSelector((state) => state.project.project);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isViewing, setIsViewing] = useState("tasks");
+  const isLoading = useSelector((state) => state.project.isLoading);
 
   const refreshProject = async (project_id) => {
-    setIsLoading(true);
     try {
       const retrievedProject = await axiosGetProject(project_id);
       return retrievedProject;
     } catch (error) {
       console.error("Failed to fetch projects", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const changeViewTo = async (view) => {
-    if (validViews.includes(view)) {
-      return setIsViewing(view);
     }
   };
 
@@ -33,5 +21,5 @@ export default function useProjectDetails(project_id) {
     refreshProject(project_id);
   }, []);
 
-  return { project, isLoading, isViewing, changeViewTo };
+  return { project, isLoading };
 }

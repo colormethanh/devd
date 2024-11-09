@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useParams } from "next/navigation";
 import useProjectDetails from "@/app/hooks/useProjectDetails";
 import SideBar from "@/app/components/utilities/SideBar";
 import ProjectTasks from "@/app/components/ProjectTasks";
@@ -9,12 +8,13 @@ import ProjectPages from "@/app/components/ProjectPages";
 import ProjectComponents from "@/app/components/ProjectComponents";
 import ProjectTeam from "@/app/components/ProjectTeam";
 import useAuth from "@/app/hooks/useAuth";
+import useViews from "@/app/hooks/useViews";
 
 export default function ProjectDetails() {
   const { project_id } = useParams();
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
-  const { project, isLoading, isViewing, changeViewTo } =
-    useProjectDetails(project_id);
+  const { project } = useProjectDetails(project_id);
+  const { isViewing, changeViewTo } = useViews();
 
   useEffect(() => {
     if (accessToken !== undefined) {
@@ -22,7 +22,6 @@ export default function ProjectDetails() {
     }
   });
 
-  debugger;
   return (
     <div className="flex h-full w-full">
       <SideBar onItemClick={changeViewTo} isViewing={isViewing} />

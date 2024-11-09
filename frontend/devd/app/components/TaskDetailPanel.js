@@ -28,10 +28,12 @@ export default function TaskDetailPanel({
 
   return (
     <div className="border-l h-full w-full">
-      <div className="mx-3 h-full flex flex-col justify-around">
+      <div className="mx-3 h-full flex flex-col gap-y-12 overflow-y-auto overflow-x-hidden">
         <div className="w-full flex flex-col">
           <h1 className="text-4xl"> {task.name} </h1>
           <hr className="my-2 "></hr>
+
+          {/* container for info bar */}
           <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
             {/* Posted date */}
             <div className="mr-3 ">
@@ -69,15 +71,17 @@ export default function TaskDetailPanel({
         {/* Task Description */}
         <DescriptionContainer
           description={description}
-          classString={"h-1/3"}
+          classString={"max-h-1/3 mt-3"}
           updateCallback={handleDescriptionUpdate}
         />
 
         <div className="border-b border-gray-500 mr-3 w-full"></div>
 
         {/* Relevant contents */}
-        <div className="flex flex-col h-2/5">
-          <RelevantContentsContainer contents={""} />
+        <div className="flex flex-col ">
+          <div className="max-h-2/5">
+            <RelevantContentsContainer contents={""} />
+          </div>
         </div>
       </div>
     </div>
