@@ -171,6 +171,7 @@ const pageRoutes = function (pageController) {
         user: req.user._id,
         request_id: req.metadata.request_id,
       });
+
       const { page_id } = req.params;
       const project = req.project;
 

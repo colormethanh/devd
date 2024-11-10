@@ -5,8 +5,14 @@ import PageDetailsPanel from "./PageDetailsPanel";
 
 export default function ProjectPages({ project, accessToken }) {
   const [isAddPageView, setIsAddTaskView] = useState(false);
-  const { page, setPage, updatePageVisibility, updatePageDescription } =
-    usePages(project, accessToken);
+  const {
+    page,
+    setPage,
+    updatePageVisibility,
+    updatePageDescription,
+    addPageImage,
+    addPageFeature,
+  } = usePages(project, accessToken);
   const currentPageId = page._id || null;
 
   return (
@@ -35,6 +41,8 @@ export default function ProjectPages({ project, accessToken }) {
             page={page}
             updatePageVisibility={updatePageVisibility}
             updatePageDescription={updatePageDescription}
+            addPageImage={addPageImage}
+            addPageFeature={addPageFeature}
           />
         </div>
       </div>

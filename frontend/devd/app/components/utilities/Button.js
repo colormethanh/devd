@@ -18,8 +18,8 @@ export default function Button({
         handleClick(e);
       }}
       className={`bg-[#000000] 
-        text-white border 
-        border-white 
+        text-white 
+        border border-white
         hover:bg-white 
         hover:text-black 
         focus:outline-black 

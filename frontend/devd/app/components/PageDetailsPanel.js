@@ -2,26 +2,45 @@ import React, { useState, useEffect, useRef } from "react";
 import useHelpers from "../hooks/useHelpers";
 import DescriptionContainer from "./DescriptionContainer";
 import HorizontalImagesSlider from "./utilities/HorizontalImagesSlider";
+import Image from "next/image";
+import ListContainer from "./utilities/ListContainer";
 
 export default function PageDetailsPanel({
   page,
   updatePageVisibility,
   updatePageDescription,
+  addPageImage,
+  addPageFeature,
 }) {
   const { formatDate } = useHelpers();
 
   const [description, setDescription] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("private");
-
   const detailsContainerRef = useRef(null);
+  const imageFileUploaderRef = useRef(null);
 
   const handleVisibilityChange = (e) => {
     updatePageVisibility(page, e.target.value);
-    console.log("changing page visibility");
   };
 
   const handleDescriptionUpdate = (updatedDescription) => {
     updatePageDescription(page, updatedDescription);
+  };
+
+  const handleImageUploaderClick = (e) => {
+    if (imageFileUploaderRef.current) imageFileUploaderRef.current.click();
+  };
+
+  const handleImageUpload = (e) => {
+    console.log("Handling image upload");
+    console.log(e.target.files[0]);
+    addPageImage(page, e.target.files[0], e.target.files[0].name);
+  };
+
+  const handleAddFeature = (featureText) => {
+    console.log("handling feature add");
+    console.log(featureText);
+    addPageFeature(page, featureText);
   };
 
   useEffect(() => {
@@ -40,9 +59,9 @@ export default function PageDetailsPanel({
           <hr className="my-2 "></hr>
 
           {/* container for info bar under page name */}
-          <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
+          <div className="flex flex-col gap-2 sm:flex-row w-full">
             {/* Posted date */}
-            <div className="mr-3">
+            <div className="">
               <div className="flex flex-col sm:flex-row">
                 <span className="text-s">
                   {" "}
@@ -51,10 +70,10 @@ export default function PageDetailsPanel({
               </div>
             </div>
 
-            <div className="border-l border-white mr-3"></div>
+            <div className="border-l border-b sm:border-b-0 border-white"></div>
 
             {/* Page visibility */}
-            <div className="mr-3 ">
+            <div className="">
               <select
                 id="status"
                 name="status"
@@ -66,6 +85,27 @@ export default function PageDetailsPanel({
                 <option value={"public"}>Public</option>
               </select>
             </div>
+
+            <div className="border-l border-b sm:border-b-0 border-white"></div>
+
+            {/* Upload image */}
+            <div
+              className={
+                "flex text-sm border border-black hover:border-white hover:cursor-pointer p-1 p-y-2"
+              }
+              onClick={handleImageUploaderClick}
+            >
+              Upload an image
+              <input
+                ref={imageFileUploaderRef}
+                type="file"
+                id="image"
+                name="task-image"
+                accept="image/png, image/jpeg"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </div>
           </div>
         </div>
 
@@ -75,10 +115,17 @@ export default function PageDetailsPanel({
           updateCallback={handleDescriptionUpdate}
         />
 
+        {/* Features container */}
+        <ListContainer
+          addStyles={"max-h-20"}
+          title={"Features"}
+          items={page.features}
+          addItem={handleAddFeature}
+        />
+
+        {/* Container for horizontal image scrolls */}
         <div className="flex flex-col">
           <h4 className="text-xl"> Images </h4>
-          <div className="h-8 border"> Options bar </div>
-
           {/* Page Images, should open a modal on click */}
           <div className="w-full h-full">
             <HorizontalImagesSlider

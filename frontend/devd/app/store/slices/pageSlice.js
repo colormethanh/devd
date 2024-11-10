@@ -42,6 +42,25 @@ export const updatePageInDB = createAsyncThunk(
   }
 );
 
+export const uploadImageToPage = createAsyncThunk(
+  "page/uploadPageImage",
+  async (params, { rejectWithValue }) => {
+    const response = await axios.put(
+      `${BASE_URL}/projects/${[params.project_id]}/pages/${
+        params.page_id
+      }/image`,
+      params.updates,
+      {
+        headers: {
+          Authorization: `Bearer ${params.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.payload;
+  }
+);
+
 const pageSlice = createSlice({
   name: "page",
   initialState: {

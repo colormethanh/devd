@@ -12,7 +12,7 @@ const defaultFormData = {
 
 export default function useSignup() {
   const [signupFormData, setSignupFormData] = useState(defaultFormData);
-  const { signup } = useAxios();
+  const { dispatchSignup } = useAxios();
   const router = useRouter();
 
   const handleSignup = async () => {
@@ -25,7 +25,7 @@ export default function useSignup() {
         throw Error("passwords don't match");
 
       // send login info
-      const response = await signup(signupFormData);
+      const response = await dispatchSignup(signupFormData);
       // set response as cookie
       console.log("signup success!");
 

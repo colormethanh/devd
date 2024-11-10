@@ -2,7 +2,11 @@ import { useDispatch } from "react-redux";
 import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
 import { getProject } from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
-import { getPage, updatePageInDB } from "../store/slices/pageSlice";
+import {
+  getPage,
+  updatePageInDB,
+  uploadImageToPage,
+} from "../store/slices/pageSlice";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -10,12 +14,12 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function useAxios() {
   const dispatch = useDispatch();
 
-  const login = async (formData) => {
+  const dispatchLogin = async (formData) => {
     const response = dispatch(login(formData));
     return response;
   };
 
-  const signup = async (formData) => {
+  const dispatchSignup = async (formData) => {
     const response = dispatch(signup(formData));
     return response;
   };
@@ -84,9 +88,11 @@ export default function useAxios() {
 
   const updatePage = async ({ page_id, project_id, updates, access_token }) => {
     try {
-      const response = dispatch(
+      const response = await dispatch(
         updatePageInDB({ page_id, project_id, access_token, updates })
       );
+
+      getPageDetails({ project_id, page_id, access_token });
       return response;
     } catch (err) {
       console.log(err);
@@ -95,16 +101,48 @@ export default function useAxios() {
 
   const getPageDetails = async ({ project_id, page_id, access_token }) => {
     try {
-      const response = dispatch(getPage({ project_id, page_id, access_token }));
-      return response;
+      const pageDetails = await dispatch(
+        getPage({ project_id, page_id, access_token })
+      );
+
+      return pageDetails;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const updatePageImages = async ({
+    project_id,
+    page_id,
+    image,
+    title,
+    access_token,
+  }) => {
+    try {
+      const updates = new FormData();
+      updates.append("title", title);
+      updates.append("image", image);
+
+      const uploadImageResponse = await dispatch(
+        uploadImageToPage({ project_id, page_id, updates, access_token })
+      );
+
+      if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
+        getPageDetails({
+          project_id,
+          page_id,
+          access_token,
+        });
+
+      return uploadImageResponse;
     } catch (err) {
       console.log(err);
     }
   };
 
   return {
-    login,
-    signup,
+    dispatchLogin,
+    dispatchSignup,
     refreshToken,
     getProjects,
     getProjectDetails,
@@ -113,5 +151,6 @@ export default function useAxios() {
     postTask,
     getPageDetails,
     updatePage,
+    updatePageImages,
   };
 }

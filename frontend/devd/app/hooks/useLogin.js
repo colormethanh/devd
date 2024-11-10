@@ -10,13 +10,13 @@ const defaultFormData = {
 
 export default function useLogin() {
   const [loginFormData, setLoginFormData] = useState(defaultFormData);
-  const { login } = useAxios();
+  const { dispatchLogin } = useAxios();
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
       // send login info
-      await login(loginFormData);
+      await dispatchLogin(loginFormData);
 
       // Reset form
       setLoginFormData(defaultFormData);

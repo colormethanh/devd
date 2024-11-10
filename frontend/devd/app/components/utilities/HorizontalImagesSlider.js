@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 export default function HorizontalImagesSlider({ images, outerContainerRef }) {
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   const handleMouseEnter = () => {
     outerContainerRef.current.style.overflow = "hidden";
@@ -21,55 +20,6 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
     }
   };
 
-  // Function to calculate the nearest item based on scroll position
-  const getNearestItem = () => {
-    const containerRect = containerRef.current.getBoundingClientRect();
-    let nearestItem = null;
-    let minDistance = Infinity;
-
-    itemRefs.current.forEach((item) => {
-      const rect = item.getBoundingClientRect();
-      const distance = Math.abs(rect.left - containerRect.left);
-      if (distance < minDistance) {
-        minDistance = distance;
-        nearestItem = item;
-      }
-    });
-    return nearestItem;
-  };
-
-  // Scroll to the nearest item when scrolling ends
-  const handleScrollEnd = () => {
-    if (!isScrolling) {
-      const nearestItem = getNearestItem();
-      if (nearestItem) {
-        containerRef.current.scrollTo({
-          left: nearestItem.offsetLeft,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    // Listen for the scroll event and trigger the nearest item calculation
-    const onScroll = () => {
-      setIsScrolling(true);
-    };
-
-    const scrollTimeout = setTimeout(() => {
-      setIsScrolling(false);
-      handleScrollEnd();
-    }, 100);
-
-    if (containerRef.current)
-      containerRef.current.addEventListener("scroll", onScroll);
-    return () => {
-      clearTimeout(scrollTimeout);
-      if (containerRef.current)
-        containerRef.current.removeEventListener("scroll", onScroll);
-    };
-  }, [isScrolling]);
   return (
     <div
       className="relative h-full w-full overflow-y-hidden"
@@ -89,7 +39,6 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
               <Image
                 height={500}
                 width={500}
-                layout={"intrinsic"}
                 src={image.url}
                 alt={image.title}
               />

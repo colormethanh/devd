@@ -3,7 +3,7 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function usePages(project, accessToken) {
-  const { getPageDetails, updatePage } = useAxios();
+  const { getPageDetails, updatePage, updatePageImages } = useAxios();
 
   const page = useSelector((state) => state.page.page);
 
@@ -49,9 +49,45 @@ export default function usePages(project, accessToken) {
     }
   };
 
+  const addPageImage = async (page, image, title) => {
+    try {
+      const updatedPage = await updatePageImages({
+        project_id: project._id,
+        page_id: page._id,
+        image: image,
+        title: title,
+        access_token: accessToken,
+      });
+      return updatedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addPageFeature = async (page, feature) => {
+    try {
+      const updatedPage = await updatePage({
+        project_id: project._id,
+        page_id: page._id,
+        access_token: accessToken,
+        updates: { features: [feature] },
+      });
+      return updatedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (project._id) setPage(project.pages[0]);
   }, [project]);
 
-  return { page, setPage, updatePageVisibility, updatePageDescription };
+  return {
+    page,
+    setPage,
+    updatePageVisibility,
+    updatePageDescription,
+    addPageImage,
+    addPageFeature,
+  };
 }
