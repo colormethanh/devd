@@ -10,7 +10,7 @@ export default function useProject(project_id) {
 
   useEffect(() => {
     if (project_id) getProjectDetails(project_id);
-  }, []);
+  }, [project_id]);
 
   return { project, isLoading };
 }

@@ -68,7 +68,11 @@ const pageSlice = createSlice({
     error: {},
     isLoading: false,
   },
-  reducers: {},
+  reducers: {
+    resetPage: (state, action) => {
+      state.page = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getPage.pending, (state, action) => {
@@ -95,5 +99,7 @@ const pageSlice = createSlice({
       });
   },
 });
+
+export const { resetPage } = pageSlice.actions;
 
 export default pageSlice.reducer;

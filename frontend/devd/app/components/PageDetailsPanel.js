@@ -13,7 +13,6 @@ export default function PageDetailsPanel({
   addPageFeature,
 }) {
   const { formatDate } = useHelpers();
-
   const [description, setDescription] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("private");
   const detailsContainerRef = useRef(null);
@@ -48,6 +47,7 @@ export default function PageDetailsPanel({
     setSelectedVisibility(page.visibility);
     setDescription(page.description);
   }, [page]);
+
   return (
     <div className="border-l h-full w-full flex">
       <div

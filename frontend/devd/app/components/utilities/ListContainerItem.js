@@ -1,4 +1,3 @@
-import { Input } from "postcss";
 import React, { useState } from "react";
 import Button from "./Button";
 
@@ -9,6 +8,10 @@ export default function ListContainerItem({ text }) {
   const handleSetEdit = () => {
     setIsEdit(true);
   };
+
+  useState(() => {
+    setItemText(text);
+  }, [text]);
 
   return isEdit ? (
     <div className="ms-3 w-5/6 my-2">

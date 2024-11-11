@@ -7,13 +7,8 @@ import ListPanel from "./utilities/ListPanel";
 export default function ProjectTasks({ project }) {
   const [isAddTaskView, setIsAddTaskView] = useState(false);
 
-  const {
-    task,
-    setTask,
-    updateTaskStatus,
-    updateTaskDescription,
-    postNewTask,
-  } = useTasks(project);
+  let { task, setTask, updateTaskStatus, updateTaskDescription, postNewTask } =
+    useTasks(project);
 
   let currentTaskId = task._id || null;
 
@@ -30,7 +25,9 @@ export default function ProjectTasks({ project }) {
         setIsAddTaskView(false);
       }
     }
-  }, []);
+  }, [project]);
+
+  useEffect(() => {}, [project]);
 
   // debugger;
   return (

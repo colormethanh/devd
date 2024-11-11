@@ -49,7 +49,11 @@ const taskSlice = createSlice({
     error: {},
     isLoading: false,
   },
-  reducers: {},
+  reducers: {
+    resetTask: (state, action) => {
+      state.task = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getTask.pending, (state, action) => {
@@ -76,5 +80,7 @@ const taskSlice = createSlice({
       });
   },
 });
+
+export const { resetTask } = taskSlice.actions;
 
 export default taskSlice.reducer;

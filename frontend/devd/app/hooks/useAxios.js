@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
+import { resetTask } from "../store/slices/taskSlice";
 import { getProject } from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
 import {
@@ -15,17 +16,17 @@ export default function useAxios() {
   const dispatch = useDispatch();
 
   const dispatchLogin = async (formData) => {
-    const response = dispatch(login(formData));
+    const response = await dispatch(login(formData));
     return response;
   };
 
   const dispatchSignup = async (formData) => {
-    const response = dispatch(signup(formData));
+    const response = await dispatch(signup(formData));
     return response;
   };
 
   const refreshToken = async () => {
-    const response = dispatch(refreshAccessToken());
+    const response = await dispatch(refreshAccessToken());
     return response;
   };
 
@@ -41,7 +42,8 @@ export default function useAxios() {
 
   const getProjectDetails = async (project_id) => {
     try {
-      const response = dispatch(getProject(project_id));
+      const response = await dispatch(getProject(project_id));
+      await dispatch(resetTask());
       return response;
     } catch (err) {
       console.log(err);
@@ -50,7 +52,9 @@ export default function useAxios() {
 
   const getTaskDetails = async ({ project_id, task_id, access_token }) => {
     try {
-      const response = dispatch(getTask({ project_id, task_id, access_token }));
+      const response = await dispatch(
+        getTask({ project_id, task_id, access_token })
+      );
       return response;
     } catch (err) {
       console.log(err);
@@ -59,7 +63,7 @@ export default function useAxios() {
 
   const updateTask = async ({ task_id, project_id, updates, access_token }) => {
     try {
-      const response = dispatch(
+      const response = await dispatch(
         updateTaskInDB({ task_id, project_id, updates, access_token })
       );
       return response;
@@ -78,7 +82,7 @@ export default function useAxios() {
       });
 
       // update project to contain task
-      const response = dispatch(getProject(project_id));
+      const response = await dispatch(getProject(project_id));
 
       return response;
     } catch (err) {
@@ -88,12 +92,15 @@ export default function useAxios() {
 
   const updatePage = async ({ page_id, project_id, updates, access_token }) => {
     try {
-      const response = await dispatch(
+      const updateResponse = await dispatch(
         updatePageInDB({ page_id, project_id, access_token, updates })
       );
+      if (updateResponse.meta?.requestStatus === "fulfilled") {
+        await getPageDetails({ project_id, page_id, access_token });
+        await getProjectDetails(project_id);
+      }
 
-      getPageDetails({ project_id, page_id, access_token });
-      return response;
+      return updateResponse;
     } catch (err) {
       console.log(err);
     }
@@ -128,7 +135,7 @@ export default function useAxios() {
       );
 
       if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
-        getPageDetails({
+        await getPageDetails({
           project_id,
           page_id,
           access_token,

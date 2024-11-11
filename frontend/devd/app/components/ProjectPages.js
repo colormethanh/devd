@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import usePages from "../hooks/usePages";
 import ListPanel from "./utilities/ListPanel";
 import PageDetailsPanel from "./PageDetailsPanel";
 
 export default function ProjectPages({ project, accessToken }) {
   const [isAddPageView, setIsAddTaskView] = useState(false);
-  const {
+  let {
     page,
     setPage,
     updatePageVisibility,
@@ -14,6 +14,16 @@ export default function ProjectPages({ project, accessToken }) {
     addPageFeature,
   } = usePages(project, accessToken);
   const currentPageId = page._id || null;
+
+  useEffect(() => {
+    if (project.pages) {
+      if (project.pages.length === 0) {
+        setIsAddTaskView(true);
+      } else {
+        setIsAddTaskView(false);
+      }
+    }
+  }, [project]);
 
   return (
     <div className="h-5/6 border border-white mr-1 mt-4">
@@ -27,7 +37,7 @@ export default function ProjectPages({ project, accessToken }) {
               {"+"}
             </div>
           </div>
-          {/* add pages panel */}
+          {/* Pages list panel */}
           <ListPanel
             project={project}
             currentItemId={currentPageId}
@@ -37,13 +47,17 @@ export default function ProjectPages({ project, accessToken }) {
           />
         </div>
         <div className="w-5/6 h-full">
-          <PageDetailsPanel
-            page={page}
-            updatePageVisibility={updatePageVisibility}
-            updatePageDescription={updatePageDescription}
-            addPageImage={addPageImage}
-            addPageFeature={addPageFeature}
-          />
+          {isAddPageView ? (
+            <h1> Add a task</h1>
+          ) : (
+            <PageDetailsPanel
+              page={page}
+              updatePageVisibility={updatePageVisibility}
+              updatePageDescription={updatePageDescription}
+              addPageImage={addPageImage}
+              addPageFeature={addPageFeature}
+            />
+          )}
         </div>
       </div>
     </div>
