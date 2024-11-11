@@ -44,10 +44,11 @@ export default function PageDetailsPanel({
 
   useEffect(() => {
     console.log(page);
+    console.log(page.features);
     setSelectedVisibility(page.visibility);
     setDescription(page.description);
   }, [page]);
-
+  // debugger;
   return (
     <div className="border-l h-full w-full flex">
       <div
@@ -121,6 +122,7 @@ export default function PageDetailsPanel({
           title={"Features"}
           items={page.features}
           addItem={handleAddFeature}
+          itemKeySalt={page._id}
         />
 
         {/* Container for horizontal image scrolls */}

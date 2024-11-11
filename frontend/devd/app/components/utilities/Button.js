@@ -19,7 +19,7 @@ export default function Button({
       }}
       className={`bg-[#000000] 
         text-white 
-        border border-white
+        border
         hover:bg-white 
         hover:text-black 
         focus:outline-black 

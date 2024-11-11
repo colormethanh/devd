@@ -20,7 +20,7 @@ export default function ProjectDetails() {
     if (accessToken !== undefined) {
       checkAndRefreshToken(accessToken);
     }
-  });
+  }, [accessToken]);
 
   return (
     <div className="flex h-full w-full">

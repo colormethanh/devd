@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ListContainerItem from "./ListContainerItem";
 import Button from "./Button";
 
@@ -8,20 +8,16 @@ export default function ListContainer({
   onItemEdit,
   title,
   addItem,
+  itemKeySalt,
 }) {
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
-  const [listItems, setListItems] = useState([]);
 
   const handleAddItem = () => {
     addItem(newItemText);
     setNewItemText("");
     setIsAddingItem(false);
   };
-
-  useEffect(() => {
-    if (items !== undefined) setListItems(items);
-  }, [items]);
 
   return (
     <div>
@@ -67,13 +63,16 @@ export default function ListContainer({
         </div>
       )}
       <ul className={`overflow-y-auto ${addStyles}`}>
-        {listItems !== undefined &&
-          listItems.map((item, i) => (
-            <ListContainerItem
-              key={`task-feature-${i + new Date()}`}
-              text={item}
-            />
-          ))}
+        {items !== undefined &&
+          items.map((item, i) => {
+            return (
+              // todo: fix this so that we're not using the item as a key
+              <ListContainerItem
+                text={item}
+                key={`task-feature-${itemKeySalt}-${i}`}
+              />
+            );
+          })}
       </ul>
     </div>
   );

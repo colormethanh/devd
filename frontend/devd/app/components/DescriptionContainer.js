@@ -39,7 +39,7 @@ export default function DescriptionContainer({
             />
             <div className="flex justify-end">
               <Button
-                addStyle={"py-0 mr-3"}
+                addStyle={"py-0 mr-3 border-red-500"}
                 clickCallback={() => {
                   setIsEdit(false);
                 }}
@@ -47,7 +47,10 @@ export default function DescriptionContainer({
                 {" "}
                 cancel{" "}
               </Button>
-              <Button addStyle={"py-0"} clickCallback={handleDescriptionUpdate}>
+              <Button
+                addStyle={"py-0 border-green-500"}
+                clickCallback={handleDescriptionUpdate}
+              >
                 {" "}
                 Submit{" "}
               </Button>

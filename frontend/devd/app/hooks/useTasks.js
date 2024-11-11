@@ -3,12 +3,17 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
-  const { getTaskDetails, updateTask, postTask } = useAxios();
+  const { getTaskDetails, updateTask, postTask, dispatchResetTask } =
+    useAxios();
   const task = useSelector((state) => state.task.task);
   const accessToken = useSelector((state) => state.auth.token);
 
   const setTask = async (task) => {
     try {
+      // debugger;
+
+      if (task === undefined) return dispatchResetTask();
+
       const retrievedTask = await getTaskDetails({
         project_id: project._id,
         task_id: task._id,
@@ -16,6 +21,7 @@ export default function useTasks(project) {
       });
       return retrievedTask;
     } catch (err) {
+      // debugger;
       console.log(err);
     }
   };
@@ -59,7 +65,7 @@ export default function useTasks(project) {
 
   useEffect(() => {
     // debugger;
-    if (project._id) setTask(project.tasks[0]);
+    if (project?._id !== undefined) setTask(project.tasks[0]);
   }, [project]);
 
   return {

@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import Form from "./utilities/Form";
+import React from "react";
 
-const initialFormData = {
-  name: "",
-  description: "",
-};
-
-export default function AddTaskPanel({
-  setIsAddTaskView,
+export default function AddPagePanel({
+  setIsAddPageView,
   project,
-  postNewTask,
+  postNewPage,
 }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -20,16 +14,15 @@ export default function AddTaskPanel({
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleTaskFormSubmit = () => {
+  const handlePageFormSubmit = () => {
     console.log({ ...formData });
-    postNewTask(project._id, formData);
-    setIsAddTaskView(false);
+    postNewPage(project._id, formData);
+    setIsAddPageView(false);
   };
-
   return (
     <div className="border-l border-white h-full w-full flex flex-row justify-center">
       <div className="w-3/4 flex flex-col justify-center">
-        <Form title={"Create a task"} onSubmit={handleTaskFormSubmit}>
+        <Form title={"Create a page"} onSubmit={handlePageFormSubmit}>
           <div>
             <label
               htmlFor="name"

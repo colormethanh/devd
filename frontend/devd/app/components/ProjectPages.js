@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import usePages from "../hooks/usePages";
 import ListPanel from "./utilities/ListPanel";
 import PageDetailsPanel from "./PageDetailsPanel";
+import AddPagePanel from "./AddPagePanel";
 
 export default function ProjectPages({ project, accessToken }) {
   const [isAddPageView, setIsAddTaskView] = useState(false);
@@ -48,7 +49,7 @@ export default function ProjectPages({ project, accessToken }) {
         </div>
         <div className="w-5/6 h-full">
           {isAddPageView ? (
-            <h1> Add a task</h1>
+            <AddPagePanel />
           ) : (
             <PageDetailsPanel
               page={page}

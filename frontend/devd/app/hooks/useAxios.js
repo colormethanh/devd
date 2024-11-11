@@ -43,7 +43,6 @@ export default function useAxios() {
   const getProjectDetails = async (project_id) => {
     try {
       const response = await dispatch(getProject(project_id));
-      await dispatch(resetTask());
       return response;
     } catch (err) {
       console.log(err);
@@ -90,16 +89,23 @@ export default function useAxios() {
     }
   };
 
+  const dispatchResetTask = async () => {
+    try {
+      return await dispatch(resetTask());
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const updatePage = async ({ page_id, project_id, updates, access_token }) => {
     try {
       const updateResponse = await dispatch(
         updatePageInDB({ page_id, project_id, access_token, updates })
       );
+
       if (updateResponse.meta?.requestStatus === "fulfilled") {
         await getPageDetails({ project_id, page_id, access_token });
-        await getProjectDetails(project_id);
       }
-
       return updateResponse;
     } catch (err) {
       console.log(err);
@@ -111,7 +117,6 @@ export default function useAxios() {
       const pageDetails = await dispatch(
         getPage({ project_id, page_id, access_token })
       );
-
       return pageDetails;
     } catch (err) {
       console.log(err);
@@ -159,5 +164,6 @@ export default function useAxios() {
     getPageDetails,
     updatePage,
     updatePageImages,
+    dispatchResetTask,
   };
 }
