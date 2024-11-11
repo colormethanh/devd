@@ -13,6 +13,7 @@ export default function ProjectPages({ project, accessToken }) {
     updatePageDescription,
     addPageImage,
     addPageFeature,
+    postNewPage,
   } = usePages(project, accessToken);
   const currentPageId = page._id || null;
 
@@ -32,7 +33,7 @@ export default function ProjectPages({ project, accessToken }) {
         <div className="flex flex-col w-1/6 h-full">
           <div className="flex w-full justify-end p-1 h-8 border-b border-gray-500">
             <div
-              onClick={() => console.log("add page button clicked")}
+              onClick={() => setIsAddTaskView((prev) => !prev)}
               className="flex justify-center w-1/6 text-xl hover:cursor-pointer"
             >
               {"+"}
@@ -49,7 +50,11 @@ export default function ProjectPages({ project, accessToken }) {
         </div>
         <div className="w-5/6 h-full">
           {isAddPageView ? (
-            <AddPagePanel />
+            <AddPagePanel
+              postNewPage={postNewPage}
+              project={project}
+              setIsAddPageView={setIsAddTaskView}
+            />
           ) : (
             <PageDetailsPanel
               page={page}

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Form from "./utilities/Form";
 
 export default function AddPagePanel({
   setIsAddPageView,

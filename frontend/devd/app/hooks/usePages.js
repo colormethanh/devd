@@ -3,9 +3,18 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function usePages(project, accessToken) {
-  const { getPageDetails, updatePage, updatePageImages } = useAxios();
+  const { getPageDetails, updatePage, updatePageImages, postPage } = useAxios();
 
   const page = useSelector((state) => state.page.page);
+
+  const postNewPage = async (project_id, formData) => {
+    try {
+      const newTask = await postPage(project_id, formData, accessToken);
+      return newTask;
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const setPage = async (page) => {
     try {
@@ -89,5 +98,6 @@ export default function usePages(project, accessToken) {
     updatePageDescription,
     addPageImage,
     addPageFeature,
+    postNewPage,
   };
 }

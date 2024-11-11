@@ -97,6 +97,20 @@ export default function useAxios() {
     }
   };
 
+  const postPage = async (project_id, formData, accessToken) => {
+    try {
+      await axios.post(`${BASE_URL}/projects/${project_id}/pages`, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const response = await dispatch(getProject(project_id));
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const updatePage = async ({ page_id, project_id, updates, access_token }) => {
     try {
       const updateResponse = await dispatch(
@@ -161,6 +175,7 @@ export default function useAxios() {
     getTaskDetails,
     updateTask,
     postTask,
+    postPage,
     getPageDetails,
     updatePage,
     updatePageImages,

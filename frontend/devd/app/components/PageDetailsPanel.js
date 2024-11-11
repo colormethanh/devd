@@ -4,6 +4,8 @@ import DescriptionContainer from "./DescriptionContainer";
 import HorizontalImagesSlider from "./utilities/HorizontalImagesSlider";
 import Image from "next/image";
 import ListContainer from "./utilities/ListContainer";
+import useModal from "../hooks/useModal";
+import ImageForm from "./ImageForm";
 
 export default function PageDetailsPanel({
   page,
@@ -30,10 +32,15 @@ export default function PageDetailsPanel({
     if (imageFileUploaderRef.current) imageFileUploaderRef.current.click();
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageFileChange = (e) => {
     console.log("Handling image upload");
     console.log(e.target.files[0]);
-    addPageImage(page, e.target.files[0], e.target.files[0].name);
+    setImage(e.target.files[0]);
+  };
+
+  const handleImageUpload = (name, image) => {
+    addPageImage(page, image, name);
+    closeModal();
   };
 
   const handleAddFeature = (featureText) => {
@@ -41,6 +48,9 @@ export default function PageDetailsPanel({
     console.log(featureText);
     addPageFeature(page, featureText);
   };
+
+  const modalBody = <ImageForm handleSubmit={handleImageUpload} />;
+  const { Modal, openModal, closeModal } = useModal("Add a task", modalBody);
 
   useEffect(() => {
     console.log(page);
@@ -94,7 +104,8 @@ export default function PageDetailsPanel({
               className={
                 "flex text-sm border border-black hover:border-white hover:cursor-pointer p-1 p-y-2"
               }
-              onClick={handleImageUploaderClick}
+              // onClick={handleImageUploaderClick}
+              onClick={openModal}
             >
               Upload an image
               <input
@@ -104,7 +115,7 @@ export default function PageDetailsPanel({
                 name="task-image"
                 accept="image/png, image/jpeg"
                 className="hidden"
-                onChange={handleImageUpload}
+                onChange={handleImageFileChange}
               />
             </div>
           </div>
@@ -137,6 +148,7 @@ export default function PageDetailsPanel({
           </div>
         </div>
       </div>
+      {Modal}
     </div>
   );
 }
