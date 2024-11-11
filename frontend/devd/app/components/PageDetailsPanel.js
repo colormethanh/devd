@@ -18,7 +18,6 @@ export default function PageDetailsPanel({
   const [description, setDescription] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("private");
   const detailsContainerRef = useRef(null);
-  const imageFileUploaderRef = useRef(null);
 
   const handleVisibilityChange = (e) => {
     updatePageVisibility(page, e.target.value);
@@ -28,24 +27,12 @@ export default function PageDetailsPanel({
     updatePageDescription(page, updatedDescription);
   };
 
-  const handleImageUploaderClick = (e) => {
-    if (imageFileUploaderRef.current) imageFileUploaderRef.current.click();
-  };
-
-  const handleImageFileChange = (e) => {
-    console.log("Handling image upload");
-    console.log(e.target.files[0]);
-    setImage(e.target.files[0]);
-  };
-
   const handleImageUpload = (name, image) => {
     addPageImage(page, image, name);
     closeModal();
   };
 
   const handleAddFeature = (featureText) => {
-    console.log("handling feature add");
-    console.log(featureText);
     addPageFeature(page, featureText);
   };
 
@@ -53,12 +40,10 @@ export default function PageDetailsPanel({
   const { Modal, openModal, closeModal } = useModal("Add a task", modalBody);
 
   useEffect(() => {
-    console.log(page);
-    console.log(page.features);
     setSelectedVisibility(page.visibility);
     setDescription(page.description);
   }, [page]);
-  // debugger;
+
   return (
     <div className="border-l h-full w-full flex">
       <div
@@ -104,19 +89,9 @@ export default function PageDetailsPanel({
               className={
                 "flex text-sm border border-black hover:border-white hover:cursor-pointer p-1 p-y-2"
               }
-              // onClick={handleImageUploaderClick}
               onClick={openModal}
             >
               Upload an image
-              <input
-                ref={imageFileUploaderRef}
-                type="file"
-                id="image"
-                name="task-image"
-                accept="image/png, image/jpeg"
-                className="hidden"
-                onChange={handleImageFileChange}
-              />
             </div>
           </div>
         </div>
@@ -129,7 +104,7 @@ export default function PageDetailsPanel({
 
         {/* Features container */}
         <ListContainer
-          addStyles={"max-h-20"}
+          addStyles={"max-h-24"}
           title={"Features"}
           items={page.features}
           addItem={handleAddFeature}

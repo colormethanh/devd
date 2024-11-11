@@ -1,9 +1,33 @@
 import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
+import useModal from "@/app/hooks/useModal";
 
 export default function HorizontalImagesSlider({ images, outerContainerRef }) {
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
+  const [selectedImage, setSelectedImage] = useState();
+
+  const modalBody = () => {
+    return (
+      <div className="w-full h-full flex justify-center">
+        {selectedImage !== undefined && (
+          <div className="w-2/3 h-2/3 flex-col justify-center items-center">
+            <Image
+              height={1080}
+              width={1920}
+              src={selectedImage.url}
+              alt={selectedImage.title}
+            />
+            <h1 className="text-center text-3xl mt-3 underline">
+              {" "}
+              {selectedImage.title}{" "}
+            </h1>
+          </div>
+        )}
+      </div>
+    );
+  };
+  const { Modal, openModal, closeModal } = useModal("Image", modalBody());
 
   const handleMouseEnter = () => {
     outerContainerRef.current.style.overflow = "hidden";
@@ -11,6 +35,11 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
 
   const handleMouseLeave = () => {
     outerContainerRef.current.style.overflow = "auto";
+  };
+
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+    openModal();
   };
 
   // Handle mouse wheel scroll
@@ -34,10 +63,11 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
             <div
               key={`page-image-${i}`}
               ref={(el) => (itemRefs.current[i] = el)} // Store each item reference
-              className="min-w-[300px] h-full flex items-center justify-center"
+              className="min-w-[300px] h-full flex items-center justify-center overflow-hidden hover:cursor-pointer"
+              onClick={() => handleImageClick(image)}
             >
               <Image
-                height={500}
+                height={400}
                 width={500}
                 src={image.url}
                 alt={image.title}
@@ -45,6 +75,7 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
             </div>
           ))}
       </div>
+      {Modal}
     </div>
   );
 }
