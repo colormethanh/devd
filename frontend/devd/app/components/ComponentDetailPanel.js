@@ -14,10 +14,12 @@ export default function ComponentDetailPanel({
   updateComponentVisibility,
   addComponentImage,
   updateComponentDescription,
+  updateComponentStatus,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("private");
+  const [selectedStatus, setSelectedStatus] = useState("backlog");
   const detailsContainerRef = useRef();
 
   const handleVisibilityChange = (e) => {
@@ -28,17 +30,22 @@ export default function ComponentDetailPanel({
     updateComponentDescription(component, updatedDescription);
   };
 
+  const handleStatusChange = (e) => {
+    updateComponentStatus(component, e.target.value);
+  };
+
   // Setting up modal for image upload
   const handleImageUpload = (name, image) => {
     addComponentImage(component, image, name);
     closeModal();
   };
   const modalBody = <ImageForm handleSubmit={handleImageUpload} />;
-  const { Modal, openModal, closeModal } = useModal("Add a task", modalBody);
+  const { Modal, openModal, closeModal } = useModal("Add an image", modalBody);
 
   useEffect(() => {
     setSelectedVisibility(component.visibility);
     setDescription(component.description);
+    setSelectedStatus(component.status);
   }, [component]);
 
   return (
@@ -47,7 +54,7 @@ export default function ComponentDetailPanel({
         <h1 className="text-4xl"> {component.name} </h1>
         <hr className="my-2 "></hr>
 
-        {/* container for info bar */}
+        {/* Title and info bar */}
         <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
           {/* Posted date */}
           <div className="mr-3 ">
@@ -72,6 +79,23 @@ export default function ComponentDetailPanel({
             >
               <option value={"private"}>Private</option>
               <option value={"public"}>Public</option>
+            </select>
+          </div>
+
+          <div className="border-l border-white mr-3"></div>
+
+          {/* Component status */}
+          <div className="mr-3 ">
+            <select
+              id="status"
+              name="status"
+              className="block w-full border border-black hover:border-white py-1.5 bg-black text-white focus:outline-none focus:ring-0 focus:ring-inset focus:ring-gray-500 sm:max-w-xs text-xs hover:cursor-pointer"
+              value={selectedStatus}
+              onChange={handleStatusChange}
+            >
+              <option value={"backlog"}>Backlog</option>
+              <option value={"inProgress"}>In progress</option>
+              <option value={"done"}>Done</option>
             </select>
           </div>
 

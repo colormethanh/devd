@@ -52,6 +52,20 @@ export default function useComponents(project, accessToken) {
     }
   };
 
+  const updateComponentStatus = async (component, status) => {
+    try {
+      const updatedComponent = await updateComponent({
+        project_id: project._id,
+        component_id: component._id,
+        updates: { status: status },
+        access_token: accessToken,
+      });
+      return updatedComponent;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addComponentImage = async (component, image, title) => {
     try {
       const updatedComponent = await updateComponentImage({
@@ -78,5 +92,6 @@ export default function useComponents(project, accessToken) {
     postNewComponent,
     updateComponentVisibility,
     addComponentImage,
+    updateComponentStatus,
   };
 }

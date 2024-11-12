@@ -33,7 +33,7 @@ export default function TaskDetailPanel({
         <h1 className="text-4xl"> {task.name} </h1>
         <hr className="my-2 "></hr>
 
-        {/* container for info bar */}
+        {/* Title and info bar */}
         <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
           {/* Posted date */}
           <div className="mr-3 ">
