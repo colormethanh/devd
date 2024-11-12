@@ -88,7 +88,8 @@ export default function usePages(project, accessToken) {
   };
 
   useEffect(() => {
-    if (project._id) setPage(project.pages[0]);
+    if (project !== undefined && project.pages.length !== 0)
+      setPage(project.pages[0]);
   }, [project]);
 
   return {

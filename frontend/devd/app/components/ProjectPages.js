@@ -5,8 +5,9 @@ import PageDetailsPanel from "./PageDetailsPanel";
 import AddPagePanel from "./AddPagePanel";
 
 export default function ProjectPages({ project, accessToken }) {
-  const [isAddPageView, setIsAddTaskView] = useState(false);
-  let {
+  const [isAddPageView, setIsAddTaskView] = useState(true);
+  const [viewTogglerDisabled, setViewTogglerDisabled] = useState(false);
+  const {
     page,
     setPage,
     updatePageVisibility,
@@ -21,8 +22,9 @@ export default function ProjectPages({ project, accessToken }) {
     if (project.pages) {
       if (project.pages.length === 0) {
         setIsAddTaskView(true);
+        setViewTogglerDisabled(true);
       } else {
-        setIsAddTaskView(false);
+        setViewTogglerDisabled(false);
       }
     }
   }, [project]);
@@ -34,7 +36,9 @@ export default function ProjectPages({ project, accessToken }) {
           <div className="flex w-full justify-end p-1 h-8 border-b border-gray-500">
             <div
               onClick={() => setIsAddTaskView((prev) => !prev)}
-              className="flex justify-center w-1/6 text-xl hover:cursor-pointer"
+              className={`flex justify-center w-1/6 text-xl hover:cursor-pointer ${
+                viewTogglerDisabled && "hidden"
+              }`}
             >
               {"+"}
             </div>

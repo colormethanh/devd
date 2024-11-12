@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, use } from "react";
-import { useParams } from "next/navigation";
 import useProject from "@/app/hooks/useProject";
 import SideBar from "@/app/components/utilities/SideBar";
 import ProjectTasks from "@/app/components/ProjectTasks";
@@ -9,7 +8,6 @@ import ProjectComponents from "@/app/components/ProjectComponents";
 import ProjectTeam from "@/app/components/ProjectTeam";
 import useAuth from "@/app/hooks/useAuth";
 import useViews from "@/app/hooks/useViews";
-import { useRouter } from "next/navigation";
 
 export default function ProjectDetails({ params }) {
   const unwrappedParams = use(params);
@@ -38,7 +36,9 @@ export default function ProjectDetails({ params }) {
             <ProjectPages project={project} accessToken={accessToken} />
           )}
 
-          {isViewing === "components" && <ProjectComponents />}
+          {isViewing === "components" && (
+            <ProjectComponents project={project} accessToken={accessToken} />
+          )}
 
           {isViewing === "team" && <ProjectTeam />}
         </div>

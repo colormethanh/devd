@@ -5,7 +5,8 @@ import AddTaskPanel from "./AddTaskPanel";
 import ListPanel from "./utilities/ListPanel";
 
 export default function ProjectTasks({ project }) {
-  const [isAddTaskView, setIsAddTaskView] = useState();
+  const [isAddTaskView, setIsAddTaskView] = useState(true);
+  const [viewTogglerDisabled, setViewTogglerDisabled] = useState(false);
 
   let { task, setTask, updateTaskStatus, updateTaskDescription, postNewTask } =
     useTasks(project);
@@ -21,8 +22,9 @@ export default function ProjectTasks({ project }) {
     if (project.tasks) {
       if (project.tasks.length === 0) {
         setIsAddTaskView(true);
+        setViewTogglerDisabled(true);
       } else {
-        setIsAddTaskView(false);
+        setViewTogglerDisabled(false);
       }
     }
   }, [project]);
@@ -35,7 +37,9 @@ export default function ProjectTasks({ project }) {
           <div className="flex w-full justify-end p-1 h-8 border-b border-gray-500">
             <div
               onClick={handleGoToAddTask}
-              className="flex justify-center w-1/6 text-xl hover:cursor-pointer"
+              className={`flex justify-center w-1/6 text-xl hover:cursor-pointer ${
+                viewTogglerDisabled && "hidden"
+              }`}
             >
               {"+"}
             </div>

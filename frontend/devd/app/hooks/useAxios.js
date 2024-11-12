@@ -3,6 +3,7 @@ import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
 import { resetTask } from "../store/slices/taskSlice";
 import { getProject } from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
+import { getComponent } from "../store/slices/componentSlice";
 import {
   getPage,
   updatePageInDB,
@@ -15,6 +16,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export default function useAxios() {
   const dispatch = useDispatch();
 
+  // Auth
   const dispatchLogin = async (formData) => {
     const response = await dispatch(login(formData));
     return response;
@@ -30,6 +32,7 @@ export default function useAxios() {
     return response;
   };
 
+  // Projects
   const getProjects = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/projects`);
@@ -49,6 +52,7 @@ export default function useAxios() {
     }
   };
 
+  // Tasks
   const getTaskDetails = async ({ project_id, task_id, access_token }) => {
     try {
       const response = await dispatch(
@@ -80,7 +84,7 @@ export default function useAxios() {
         },
       });
 
-      // update project to contain task
+      // update project to contain newly added task in frontend
       const response = await dispatch(getProject(project_id));
 
       return response;
@@ -97,6 +101,7 @@ export default function useAxios() {
     }
   };
 
+  // Pages
   const postPage = async (project_id, formData, accessToken) => {
     try {
       await axios.post(`${BASE_URL}/projects/${project_id}/pages`, formData, {
@@ -166,6 +171,43 @@ export default function useAxios() {
     }
   };
 
+  // Components
+  const postComponent = async (project_id, formData, accessToken) => {
+    try {
+      await axios.post(
+        `${BASE_URL}/projects/${project_id}/components`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      // update project to contain newly added component in frontend
+      const response = await dispatch(getProject(project_id));
+
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getComponentDetails = async ({
+    project_id,
+    component_id,
+    access_token,
+  }) => {
+    try {
+      const response = await dispatch(
+        getComponent({ project_id, component_id, access_token })
+      );
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return {
     dispatchLogin,
     dispatchSignup,
@@ -180,5 +222,7 @@ export default function useAxios() {
     updatePage,
     updatePageImages,
     dispatchResetTask,
+    postComponent,
+    getComponentDetails,
   };
 }

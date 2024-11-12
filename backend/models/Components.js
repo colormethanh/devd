@@ -37,11 +37,7 @@ const ComponentSchema = new Schema({
     enum: ["backlog", "inProgress", "done"],
     default: "backlog",
   },
-  images: [
-    {
-      type: String, // Image URLs as strings
-    },
-  ],
+  images: [{ title: { type: String }, url: { type: String } }],
   project: {
     type: Schema.Types.ObjectId,
     ref: "Project",
