@@ -6,7 +6,7 @@ const validViews = ["tasks", "components", "pages", "team"];
 
 export default function useViews(project) {
   const [isViewing, setIsViewing] = useState("tasks");
-  const { getComponentDetails } = useAxios();
+  const { getComponentDetails, getPageDetails } = useAxios();
   const token = useSelector((state) => state.auth.token);
 
   const changeViewTo = async (view, contentId = "") => {
@@ -17,6 +17,14 @@ export default function useViews(project) {
             getComponentDetails({
               project_id: project._id,
               component_id: contentId,
+              access_token: token,
+            });
+          break;
+        case "pages":
+          if (contentId !== "")
+            getPageDetails({
+              project_id: project._id,
+              page_id: contentId,
               access_token: token,
             });
           break;
