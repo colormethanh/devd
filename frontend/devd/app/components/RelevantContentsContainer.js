@@ -6,7 +6,7 @@ export default function RelevantContentsContainer({ contents }) {
     <div className="flex flex-col h-full ">
       <h5 className="text-xl font-bold"> Relevant contents:</h5>
 
-      <div className="h-4/6 w-full border overflow-auto no-scrollbar border-gray-500">
+      <div className="h-4/6 w-full border overflow-auto no-scrollbar bg-gray-800">
         <RelevantContentsItem
           content={{
             type: "component",
@@ -36,8 +36,6 @@ export default function RelevantContentsContainer({ contents }) {
           }}
         />
       </div>
-
-      <div className="h-1/6 l w-full ">Hello world</div>
     </div>
   );
 }

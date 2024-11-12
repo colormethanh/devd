@@ -92,13 +92,14 @@ export default function PageDetailsPanel({
         </div>
       </div>
 
+      {/* Description */}
       <DescriptionContainer
         description={description}
         classString={"max-h-1/3 mt-3"}
         updateCallback={handleDescriptionUpdate}
       />
 
-      {/* Features container */}
+      {/* Features */}
       <ListContainer
         addStyles={"max-h-24"}
         title={"Features"}
@@ -117,8 +118,8 @@ export default function PageDetailsPanel({
             images={page.images}
           />
         </div>
-        {Modal}
       </div>
+      {Modal}
     </DetailPanel>
   );
 }

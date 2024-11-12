@@ -26,6 +26,27 @@ export const getComponent = createAsyncThunk(
   }
 );
 
+export const updateComponentInDB = createAsyncThunk(
+  "component/updateComponent",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/projects/${params.project_id}/components/${params.component_id}`,
+        params.updates,
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
+      );
+
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
 const componentSlice = createSlice({
   name: "component",
   initialState: {
@@ -44,6 +65,17 @@ const componentSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(getComponent.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(updateComponentInDB.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updateComponentInDB.fulfilled, (state, action) => {
+        state.component = action.payload.updatedComponent;
+        state.isLoading = false;
+      })
+      .addCase(updateComponentInDB.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
       });

@@ -3,7 +3,10 @@ import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
 import { resetTask } from "../store/slices/taskSlice";
 import { getProject } from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
-import { getComponent } from "../store/slices/componentSlice";
+import {
+  getComponent,
+  updateComponentInDB,
+} from "../store/slices/componentSlice";
 import {
   getPage,
   updatePageInDB,
@@ -193,6 +196,26 @@ export default function useAxios() {
     }
   };
 
+  const updateComponent = async ({
+    component_id,
+    project_id,
+    updates,
+    access_token,
+  }) => {
+    try {
+      debugger;
+      const updateResponse = await dispatch(
+        updateComponentInDB({ project_id, component_id, access_token, updates })
+      );
+
+      if (updateResponse.meta?.requestStatus === "fulfilled") {
+        await getComponentDetails({ project_id, component_id, access_token });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getComponentDetails = async ({
     project_id,
     component_id,
@@ -224,5 +247,6 @@ export default function useAxios() {
     dispatchResetTask,
     postComponent,
     getComponentDetails,
+    updateComponent,
   };
 }

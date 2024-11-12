@@ -4,7 +4,6 @@ import useModal from "@/app/hooks/useModal";
 
 export default function HorizontalImagesSlider({ images, outerContainerRef }) {
   const containerRef = useRef(null);
-  const itemRefs = useRef([]);
   const [selectedImage, setSelectedImage] = useState();
 
   const modalBody = () => {
@@ -58,11 +57,10 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
       onMouseLeave={handleMouseLeave}
     >
       <div className="flex h-4/5 items-center gap-5">
-        {images !== undefined &&
+        {images !== undefined && images.length !== 0 ? (
           images.map((image, i) => (
             <div
               key={`page-image-${i}`}
-              ref={(el) => (itemRefs.current[i] = el)} // Store each item reference
               className="min-w-[300px] h-full flex items-center justify-center overflow-hidden hover:cursor-pointer"
               onClick={() => handleImageClick(image)}
             >
@@ -73,7 +71,15 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
                 alt={image.title}
               />
             </div>
-          ))}
+          ))
+        ) : (
+          <div className="h-12">
+            <h1 className="text-lg">
+              {" "}
+              No images to show...Upload an image to view them here
+            </h1>
+          </div>
+        )}
       </div>
       {Modal}
     </div>

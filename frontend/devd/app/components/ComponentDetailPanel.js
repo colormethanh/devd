@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DescriptionContainer from "./DescriptionContainer";
 import useHelpers from "../hooks/useHelpers";
 import useModal from "../hooks/useModal";
 import DetailPanel from "./utilities/DetailPanel";
 import ImageForm from "./ImageForm";
+import RelevantContentsContainer from "./RelevantContentsContainer";
+import HorizontalImagesSlider from "./utilities/HorizontalImagesSlider";
+
+import CodeSnippetContainer from "./CodeSnippetContainer";
 
 export default function ComponentDetailPanel({
   component,
   updateComponentVisibility,
   addComponentImage,
+  updateComponentDescription,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("private");
+  const detailsContainerRef = useRef();
 
   const handleVisibilityChange = (e) => {
     updateComponentVisibility(component, e.target.value);
+  };
+
+  const handleDescriptionUpdate = (updatedDescription) => {
+    updateComponentDescription(component, updatedDescription);
   };
 
   // Setting up modal for image upload
@@ -32,7 +42,7 @@ export default function ComponentDetailPanel({
   }, [component]);
 
   return (
-    <DetailPanel>
+    <DetailPanel detailsContainerRef={detailsContainerRef}>
       <div className="w-full flex flex-col">
         <h1 className="text-4xl"> {component.name} </h1>
         <hr className="my-2 "></hr>
@@ -77,8 +87,38 @@ export default function ComponentDetailPanel({
             Upload an image
           </div>
         </div>
-        {Modal}
       </div>
+
+      {/* Description */}
+      <DescriptionContainer
+        description={description}
+        classString={"max-h-1/3 mt-3"}
+        updateCallback={handleDescriptionUpdate}
+      />
+
+      {/* Code Snippet */}
+      <CodeSnippetContainer snippet={component.snippet} />
+
+      {/* Relevant contents */}
+      <div className="flex flex-col ">
+        <div className="max-h-2/5">
+          <RelevantContentsContainer contents={""} />
+        </div>
+      </div>
+
+      {/* Container for horizontal image scrolls */}
+      <div className="flex flex-col">
+        <h4 className="text-xl"> Images </h4>
+        {/* Page Images, should open a modal on click */}
+        <div className="w-full h-full">
+          <HorizontalImagesSlider
+            outerContainerRef={detailsContainerRef}
+            images={component.images}
+          />
+        </div>
+      </div>
+
+      {Modal}
     </DetailPanel>
   );
 }

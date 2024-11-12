@@ -7,10 +7,12 @@ import ComponentDetailPanel from "./ComponentDetailPanel";
 export default function ProjectComponents({ project, accessToken }) {
   const [isAddComponentView, setIsAddComponentView] = useState(true);
   const [viewTogglerDisabled, setViewTogglerDisabled] = useState(false);
-  const { component, setComponent, postNewComponent } = useComponents(
-    project,
-    accessToken
-  );
+  const {
+    component,
+    setComponent,
+    postNewComponent,
+    updateComponentVisibility,
+  } = useComponents(project, accessToken);
   const currentComponentId = component._id || null;
 
   useEffect(() => {
@@ -56,7 +58,10 @@ export default function ProjectComponents({ project, accessToken }) {
               postNewComponent={postNewComponent}
             />
           ) : (
-            <ComponentDetailPanel component={component} />
+            <ComponentDetailPanel
+              component={component}
+              updateComponentVisibility={updateComponentVisibility}
+            />
           )}
         </div>
       </div>

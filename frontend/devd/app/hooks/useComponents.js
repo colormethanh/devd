@@ -3,7 +3,7 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useComponents(project, accessToken) {
-  const { getComponentDetails, postComponent } = useAxios();
+  const { getComponentDetails, postComponent, updateComponent } = useAxios();
 
   const component = useSelector((state) => state.component.component);
 
@@ -33,10 +33,29 @@ export default function useComponents(project, accessToken) {
     }
   };
 
+  const updateComponentVisibility = async (component, visibility) => {
+    try {
+      const updatedComponent = await updateComponent({
+        component_id: component._id,
+        project_id: project._id,
+        access_token: accessToken,
+        updates: { visibility: visibility },
+      });
+      return updatedComponent;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    if (project !== undefined && project.components.length !== 0)
+    if (project !== undefined && project?.components?.length !== 0)
       setComponent(project.components[0]);
   }, [project]);
 
-  return { component, setComponent, postNewComponent };
+  return {
+    component,
+    setComponent,
+    postNewComponent,
+    updateComponentVisibility,
+  };
 }
