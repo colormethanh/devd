@@ -13,7 +13,10 @@ export default function ImageForm({ handleSubmit }) {
 
   return (
     <div className="overflow-auto">
-      <Form onSubmit={() => handleSubmit(imageName, image)} title={"Sign In"}>
+      <Form
+        onSubmit={() => handleSubmit(imageName, image)}
+        title={"Upload Image"}
+      >
         <input
           type="file"
           id="image"

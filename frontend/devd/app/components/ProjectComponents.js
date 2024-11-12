@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ListPanel from "./utilities/ListPanel";
 import useComponents from "../hooks/useComponents";
 import AddComponentPanel from "./AddComponentPanel";
+import ComponentDetailPanel from "./ComponentDetailPanel";
 
 export default function ProjectComponents({ project, accessToken }) {
   const [isAddComponentView, setIsAddComponentView] = useState(true);
@@ -19,6 +20,7 @@ export default function ProjectComponents({ project, accessToken }) {
         setViewTogglerDisabled(true);
       } else {
         setViewTogglerDisabled(false);
+        setIsAddComponentView(false);
       }
     }
   }, [project]);
@@ -54,7 +56,7 @@ export default function ProjectComponents({ project, accessToken }) {
               postNewComponent={postNewComponent}
             />
           ) : (
-            <h1> Page view </h1>
+            <ComponentDetailPanel component={component} />
           )}
         </div>
       </div>

@@ -25,6 +25,7 @@ export default function ProjectPages({ project, accessToken }) {
         setViewTogglerDisabled(true);
       } else {
         setViewTogglerDisabled(false);
+        setIsAddTaskView(false);
       }
     }
   }, [project]);

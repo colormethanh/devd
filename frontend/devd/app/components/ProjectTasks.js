@@ -25,6 +25,7 @@ export default function ProjectTasks({ project }) {
         setViewTogglerDisabled(true);
       } else {
         setViewTogglerDisabled(false);
+        setIsAddTaskView(false);
       }
     }
   }, [project]);
