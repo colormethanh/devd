@@ -96,6 +96,16 @@ const pageSlice = createSlice({
       .addCase(updatePageInDB.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
+      })
+      .addCase(uploadImageToPage.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadImageToPage.fulfilled, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadImageToPage.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
       });
   },
 });

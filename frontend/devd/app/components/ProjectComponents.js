@@ -12,6 +12,7 @@ export default function ProjectComponents({ project, accessToken }) {
     setComponent,
     postNewComponent,
     updateComponentVisibility,
+    addComponentImage,
   } = useComponents(project, accessToken);
   const currentComponentId = component._id || null;
 
@@ -61,6 +62,7 @@ export default function ProjectComponents({ project, accessToken }) {
             <ComponentDetailPanel
               component={component}
               updateComponentVisibility={updateComponentVisibility}
+              addComponentImage={addComponentImage}
             />
           )}
         </div>

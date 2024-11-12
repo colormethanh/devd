@@ -30,7 +30,7 @@ export default function ComponentDetailPanel({
 
   // Setting up modal for image upload
   const handleImageUpload = (name, image) => {
-    addPageImage(page, image, name);
+    addComponentImage(component, image, name);
     closeModal();
   };
   const modalBody = <ImageForm handleSubmit={handleImageUpload} />;

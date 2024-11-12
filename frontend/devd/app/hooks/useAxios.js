@@ -6,6 +6,7 @@ import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
 import {
   getComponent,
   updateComponentInDB,
+  uploadImageToComponent,
 } from "../store/slices/componentSlice";
 import {
   getPage,
@@ -203,7 +204,6 @@ export default function useAxios() {
     access_token,
   }) => {
     try {
-      debugger;
       const updateResponse = await dispatch(
         updateComponentInDB({ project_id, component_id, access_token, updates })
       );
@@ -231,6 +231,39 @@ export default function useAxios() {
     }
   };
 
+  const updateComponentImage = async ({
+    project_id,
+    component_id,
+    image,
+    title,
+    access_token,
+  }) => {
+    try {
+      const updates = new FormData();
+      updates.append("title", title);
+      updates.append("image", image);
+
+      const uploadImageResponse = await dispatch(
+        uploadImageToComponent({
+          project_id,
+          component_id,
+          updates,
+          access_token,
+        })
+      );
+
+      if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
+        await getComponentDetails({
+          project_id,
+          component_id,
+          access_token,
+        });
+      return uploadImageResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return {
     dispatchLogin,
     dispatchSignup,
@@ -248,5 +281,6 @@ export default function useAxios() {
     postComponent,
     getComponentDetails,
     updateComponent,
+    updateComponentImage,
   };
 }

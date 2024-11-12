@@ -3,7 +3,12 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useComponents(project, accessToken) {
-  const { getComponentDetails, postComponent, updateComponent } = useAxios();
+  const {
+    getComponentDetails,
+    postComponent,
+    updateComponent,
+    updateComponentImage,
+  } = useAxios();
 
   const component = useSelector((state) => state.component.component);
 
@@ -47,6 +52,21 @@ export default function useComponents(project, accessToken) {
     }
   };
 
+  const addComponentImage = async (component, image, title) => {
+    try {
+      const updatedComponent = await updateComponentImage({
+        project_id: project._id,
+        component_id: component._id,
+        image: image,
+        title: title,
+        access_token: accessToken,
+      });
+      return updatedComponent;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (project !== undefined && project?.components?.length !== 0)
       setComponent(project.components[0]);
@@ -57,5 +77,6 @@ export default function useComponents(project, accessToken) {
     setComponent,
     postNewComponent,
     updateComponentVisibility,
+    addComponentImage,
   };
 }

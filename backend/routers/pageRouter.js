@@ -270,13 +270,6 @@ const pageRoutes = function (pageController) {
 
         const updates = { images: updatedImagesArray };
 
-        // update the the page and return page
-        // const updates = fillObjectWithFromBody(
-        //   ["images"],
-        //   updateObject,
-        //   originalPage
-        // );
-
         const updatedPage = await pageController.updatePage(page_id, updates);
 
         if (!updatedPage) next(createError(500, "error when updating"));

@@ -47,6 +47,25 @@ export const updateComponentInDB = createAsyncThunk(
   }
 );
 
+export const uploadImageToComponent = createAsyncThunk(
+  "component/uploadComponent/Image",
+  async (params, { rejectWithValue }) => {
+    const response = await axios.put(
+      `${BASE_URL}/projects/${[params.project_id]}/components/${
+        params.component_id
+      }/image`,
+      params.updates,
+      {
+        headers: {
+          Authorization: `Bearer ${params.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.payload;
+  }
+);
+
 const componentSlice = createSlice({
   name: "component",
   initialState: {
@@ -76,6 +95,16 @@ const componentSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateComponentInDB.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(uploadImageToComponent.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadImageToComponent.fulfilled, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadImageToComponent.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
       });
