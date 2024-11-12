@@ -87,10 +87,10 @@ export default function usePages(project, accessToken) {
     }
   };
 
-  useEffect(() => {
-    if (project !== undefined && project.pages.length !== 0)
-      setPage(project.pages[0]);
-  }, [project]);
+  // useEffect(() => {
+  //   if (project !== undefined && project.pages.length !== 0)
+  //     setPage(project.pages[0]);
+  // }, [project]);
 
   return {
     page,

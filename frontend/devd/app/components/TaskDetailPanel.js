@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DescriptionContainer from "./DescriptionContainer";
 import useHelpers from "../hooks/useHelpers";
-import TaskUtilitiesDropdown from "./TaskUtilitiesDropdown";
 import RelevantContentsContainer from "./RelevantContentsContainer";
 import DetailPanel from "./utilities/DetailPanel";
 
@@ -9,6 +8,9 @@ export default function TaskDetailPanel({
   task,
   updateTaskStatus,
   updateTaskDescription,
+  project,
+  addTaskRelevantContent,
+  changeViewTo,
 }) {
   const [selectedStatus, setSelectedStatus] = useState("backlog");
   const [description, setDescription] = useState("");
@@ -20,6 +22,10 @@ export default function TaskDetailPanel({
 
   const handleDescriptionUpdate = (updatedDescription) => {
     updateTaskDescription(task, updatedDescription);
+  };
+
+  const handleAddRelevantContent = (content) => {
+    addTaskRelevantContent(task, content);
   };
 
   useEffect(() => {
@@ -60,11 +66,6 @@ export default function TaskDetailPanel({
               <option value={"done"}>Done</option>
             </select>
           </div>
-
-          <div className="border-l border-white mr-3"></div>
-
-          {/* options dropdown */}
-          <TaskUtilitiesDropdown />
         </div>
       </div>
 
@@ -78,11 +79,16 @@ export default function TaskDetailPanel({
       <div className="border-b border-gray-500 mr-3 w-full"></div>
 
       {/* Relevant contents */}
-      <div className="flex flex-col ">
-        <div className="max-h-2/5">
-          <RelevantContentsContainer contents={""} />
-        </div>
-      </div>
+
+      <RelevantContentsContainer
+        projectContents={{
+          components: project.components,
+          pages: project.pages,
+        }}
+        relevantContents={task.relevant_contents}
+        addContent={handleAddRelevantContent}
+        changeViewTo={changeViewTo}
+      />
     </DetailPanel>
   );
 }

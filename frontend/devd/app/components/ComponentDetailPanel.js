@@ -120,19 +120,14 @@ export default function ComponentDetailPanel({
         updateCallback={handleDescriptionUpdate}
       />
 
+      <div className="border-b border-gray-500 mr-3 w-full"></div>
+
       {/* Code Snippet */}
       <CodeSnippetContainer snippet={component.snippet} />
 
-      {/* Relevant contents */}
-      <div className="flex flex-col ">
-        <div className="max-h-2/5">
-          <RelevantContentsContainer contents={""} />
-        </div>
-      </div>
-
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
-        <h4 className="text-xl"> Images </h4>
+        <h4 className="text-xl font-bold"> Images </h4>
         {/* Page Images, should open a modal on click */}
         <div className="w-full h-full">
           <HorizontalImagesSlider

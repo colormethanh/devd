@@ -54,6 +54,20 @@ export default function useTasks(project) {
     }
   };
 
+  const addTaskRelevantContent = async (task, content) => {
+    try {
+      const updatedTask = await updateTask({
+        project_id: project._id,
+        task_id: task._id,
+        updates: { relevant_contents: [content] },
+        access_token: accessToken,
+      });
+      return updatedTask;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const postNewTask = async (project_id, formData) => {
     try {
       const newTask = await postTask(project_id, formData, accessToken);
@@ -75,5 +89,6 @@ export default function useTasks(project) {
     updateTaskStatus,
     updateTaskDescription,
     postNewTask,
+    addTaskRelevantContent,
   };
 }

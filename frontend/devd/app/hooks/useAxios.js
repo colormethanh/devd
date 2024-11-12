@@ -70,10 +70,15 @@ export default function useAxios() {
 
   const updateTask = async ({ task_id, project_id, updates, access_token }) => {
     try {
-      const response = await dispatch(
+      const updateResponse = await dispatch(
         updateTaskInDB({ task_id, project_id, updates, access_token })
       );
-      return response;
+
+      if (updateResponse.meta?.requestStatus === "fulfilled") {
+        await getTaskDetails({ project_id, task_id, access_token });
+      }
+
+      return updateResponse;
     } catch (err) {
       console.log(err);
     }

@@ -1,41 +1,100 @@
 import React, { useState } from "react";
 import RelevantContentsItem from "./RelevantContentsItem";
+import RelevantContentsForm from "./RelevantContentsForm";
+import Dropdown from "./utilities/Dropdown";
+import Image from "next/image";
+import useModal from "../hooks/useModal";
 
-export default function RelevantContentsContainer({ contents }) {
+export default function RelevantContentsContainer({
+  projectContents,
+  relevantContents,
+  addContent,
+  changeViewTo,
+}) {
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContents, setModalContents] = useState([]);
+  const [selectedContent, setSelectedContent] = useState(undefined);
+  const [selectedContentType, setSelectedContentType] = useState();
+
+  // Modal for adding relevant content
+  const handleRelevantContentSubmit = () => {
+    addContent({
+      content_id: selectedContent._id,
+      content_type: selectedContentType,
+      content_name: selectedContent.name,
+    });
+    closeModal();
+  };
+
+  const { Modal, openModal, closeModal } = useModal(
+    modalTitle,
+    <RelevantContentsForm
+      contents={modalContents}
+      setSelectedContent={setSelectedContent}
+      handleSubmit={handleRelevantContentSubmit}
+    />
+  );
+
+  const handleModalToggle = (title, contents) => {
+    setModalTitle(title);
+    setModalContents(contents);
+    openModal();
+  };
+
+  const dropdownItems = [
+    {
+      text: "Add a component",
+      callback: () => {
+        setSelectedContentType("Component");
+        handleModalToggle("Add a component", projectContents.components);
+      },
+    },
+    {
+      text: "Add a page",
+      callback: () => {
+        setSelectedContentType("Page");
+        handleModalToggle("Add a page", projectContents.pages);
+      },
+    },
+  ];
+
   return (
-    <div className="flex flex-col h-full ">
-      <h5 className="text-xl font-bold"> Relevant contents:</h5>
-
-      <div className="h-4/6 w-full border overflow-auto no-scrollbar bg-gray-800">
-        <RelevantContentsItem
-          content={{
-            type: "component",
-            name: "Index number 0",
-            id: "1234345",
-          }}
-        />
-        <RelevantContentsItem
-          content={{
-            type: "component",
-            name: "TaskBarNav number 1",
-            id: "1234345",
-          }}
-        />
-        <RelevantContentsItem
-          content={{
-            type: "page",
-            name: "Body1 number 2",
-            id: "1234345",
-          }}
-        />
-        <RelevantContentsItem
-          content={{
-            type: "bug",
-            name: "Footer number 3",
-            id: "1234345",
-          }}
+    <div className="flex flex-col gap-2 h-full">
+      <div className="flex gap-4">
+        <h5 className="text-xl font-bold"> Relevant contents </h5>
+        <Dropdown
+          toggleText={
+            <Image
+              src={"/static/ellipseIcon-white.png"}
+              alt={"Ellipse icon"}
+              height={10}
+              width={10}
+            />
+          }
+          items={dropdownItems}
         />
       </div>
+
+      {/* Contents list */}
+      <div
+        className={`w-full border overflow-auto no-scrollbar transition-all`}
+      >
+        {relevantContents !== undefined && relevantContents.length !== 0 ? (
+          relevantContents.map((content) => (
+            <RelevantContentsItem
+              key={`relevantContent-${content._id}`}
+              content={content}
+              changeViewTo={changeViewTo}
+            />
+          ))
+        ) : (
+          <h1 className="text-xl">
+            {" "}
+            {"Oops, no relevant contents set up yet. Add one now to view"}{" "}
+          </h1>
+        )}
+      </div>
+      {Modal}
     </div>
   );
 }

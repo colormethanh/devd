@@ -1,7 +1,6 @@
 import React from "react";
-import Button from "./Button";
 
-export default function Modal({ isOpen, openModal, closeModal, body }) {
+export default function Modal({ isOpen, closeModal, body, title }) {
   return (
     <div>
       {/* Modal */}
@@ -16,7 +15,7 @@ export default function Modal({ isOpen, openModal, closeModal, body }) {
                 {"X"}
               </button>
             </div>
-
+            <h1 className="text-xl"> {title}</h1>
             {body}
           </div>
         </div>

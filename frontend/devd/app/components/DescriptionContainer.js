@@ -26,7 +26,6 @@ export default function DescriptionContainer({
 
   return (
     <div className={`${classString}`}>
-      <h5 className="text-xl font-bold">Description: </h5>
       <div className={`sm:w-full overflow-auto`}>
         {isEdit ? (
           <div>
@@ -57,7 +56,7 @@ export default function DescriptionContainer({
             </div>
           </div>
         ) : (
-          <div className="hover:cursor-pointer border border-black  hover:border-gray-500">
+          <div className="hover:cursor-pointer border border-black  hover:border-gray-500 italic">
             <p
               onClick={handleDescriptionClick}
               className="text-lg ms-3 overflow-auto "

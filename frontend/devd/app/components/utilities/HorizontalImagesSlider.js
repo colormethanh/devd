@@ -26,7 +26,7 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
       </div>
     );
   };
-  const { Modal, openModal, closeModal } = useModal("Image", modalBody());
+  const { Modal, openModal, closeModal } = useModal("", modalBody());
 
   const handleMouseEnter = () => {
     outerContainerRef.current.style.overflow = "hidden";

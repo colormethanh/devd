@@ -1,8 +1,13 @@
 import React from "react";
 
-export default function Form({ onSubmit, title, children }) {
+export default function Form({
+  onSubmit,
+  title,
+  submitButtonStyle = "",
+  children,
+}) {
   return (
-    <div className="min-h-80 w-full flex justify-center text-white ">
+    <div className="min-h-20 w-full flex justify-center text-white ">
       <form
         className="bg-black p-4 w-full space-y-6"
         onSubmit={(e) => {
@@ -14,14 +19,14 @@ export default function Form({ onSubmit, title, children }) {
         {children}
         <div className="w-full flex justify-end">
           <button
-            className="bg-[#000000] 
+            className={`bg-[#000000] 
                 text-white border 
                 border-white 
                 hover:bg-white 
                 hover:text-black 
                 focus:outline-black 
                 w-48 
-                p-3 py-0"
+                p-3 py-0 ${submitButtonStyle}`}
             type="submit"
           >
             Submit

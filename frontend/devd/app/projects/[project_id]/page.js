@@ -15,7 +15,7 @@ export default function ProjectDetails({ params }) {
 
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
   const { project } = useProject(project_id);
-  const { isViewing, changeViewTo } = useViews();
+  const { isViewing, changeViewTo } = useViews(project);
 
   useEffect(() => {
     if (accessToken !== undefined) {
@@ -30,7 +30,9 @@ export default function ProjectDetails({ params }) {
         <div className="w-full"> Please login to continue </div>
       ) : (
         <div className="w-full overflow-hidden">
-          {isViewing === "tasks" && <ProjectTasks project={project} />}
+          {isViewing === "tasks" && (
+            <ProjectTasks project={project} changeViewTo={changeViewTo} />
+          )}
 
           {isViewing === "pages" && (
             <ProjectPages project={project} accessToken={accessToken} />

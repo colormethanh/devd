@@ -4,12 +4,18 @@ import { useState, useEffect } from "react";
 import AddTaskPanel from "./AddTaskPanel";
 import ListPanel from "./utilities/ListPanel";
 
-export default function ProjectTasks({ project }) {
+export default function ProjectTasks({ project, changeViewTo }) {
   const [isAddTaskView, setIsAddTaskView] = useState(true);
   const [viewTogglerDisabled, setViewTogglerDisabled] = useState(false);
 
-  let { task, setTask, updateTaskStatus, updateTaskDescription, postNewTask } =
-    useTasks(project);
+  let {
+    task,
+    setTask,
+    updateTaskStatus,
+    updateTaskDescription,
+    postNewTask,
+    addTaskRelevantContent,
+  } = useTasks(project);
 
   let currentTaskId = task._id || null;
 
@@ -65,6 +71,9 @@ export default function ProjectTasks({ project }) {
               task={task}
               updateTaskStatus={updateTaskStatus}
               updateTaskDescription={updateTaskDescription}
+              project={project}
+              addTaskRelevantContent={addTaskRelevantContent}
+              changeViewTo={changeViewTo}
             />
           )}
         </div>

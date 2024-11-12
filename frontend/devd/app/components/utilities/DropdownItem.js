@@ -7,7 +7,7 @@ export default function DropdownItem({ clickCallback, children }) {
 
   return (
     <div
-      className="text-black block px-2 py-1 text-sm hover:bg-gray-100 hover:cursor-pointer"
+      className="text-black block px-2 py-1 text-sm hover:bg-gray-300 hover:cursor-pointer"
       onClick={handleClick}
     >
       {children}{" "}
