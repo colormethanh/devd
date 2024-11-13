@@ -77,11 +77,6 @@ export default function useTasks(project) {
     }
   };
 
-  useEffect(() => {
-    if (project !== undefined && project?.tasks?.length !== 0)
-      setTask(project.tasks[0]);
-  }, [project]);
-
   return {
     task,
     setTask,

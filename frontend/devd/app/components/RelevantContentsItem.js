@@ -28,7 +28,7 @@ export default function RelevantContentsItem({ content, changeViewTo }) {
   };
 
   return (
-    <div className="flex justify-between h-12 w-full border-b border-gray-500 hover:bg-slate-700 hover:cursor-pointer">
+    <div className="flex justify-between h-12 w-full border-b border-gray-500 hover:bg-slate-700">
       <div className="w-1/3 h-full flex gap-3 items-center ps-3">
         <div className="hidden md:block">
           <div className="">{itemIcon()}</div>
@@ -48,10 +48,15 @@ export default function RelevantContentsItem({ content, changeViewTo }) {
       </div>
 
       <div
-        className="w-1/6 text-start flex items-center"
+        className="w-1/6 text-start flex items-center hover:cursor-pointer"
         onClick={handleContentViewPeek}
       >
-        {">>>"}
+        <Image
+          src={"/static/magnifyingGlassIcon-white.png"}
+          height={25}
+          width={25}
+          alt={"Peek content Icon"}
+        />
       </div>
     </div>
   );

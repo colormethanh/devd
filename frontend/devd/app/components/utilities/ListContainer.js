@@ -22,7 +22,7 @@ export default function ListContainer({
   return (
     <div>
       <div className="flex gap-4">
-        <h1 className="text-xl">{title}</h1>
+        <h1 className="text-xl font-bold underline mb-3">{title}</h1>
         <div
           onClick={() => {
             setIsAddingItem(true);

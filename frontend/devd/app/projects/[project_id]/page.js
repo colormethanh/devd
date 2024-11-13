@@ -19,6 +19,7 @@ export default function ProjectDetails({ params }) {
 
   const handleChangeView = (view) => {
     // if view array is not empty then set the first item as the default
+
     if (project[view] !== undefined && project[view].length !== 0) {
       return changeViewTo(view, project[view][0]._id);
     }
@@ -29,6 +30,7 @@ export default function ProjectDetails({ params }) {
     if (accessToken !== undefined) {
       checkAndRefreshToken(accessToken);
     }
+    handleChangeView("tasks");
   }, [accessToken]);
 
   return (
@@ -37,6 +39,7 @@ export default function ProjectDetails({ params }) {
       {needsLogin === true ? (
         <div className="w-full"> Please login to continue </div>
       ) : (
+        // todo add needs login view
         <div className="w-full overflow-hidden">
           {isViewing === "tasks" && (
             <ProjectTasks project={project} changeViewTo={changeViewTo} />

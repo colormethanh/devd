@@ -60,17 +60,6 @@ export default function SideBar({ onItemClick, isViewing }) {
           >
             Components
           </SideBarItem>
-          <SideBarItem
-            src={"/static/teamIcon-white.png"}
-            onHoverSrc={"/static/teamIcon.png"}
-            onClickCallback={() => {
-              onItemClick("team");
-            }}
-            isOpen={isOpen}
-            isSelected={isViewing === "team"}
-          >
-            Team
-          </SideBarItem>
         </ul>
       </div>
       <div

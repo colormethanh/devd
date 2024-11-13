@@ -6,17 +6,17 @@ const validViews = ["tasks", "components", "pages", "team"];
 
 export default function useViews(project) {
   const [isViewing, setIsViewing] = useState("tasks");
-  const { getComponentDetails, getPageDetails } = useAxios();
+  const { getComponentDetails, getPageDetails, getTaskDetails } = useAxios();
   const token = useSelector((state) => state.auth.token);
 
   const changeViewTo = async (view, contentId = "") => {
     if (validViews.includes(view)) {
       switch (view) {
-        case "components":
+        case "tasks":
           if (contentId !== "")
-            getComponentDetails({
+            getTaskDetails({
               project_id: project._id,
-              component_id: contentId,
+              task_id: contentId,
               access_token: token,
             });
           break;
@@ -28,9 +28,19 @@ export default function useViews(project) {
               access_token: token,
             });
           break;
+        case "components":
+          if (contentId !== "")
+            getComponentDetails({
+              project_id: project._id,
+              component_id: contentId,
+              access_token: token,
+            });
+          break;
+
         default:
           break;
       }
+
       return setIsViewing(view);
     }
   };

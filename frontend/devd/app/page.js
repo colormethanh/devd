@@ -8,6 +8,7 @@ import useAuth from "./hooks/useAuth";
 export default function Home() {
   const router = useRouter();
   const { accessToken, checkAndRefreshToken } = useAuth();
+  const needsLogin = useSelector((state) => state.auth.needs_login);
 
   useEffect(() => {
     if (accessToken !== undefined) {
@@ -32,28 +33,32 @@ export default function Home() {
             <div className="mr-3 grid place-items-center">{">"} </div>
           </div>
         </Button>
-        <Button
-          clickCallback={() => {
-            router.push("/auth");
-          }}
-          addStyle="mt-3"
-        >
-          <div className="w-full flex justify-between">
-            Login
-            <div className="mr-3 grid place-items-center">{">"} </div>
-          </div>
-        </Button>
-        <Button
-          clickCallback={() => {
-            router.push("/auth/signup");
-          }}
-          addStyle="mt-3"
-        >
-          <div className="w-full flex justify-between">
-            Signup
-            <div className="mr-3 grid place-items-center">{">"} </div>
-          </div>
-        </Button>
+        {needsLogin === true && (
+          <>
+            <Button
+              clickCallback={() => {
+                router.push("/auth");
+              }}
+              addStyle="mt-3"
+            >
+              <div className="w-full flex justify-between">
+                Login
+                <div className="mr-3 grid place-items-center">{">"} </div>
+              </div>
+            </Button>
+            <Button
+              clickCallback={() => {
+                router.push("/auth/signup");
+              }}
+              addStyle="mt-3"
+            >
+              <div className="w-full flex justify-between">
+                Signup
+                <div className="mr-3 grid place-items-center">{">"} </div>
+              </div>
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -36,7 +36,6 @@ export default function ProjectTasks({ project, changeViewTo }) {
     }
   }, [project]);
 
-  // debugger;
   return (
     <div className="h-5/6 border border-white mr-1 mt-4">
       <div className="flex h-full">

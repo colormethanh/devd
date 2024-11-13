@@ -99,6 +99,8 @@ export default function PageDetailsPanel({
         updateCallback={handleDescriptionUpdate}
       />
 
+      <div className="border-b border-gray-500 mr-3 w-full"></div>
+
       {/* Features */}
       <ListContainer
         addStyles={"max-h-24"}
@@ -110,7 +112,7 @@ export default function PageDetailsPanel({
 
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
-        <h4 className="text-xl"> Images </h4>
+        <h4 className="text-xl font-bold underline mb-2"> Images </h4>
         {/* Page Images, should open a modal on click */}
         <div className="w-full h-full">
           <HorizontalImagesSlider
