@@ -13,9 +13,8 @@ import { useRouter } from "next/navigation";
 
 export default function ProjectDetails({ params }) {
   const router = useRouter();
-  const unwrappedParams = use(params);
 
-  const { project_id } = unwrappedParams;
+  const { project_id } = React.use(params);
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
 
   const { project } = useProject(project_id, accessToken);

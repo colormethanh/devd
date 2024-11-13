@@ -22,14 +22,27 @@ export default function ProjectsPage() {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
         setProjects(user.projects);
+        console.log(user);
       }
     };
     setupPage();
-  }, [accessToken, user]);
-
+  }, [accessToken, user, projects]);
+  debugger;
   return (
     <div className="flex flex-row justify-center text-center h-full w-full">
-      <h1 className="w-2/3 border">Hello world</h1>
+      <div className="w-2/3 h-full border p-3 flex flex-col gap-4">
+        <h1 className="text-3xl">Welcome Back: {user && user.username}</h1>
+
+        <div className="min-h-32">
+          <h3 className="text-start text-lg"> Your projects </h3>
+          <div className="w-full h-full border border-gray-500 p-3">
+            {user !== undefined &&
+              user.projects.map((project) => {
+                <div className="h-12"> {project.name} </div>;
+              })}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
