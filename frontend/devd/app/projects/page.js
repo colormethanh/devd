@@ -11,9 +11,11 @@ import useHelpers from "../hooks/useHelpers";
 import Image from "next/image";
 import { setRequestedProject } from "@/app/store/slices/projectSlice";
 import { useDispatch } from "react-redux";
+import useModal from "../hooks/useModal";
+import DeleteProjectWarning from "../components/DeleteProjectWarning";
 
 export default function ProjectsPage() {
-  const { isLoading } = useProjects();
+  const { deleteProject } = useProjects();
   const [projects, setProjects] = useState([]);
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
   const [selectedProject, setSelectedProject] = useState();
@@ -23,8 +25,30 @@ export default function ProjectsPage() {
   );
 
   const dispatch = useDispatch();
-
   const router = useRouter();
+
+  const handleOpenModal = () => {
+    openModal();
+  };
+
+  const handleCloseModal = () => {
+    closeModal();
+  };
+
+  const handleDeleteProject = (project_id) => {
+    deleteProject(project_id, accessToken);
+    setProjects(user.projects);
+    closeModal();
+  };
+
+  const { Modal, openModal, closeModal } = useModal(
+    "Delete project?",
+    <DeleteProjectWarning
+      project={selectedProject}
+      handleCancel={handleCloseModal}
+      onDelete={handleDeleteProject}
+    />
+  );
 
   const handleProjectSelect = (i) => {
     setSelectedProject({
@@ -44,7 +68,6 @@ export default function ProjectsPage() {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
         setProjects(user.projects);
-        console.log(user);
       }
     };
     setupPage();
@@ -75,7 +98,7 @@ export default function ProjectsPage() {
                         onClick={() => handleProjectSelect(i)}
                       >
                         <div className="w-1/2 text-start">
-                          {project.project_id.name}
+                          {project.project_id?.name}
                         </div>{" "}
                         <div className="text-start">
                           {" "}
@@ -134,7 +157,10 @@ export default function ProjectsPage() {
                       {" "}
                       View Project{" "}
                     </Button>
-                    <div className="w-10 p-1 h-full border border-red-400 hover:border-red-700 mx-3 flex justify-center">
+                    <div
+                      className="w-10 p-1 h-full border border-red-400 hover:border-red-700 mx-3 flex justify-center"
+                      onClick={handleOpenModal}
+                    >
                       {" "}
                       <Image
                         src={"/static/trashIcon-white.png"}
@@ -151,7 +177,7 @@ export default function ProjectsPage() {
                     {" "}
                     <h1 className="text-2xl">
                       {" "}
-                      ⬅️ Select a project on the left to view it's details{" "}
+                      ⬅️ Select a project from the left to view it's details{" "}
                     </h1>{" "}
                   </div>
                 </>
@@ -160,6 +186,7 @@ export default function ProjectsPage() {
           </div>
         </div>
       </div>
+      {Modal}
     </div>
   );
 }

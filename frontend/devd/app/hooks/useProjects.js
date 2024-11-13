@@ -4,22 +4,12 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useProjects() {
-  const user = useSelector((state) => state.auth.user);
-  // const projects = useSelector((state) => state.auth.user.projects);
-  const [isLoading, setIsLoading] = useState(false);
-  const { getProjects } = useAxios();
+  const { deleteProjectInDB } = useAxios();
 
-  // const refreshProjects = async () => {
-  //   setIsLoading(true);
-  //   try {
-  //     const fetchedProjects = await getProjects();
-  //     setProjects(fetchedProjects);
-  //   } catch (error) {
-  //     console.error("Failed to fetch projects", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const deleteProject = (projectId, access_token) => {
+    debugger;
+    deleteProjectInDB(projectId, access_token);
+  };
 
-  return { isLoading };
+  return { deleteProject };
 }

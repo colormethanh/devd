@@ -47,6 +47,22 @@ export default function useAxios() {
     // todo: check if user is authorized
   };
 
+  const deleteProjectInDB = async (project_id, access_token) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/projects/${project_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      if (response.meta?.requestStatus === "fulfilled") await getProjects();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getProjectDetails = async (project_id) => {
     try {
       const response = await dispatch(getProject(project_id));
@@ -288,5 +304,6 @@ export default function useAxios() {
     getComponentDetails,
     updateComponent,
     updateComponentImage,
+    deleteProjectInDB,
   };
 }
