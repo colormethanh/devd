@@ -17,6 +17,14 @@ export default function ProjectDetails({ params }) {
   const { project } = useProject(project_id);
   const { isViewing, changeViewTo } = useViews(project);
 
+  const handleChangeView = (view) => {
+    // if view array is not empty then set the first item as the default
+    if (project[view] !== undefined && project[view].length !== 0) {
+      return changeViewTo(view, project[view][0]._id);
+    }
+    changeViewTo(view);
+  };
+
   useEffect(() => {
     if (accessToken !== undefined) {
       checkAndRefreshToken(accessToken);
@@ -25,7 +33,7 @@ export default function ProjectDetails({ params }) {
 
   return (
     <div className="flex h-full w-full">
-      <SideBar onItemClick={changeViewTo} isViewing={isViewing} />
+      <SideBar onItemClick={handleChangeView} isViewing={isViewing} />
       {needsLogin === true ? (
         <div className="w-full"> Please login to continue </div>
       ) : (

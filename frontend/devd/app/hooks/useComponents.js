@@ -95,11 +95,6 @@ export default function useComponents(project, accessToken) {
     }
   };
 
-  // useEffect(() => {
-  //   if (project !== undefined && project?.components?.length !== 0)
-  //     setComponent(project.components[0]);
-  // }, [project]);
-
   return {
     component,
     setComponent,

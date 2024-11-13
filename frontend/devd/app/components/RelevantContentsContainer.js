@@ -88,10 +88,11 @@ export default function RelevantContentsContainer({
             />
           ))
         ) : (
-          <h1 className="text-xl">
-            {" "}
-            {"Oops, no relevant contents set up yet. Add one now to view"}{" "}
-          </h1>
+          <div className="h-12 flex items-center p-2">
+            <h1 className="text-md">
+              {"😔 Oops, no relevant contents set up yet. Add one now!"}
+            </h1>
+          </div>
         )}
       </div>
       {Modal}
