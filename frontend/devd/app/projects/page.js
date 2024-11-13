@@ -5,12 +5,13 @@ import HorizontalScrollContainer from "../components/utilities/HorizontalScrollC
 import useProjects from "../hooks/useProjects";
 import Button from "../components/utilities/Button";
 import { useRouter } from "next/navigation";
+import useViews from "../hooks/useViews";
 
 export default function ProjectsPage() {
   const { projects, refreshProjects, isLoading } = useProjects();
+
   const [activeProject, setActiveProject] = useState(0);
   const router = useRouter();
-
   return (
     <div className="flex flex-col text-center">
       <div className="mt-8">

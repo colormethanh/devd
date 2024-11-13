@@ -1,6 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export default function useAuth() {
   const { refreshToken } = useAxios();
@@ -35,6 +36,9 @@ export default function useAuth() {
       console.log("nothing wrong with token");
     }
   };
+  useEffect(() => {
+    checkAndRefreshToken(accessToken);
+  }, []);
 
   return { checkAndRefreshToken, accessToken, needsLogin };
 }

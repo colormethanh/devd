@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 export default function Navbar() {
   const router = useRouter();
   const user_id = useSelector((state) => state.auth.user_id);
+  const needs_login = useSelector((state) => state.auth.needs_login);
 
   return (
     <nav className="bg-black border-b border-white p-4 mr-1">
@@ -22,32 +23,35 @@ export default function Navbar() {
             >
               Home
             </div>
-            <div
-              onClick={() => {
-                router.push("/auth");
-              }}
-              className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
-            >
-              Login
-            </div>
-            <div
-              onClick={() => {
-                router.push("/auth/signup");
-              }}
-              className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
-            >
-              Signup
-            </div>
 
-            {user_id !== "" && (
+            {needs_login === false ? (
               <div
                 onClick={() => {
-                  router.push("/");
+                  router.push("/projects");
                 }}
                 className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
               >
-                User
+                My Projects
               </div>
+            ) : (
+              <>
+                <div
+                  onClick={() => {
+                    router.push("/auth");
+                  }}
+                  className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
+                >
+                  Login
+                </div>
+                <div
+                  onClick={() => {
+                    router.push("/auth/signup");
+                  }}
+                  className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
+                >
+                  Signup
+                </div>
+              </>
             )}
           </div>
         </div>

@@ -23,17 +23,7 @@ export default function Home() {
         <h1 className="text-6xl font-bold"> Devd </h1>
       </div>
       <div className="home-options flex flex-col items-center mt-3">
-        <Button
-          clickCallback={() => {
-            router.push("/projects");
-          }}
-        >
-          <div className="w-full flex justify-between">
-            Enter as guest
-            <div className="mr-3 grid place-items-center">{">"} </div>
-          </div>
-        </Button>
-        {needsLogin === true && (
+        {needsLogin === true ? (
           <>
             <Button
               clickCallback={() => {
@@ -58,6 +48,17 @@ export default function Home() {
               </div>
             </Button>
           </>
+        ) : (
+          <Button
+            clickCallback={() => {
+              router.push("/projects");
+            }}
+          >
+            <div className="w-full flex justify-between">
+              Enter
+              <div className="mr-3 grid place-items-center">{">"} </div>
+            </div>
+          </Button>
         )}
       </div>
     </div>

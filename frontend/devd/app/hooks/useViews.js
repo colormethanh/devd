@@ -14,7 +14,7 @@ export default function useViews(project) {
       switch (view) {
         case "tasks":
           if (contentId !== "")
-            getTaskDetails({
+            await getTaskDetails({
               project_id: project._id,
               task_id: contentId,
               access_token: token,
@@ -22,7 +22,7 @@ export default function useViews(project) {
           break;
         case "pages":
           if (contentId !== "")
-            getPageDetails({
+            await getPageDetails({
               project_id: project._id,
               page_id: contentId,
               access_token: token,
@@ -30,7 +30,7 @@ export default function useViews(project) {
           break;
         case "components":
           if (contentId !== "")
-            getComponentDetails({
+            await getComponentDetails({
               project_id: project._id,
               component_id: contentId,
               access_token: token,

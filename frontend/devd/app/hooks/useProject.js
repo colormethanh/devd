@@ -3,13 +3,18 @@ import { useEffect } from "react";
 import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
-export default function useProject(project_id) {
-  const { getProjectDetails } = useAxios();
+export default function useProject(project_id, accessToken) {
+  const { getProjectDetails, getTaskDetails } = useAxios();
   const project = useSelector((state) => state.project.project);
   const isLoading = useSelector((state) => state.project.isLoading);
 
   useEffect(() => {
-    if (project_id) getProjectDetails(project_id);
+    const setupProject = async () => {
+      if (project_id) {
+        const project = await getProjectDetails(project_id);
+      }
+    };
+    setupProject();
   }, [project_id]);
 
   return { project, isLoading };

@@ -7,7 +7,6 @@ import ListPanel from "./utilities/ListPanel";
 export default function ProjectTasks({ project, changeViewTo }) {
   const [isAddTaskView, setIsAddTaskView] = useState(true);
   const [viewTogglerDisabled, setViewTogglerDisabled] = useState(false);
-
   let {
     task,
     setTask,

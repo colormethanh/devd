@@ -14,12 +14,11 @@ export default function ProjectDetails({ params }) {
   const { project_id } = unwrappedParams;
 
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
-  const { project } = useProject(project_id);
+  const { project } = useProject(project_id, accessToken);
   const { isViewing, changeViewTo } = useViews(project);
 
   const handleChangeView = (view) => {
     // if view array is not empty then set the first item as the default
-
     if (project[view] !== undefined && project[view].length !== 0) {
       return changeViewTo(view, project[view][0]._id);
     }
@@ -27,11 +26,10 @@ export default function ProjectDetails({ params }) {
   };
 
   useEffect(() => {
-    if (accessToken !== undefined) {
-      checkAndRefreshToken(accessToken);
-    }
+    if (accessToken !== undefined) checkAndRefreshToken(accessToken);
+
     handleChangeView("tasks");
-  }, [accessToken]);
+  }, [project]);
 
   return (
     <div className="flex h-full w-full">

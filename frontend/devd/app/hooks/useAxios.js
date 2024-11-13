@@ -59,6 +59,7 @@ export default function useAxios() {
   // Tasks
   const getTaskDetails = async ({ project_id, task_id, access_token }) => {
     try {
+      // debugger;
       const response = await dispatch(
         getTask({ project_id, task_id, access_token })
       );
