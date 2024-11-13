@@ -19,12 +19,17 @@ export const getProject = createAsyncThunk(
 const projectSlice = createSlice({
   name: "project",
   initialState: {
+    requestedProject: "",
     project: {},
     error: {},
     role: "",
     isLoading: false,
   },
-  reducers: {},
+  reducers: {
+    setRequestedProject: (state, action) => {
+      state.requestedProject = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getProject.pending, (state, action) => {
@@ -40,5 +45,7 @@ const projectSlice = createSlice({
       });
   },
 });
+
+export const { setRequestedProject } = projectSlice.actions;
 
 export default projectSlice.reducer;

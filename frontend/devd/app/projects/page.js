@@ -9,6 +9,8 @@ import useAuth from "../hooks/useAuth";
 import { useSelector } from "react-redux";
 import useHelpers from "../hooks/useHelpers";
 import Image from "next/image";
+import { setRequestedProject } from "@/app/store/slices/projectSlice";
+import { useDispatch } from "react-redux";
 
 export default function ProjectsPage() {
   const { isLoading } = useProjects();
@@ -16,6 +18,11 @@ export default function ProjectsPage() {
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
   const [selectedProject, setSelectedProject] = useState();
   const { formatDate } = useHelpers();
+  const requestedProject = useSelector(
+    (state) => state.project.requestedProject
+  );
+
+  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -24,6 +31,11 @@ export default function ProjectsPage() {
       project: projects[i].project_id,
       role: projects[i].role,
     });
+    dispatch(setRequestedProject(projects[i].project_id._id));
+  };
+
+  const handleGoToProject = () => {
+    router.push(`/projects/${requestedProject}`);
   };
 
   useEffect(() => {
@@ -115,7 +127,13 @@ export default function ProjectsPage() {
                     Component: {selectedProject.project.components.length}{" "}
                   </p>
                   <div className="w-full h-8 flex justify-end my-3">
-                    <Button addStyle="p-0 text text-sm"> View Project </Button>
+                    <Button
+                      clickCallback={handleGoToProject}
+                      addStyle="p-0 text text-sm"
+                    >
+                      {" "}
+                      View Project{" "}
+                    </Button>
                     <div className="w-10 p-1 h-full border border-red-400 hover:border-red-700 mx-3 flex justify-center">
                       {" "}
                       <Image
