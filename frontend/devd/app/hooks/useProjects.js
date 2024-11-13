@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 export default function useProjects() {
   const user = useSelector((state) => state.auth.user);
-  const [projects, setProjects] = useState([]);
+  // const projects = useSelector((state) => state.auth.user.projects);
   const [isLoading, setIsLoading] = useState(false);
   const { getProjects } = useAxios();
 
@@ -21,10 +21,5 @@ export default function useProjects() {
   //   }
   // };
 
-  useEffect(() => {
-    // refreshProjects();
-    if (user !== undefined) setProjects(user.projects);
-  }, []);
-
-  return { projects, isLoading };
+  return { isLoading };
 }

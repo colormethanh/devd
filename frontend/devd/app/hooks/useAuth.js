@@ -7,6 +7,7 @@ export default function useAuth() {
   const { refreshToken } = useAxios();
   const accessToken = useSelector((state) => state.auth.token);
   const needsLogin = useSelector((state) => state.auth.needs_login);
+  const user = useSelector((state) => state.auth.user);
 
   const checkIfTokenIsExpired = (token) => {
     try {
@@ -33,5 +34,5 @@ export default function useAuth() {
     checkAndRefreshToken(accessToken);
   }, []);
 
-  return { checkAndRefreshToken, accessToken, needsLogin };
+  return { checkAndRefreshToken, accessToken, needsLogin, user };
 }

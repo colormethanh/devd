@@ -11,10 +11,8 @@ import { useSelector } from "react-redux";
 export default function ProjectsPage() {
   const { isLoading } = useProjects();
   const [activeProject, setActiveProject] = useState(0);
-
-  const projects = useSelector((state) => state.auth.user.projects);
-
-  const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
+  const [projects, setProjects] = useState([]);
+  const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
 
   const router = useRouter();
 
@@ -23,24 +21,15 @@ export default function ProjectsPage() {
       if (accessToken !== undefined) {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
+        setProjects(user.projects);
       }
-      console.log(projects);
     };
     setupPage();
-  }, []);
+  }, [accessToken, user]);
 
   return (
-    <div className="flex flex-col text-center">
-      {/* <HorizontalScrollContainer setActiveChild={setActiveProject}>
-        {projects &&
-          projects.map((project, i) => (
-            <ProjectPanel
-              key={project._id}
-              project={project}
-              isActive={i === activeProject}
-            />
-          ))}
-      </HorizontalScrollContainer> */}
+    <div className="flex flex-row justify-center text-center h-full w-full">
+      <h1 className="w-2/3 border">Hello world</h1>
     </div>
   );
 }
