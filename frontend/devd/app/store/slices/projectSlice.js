@@ -21,6 +21,7 @@ const projectSlice = createSlice({
   initialState: {
     project: {},
     error: {},
+    role: "",
     isLoading: false,
   },
   reducers: {},

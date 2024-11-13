@@ -34,7 +34,7 @@ const authRoutes = function (
         return next(tokens);
       }
 
-      const { accessToken, refreshToken } = tokens;
+      const { accessToken, refreshToken, user } = tokens;
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -43,7 +43,7 @@ const authRoutes = function (
 
       return res.send(
         createResponseObject(
-          { accessToken, user_id: refreshToken.user_id },
+          { accessToken, user_id: user._id, user: user },
           "Login Successful"
         )
       );
@@ -72,6 +72,7 @@ const authRoutes = function (
       const accessTokenAndUserId = {
         accessToken: signupResponse.accessToken,
         user_id: signupResponse.user_id,
+        user: signupResponse.user,
       };
 
       const refreshToken = signupResponse.refreshToken;
@@ -119,7 +120,7 @@ const authRoutes = function (
 
       return res.send(
         createResponseObject(
-          { accessToken, user_id: userInDB._id },
+          { accessToken, user_id: userInDB._id, user: userInDB },
           "successfully refreshed token"
         )
       );

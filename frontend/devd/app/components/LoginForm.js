@@ -26,6 +26,7 @@ export default function LoginForm({ formData, setFormData, handleSubmit }) {
             value={formData["username"]}
             onChange={handleInputChange}
             required
+            autoComplete="username"
             className="mt-1 w-full p-2 border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
           />
         </div>
@@ -42,6 +43,7 @@ export default function LoginForm({ formData, setFormData, handleSubmit }) {
             name="password"
             value={formData["password"]}
             onChange={handleInputChange}
+            autoComplete="current-password"
             required
             className="mt-1 w-full p-2 border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
           />

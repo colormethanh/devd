@@ -30,9 +30,15 @@ export default function ProjectDetails({ params }) {
   };
 
   useEffect(() => {
-    if (accessToken !== undefined) checkAndRefreshToken(accessToken);
-    if (needsLogin === true) router.push("/auth");
-    handleChangeView("tasks");
+    const setupPage = async () => {
+      if (accessToken !== undefined) {
+        await checkAndRefreshToken(accessToken);
+        if (needsLogin === true) router.push("/auth");
+      }
+      handleChangeView("tasks");
+    };
+
+    setupPage();
   }, [project]);
 
   return (
