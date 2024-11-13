@@ -15,7 +15,8 @@ import Form from "../components/utilities/Form";
 
 export default function ProjectsPage() {
   const { deleteProject, postProject } = useProjects();
-  const [projects, setProjects] = useState([]);
+  // const [projects, setProjects] = useState([]);
+  const projects = useSelector((state) => state?.auth?.user?.projects) || [];
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
   const [selectedProject, setSelectedProject] = useState();
   const { formatDate } = useHelpers();
@@ -38,6 +39,7 @@ export default function ProjectsPage() {
 
   const handlePostProject = () => {
     postProject(formData, accessToken);
+    handleCloseModal();
   };
 
   const handleOpenModal = () => {
@@ -50,7 +52,6 @@ export default function ProjectsPage() {
 
   const handleDeleteProject = (project_id) => {
     deleteProject(project_id, accessToken);
-    setProjects(user.projects);
     closeModal();
   };
 
@@ -88,11 +89,11 @@ export default function ProjectsPage() {
       if (accessToken !== undefined) {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
-        setProjects(user.projects);
       }
     };
     setupPage();
   }, [accessToken, user, projects]);
+
   return (
     <div className="flex flex-row justify-center mt-6 text-center h-full w-full">
       <div className="w-2/3 h-4/5 border p-3 flex flex-col">

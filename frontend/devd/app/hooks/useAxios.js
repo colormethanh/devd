@@ -54,7 +54,7 @@ export default function useAxios() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      if (response.meta?.requestStatus === "fulfilled") await refreshToken();
+      await refreshToken();
     } catch (err) {
       console.log(err);
     }
@@ -70,7 +70,7 @@ export default function useAxios() {
           },
         }
       );
-      if (response.meta?.requestStatus === "fulfilled") await refreshToken();
+      await refreshToken();
     } catch (err) {
       console.log(err);
     }

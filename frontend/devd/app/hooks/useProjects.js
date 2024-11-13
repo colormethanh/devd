@@ -11,7 +11,6 @@ export default function useProjects() {
   };
 
   const postProject = (formData, accessToken) => {
-    debugger;
     postProjectToDB({ formData, accessToken });
   };
 
