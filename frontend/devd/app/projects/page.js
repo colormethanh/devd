@@ -1,17 +1,23 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProjectPanel from "../components/ProjectPanel";
 import HorizontalScrollContainer from "../components/utilities/HorizontalScrollContainer";
 import useProjects from "../hooks/useProjects";
 import Button from "../components/utilities/Button";
 import { useRouter } from "next/navigation";
-import useViews from "../hooks/useViews";
+import { useSelector } from "react-redux";
 
 export default function ProjectsPage() {
   const { projects, refreshProjects, isLoading } = useProjects();
+  const needs_login = useSelector((state) => state.auth.needs_login);
 
   const [activeProject, setActiveProject] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    if (needs_login === true) router.push("/auth");
+  }, []);
+
   return (
     <div className="flex flex-col text-center">
       <div className="mt-8">

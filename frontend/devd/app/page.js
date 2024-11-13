@@ -11,9 +11,7 @@ export default function Home() {
   const needsLogin = useSelector((state) => state.auth.needs_login);
 
   useEffect(() => {
-    if (accessToken !== undefined) {
-      checkAndRefreshToken(accessToken);
-    }
+    if (accessToken !== undefined) checkAndRefreshToken(accessToken);
   }, []);
 
   return (

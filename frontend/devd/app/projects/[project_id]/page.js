@@ -8,12 +8,16 @@ import ProjectComponents from "@/app/components/ProjectComponents";
 import ProjectTeam from "@/app/components/ProjectTeam";
 import useAuth from "@/app/hooks/useAuth";
 import useViews from "@/app/hooks/useViews";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function ProjectDetails({ params }) {
+  const router = useRouter();
   const unwrappedParams = use(params);
-  const { project_id } = unwrappedParams;
 
+  const { project_id } = unwrappedParams;
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
+
   const { project } = useProject(project_id, accessToken);
   const { isViewing, changeViewTo } = useViews(project);
 
@@ -27,7 +31,7 @@ export default function ProjectDetails({ params }) {
 
   useEffect(() => {
     if (accessToken !== undefined) checkAndRefreshToken(accessToken);
-
+    if (needsLogin === true) router.push("/auth");
     handleChangeView("tasks");
   }, [project]);
 
