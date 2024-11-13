@@ -22,7 +22,7 @@ export default function ListContainer({
   return (
     <div>
       <div className="flex gap-4">
-        <h1 className="text-xl font-bold underline mb-3">{title}</h1>
+        <h1 className="text-xl font-bold underline ">{title}</h1>
         <div
           onClick={() => {
             setIsAddingItem(true);
@@ -73,6 +73,9 @@ export default function ListContainer({
               />
             );
           })}
+        {items !== undefined && items.length === 0 && (
+          <div>{"😦 No features added yet. Add on now!"}</div>
+        )}
       </ul>
     </div>
   );

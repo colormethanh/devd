@@ -23,7 +23,7 @@ export default function ProjectsPage() {
   const requestedProject = useSelector(
     (state) => state.project.requestedProject
   );
-  const [isAddProjectView, setIsAddProjectView] = useState(true);
+  const [isAddProjectView, setIsAddProjectView] = useState(false);
 
   // add project form data
   const [formData, setFormData] = useState({ name: "", description: "" });
@@ -124,7 +124,6 @@ export default function ProjectsPage() {
               >
                 {user !== undefined &&
                   user.projects.map((project, i) => {
-                    console.log(project);
                     return (
                       <div
                         key={project._id}

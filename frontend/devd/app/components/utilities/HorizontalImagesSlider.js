@@ -76,7 +76,7 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
           <div className="h-12">
             <h1 className="text-lg">
               {" "}
-              No images to show...Upload an image to view them here
+              📸 No images to show...Upload an image to view them here
             </h1>
           </div>
         )}
