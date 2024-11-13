@@ -47,6 +47,19 @@ export default function useAxios() {
     // todo: check if user is authorized
   };
 
+  const postProjectToDB = async ({ formData, accessToken }) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/projects/`, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (response.meta?.requestStatus === "fulfilled") await refreshToken();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const deleteProjectInDB = async (project_id, access_token) => {
     try {
       const response = await axios.delete(
@@ -57,7 +70,7 @@ export default function useAxios() {
           },
         }
       );
-      if (response.meta?.requestStatus === "fulfilled") await getProjects();
+      if (response.meta?.requestStatus === "fulfilled") await refreshToken();
     } catch (err) {
       console.log(err);
     }
@@ -291,6 +304,8 @@ export default function useAxios() {
     dispatchSignup,
     refreshToken,
     getProjects,
+    postProjectToDB,
+    deleteProjectInDB,
     getProjectDetails,
     getTaskDetails,
     updateTask,
@@ -304,6 +319,5 @@ export default function useAxios() {
     getComponentDetails,
     updateComponent,
     updateComponentImage,
-    deleteProjectInDB,
   };
 }

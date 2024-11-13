@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-export default function ProjectDetails({ params }) {
+export default function ProjectDetails() {
   const router = useRouter();
   // debugger;
   const project_id = useSelector((state) => state.project.requestedProject);

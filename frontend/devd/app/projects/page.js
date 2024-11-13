@@ -1,7 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import ProjectPanel from "../components/ProjectPanel";
-import HorizontalScrollContainer from "../components/utilities/HorizontalScrollContainer";
 import useProjects from "../hooks/useProjects";
 import Button from "../components/utilities/Button";
 import { useRouter } from "next/navigation";
@@ -13,9 +11,10 @@ import { setRequestedProject } from "@/app/store/slices/projectSlice";
 import { useDispatch } from "react-redux";
 import useModal from "../hooks/useModal";
 import DeleteProjectWarning from "../components/DeleteProjectWarning";
+import Form from "../components/utilities/Form";
 
 export default function ProjectsPage() {
-  const { deleteProject } = useProjects();
+  const { deleteProject, postProject } = useProjects();
   const [projects, setProjects] = useState([]);
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
   const [selectedProject, setSelectedProject] = useState();
@@ -23,9 +22,23 @@ export default function ProjectsPage() {
   const requestedProject = useSelector(
     (state) => state.project.requestedProject
   );
+  const [isAddProjectView, setIsAddProjectView] = useState(true);
+
+  // add project form data
+  const [formData, setFormData] = useState({ name: "", description: "" });
 
   const dispatch = useDispatch();
   const router = useRouter();
+
+  // input change for formData
+  const handleInputChange = (e) => {
+    const name = e.target.name;
+    setFormData((prev) => ({ ...prev, [name]: e.target.value }));
+  };
+
+  const handlePostProject = () => {
+    postProject(formData, accessToken);
+  };
 
   const handleOpenModal = () => {
     openModal();
@@ -41,6 +54,12 @@ export default function ProjectsPage() {
     closeModal();
   };
 
+  const handleAddProjectView = () => {
+    setIsAddProjectView((prev) => !prev);
+    setFormData({ name: "", description: "" });
+  };
+
+  // Project delete modal
   const { Modal, openModal, closeModal } = useModal(
     "Delete project?",
     <DeleteProjectWarning
@@ -55,6 +74,8 @@ export default function ProjectsPage() {
       project: projects[i].project_id,
       role: projects[i].role,
     });
+    setIsAddProjectView(false);
+    setFormData({ name: "", description: "" });
     dispatch(setRequestedProject(projects[i].project_id._id));
   };
 
@@ -79,10 +100,22 @@ export default function ProjectsPage() {
         <div className="h-5/6 flex g-3">
           {/* User Projects container */}
           <div className="h-full w-1/2 p-3">
-            <h3 className="text-start text-lg font-bold mb-1">
-              {" "}
-              Your projects{" "}
-            </h3>
+            <div className="w-full flex gap-2">
+              <h3 className="text-start text-lg font-bold mb-1">
+                {" "}
+                Your projects{" "}
+              </h3>
+
+              <div
+                className="h-8 w-8  text-lg p-1 hover:cursor-pointer"
+                onClick={handleAddProjectView}
+              >
+                <div className="border w-full h-full flex justify-center items-center ">
+                  {" "}
+                  {"+"}{" "}
+                </div>
+              </div>
+            </div>
             <div className="h-5/6 w-full">
               <div
                 className="gap-4 overflow-auto no-scrollbar w-full h-full border border-gray-500 p-3
@@ -113,13 +146,50 @@ export default function ProjectsPage() {
 
           {/* Project Info Container */}
           <div className="h-full w-1/2 p-3">
-            <h3 className="text-start text-lg font-bold mb-1">
-              {" "}
-              Project Details{" "}
-            </h3>
+            <h3 className="text-start text-lg font-bold mb-1"> Project </h3>
             {/* Project info */}
             <div className="border border-gray-500 h-5/6 p-3 overflow-auto">
-              {selectedProject !== undefined ? (
+              {isAddProjectView && (
+                <>
+                  {" "}
+                  <Form title={"add A Project"} onSubmit={handlePostProject}>
+                    <div>
+                      <label
+                        htmlFor="name"
+                        className="block text-sm text-start font-medium text-gray-300"
+                      >
+                        Project name
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData["name"]}
+                        onChange={handleInputChange}
+                        required
+                        autoComplete="username"
+                        className="mt-1 w-full p-2 border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="description"
+                        className="block text-sm text-start font-medium text-gray-300"
+                      >
+                        Description
+                      </label>
+                      <textarea
+                        className="w-full border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
+                        name="description"
+                        rows={"3"}
+                        defaultValue={formData["description"]}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </Form>
+                </>
+              )}
+              {selectedProject !== undefined && !isAddProjectView && (
                 <>
                   <h1 className="text-xl font-bold underline m-3">
                     {" "}
@@ -171,7 +241,9 @@ export default function ProjectsPage() {
                     </div>
                   </div>
                 </>
-              ) : (
+              )}
+
+              {selectedProject === undefined && !isAddProjectView && (
                 <>
                   <div className="w-full h-full flex justify-center items-center">
                     {" "}

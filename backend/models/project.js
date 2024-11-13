@@ -34,7 +34,6 @@ projectSchema.pre("findOneAndDelete", async function (next) {
       { _id: owner },
       { $pull: { projects: { project_id: projectId } } }
     );
-    console.log(updates);
   } catch (err) {
     logger.error(
       `error in project schema pre-middleware for findOneAndDelete ${err.message}`

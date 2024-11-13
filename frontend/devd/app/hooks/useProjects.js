@@ -4,12 +4,16 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useProjects() {
-  const { deleteProjectInDB } = useAxios();
+  const { deleteProjectInDB, postProjectToDB } = useAxios();
 
   const deleteProject = (projectId, access_token) => {
-    debugger;
     deleteProjectInDB(projectId, access_token);
   };
 
-  return { deleteProject };
+  const postProject = (formData, accessToken) => {
+    debugger;
+    postProjectToDB({ formData, accessToken });
+  };
+
+  return { deleteProject, postProject };
 }
