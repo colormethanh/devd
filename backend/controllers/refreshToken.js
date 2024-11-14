@@ -15,6 +15,18 @@ exports.createRefreshToken = async (user_id, token, expiresAt) => {
   }
 };
 
+exports.deleteRefreshToken = async (token) => {
+  try {
+    const deleteResponse = await RefreshTokenModel.findOneAndDelete({
+      _id: token._id,
+    });
+
+    return deleteResponse;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};
+
 exports.getRefreshToken = async (token) => {
   try {
     const refreshToken = await RefreshTokenModel.findOne({ token: token });

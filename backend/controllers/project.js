@@ -8,7 +8,7 @@ exports.getAllProjects = async () => {
     const projects = await ProjectModel.find({});
     return projects;
   } catch (err) {
-    return createError(err.statusCode);
+    return createError(err.statusCode, err.message);
   }
 };
 
@@ -42,7 +42,10 @@ exports.getProject = async (projectId) => {
   try {
     if (!projectId) return createError("Project Id is required", 400);
 
-    const project = await ProjectModel.findById(projectId);
+    const project = await ProjectModel.findById(projectId).populate(
+      "tasks components pages",
+      "name _id"
+    );
 
     return project;
   } catch (err) {

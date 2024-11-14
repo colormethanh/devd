@@ -8,13 +8,13 @@ const { createError } = require("../utils/errorHelpers");
 const { createRefreshToken } = require("../controllers/refreshToken");
 const logger = require("../utils/logging/logger");
 
-const tokenForUser = (user, expirationInMinutes = 5) => {
+const tokenForUser = (user, expirationInMinutes = 1) => {
   const timestamp = Math.round(Date.now() / 1000);
   return jwt.encode(
     {
       sub: user._id,
       iat: timestamp,
-      exp: timestamp + expirationInMinutes * 60, // expires in 5 minutes
+      exp: timestamp + expirationInMinutes * 60 * 60, // expires in 1 hour
     },
     keys.TOKEN_SECRET
   );

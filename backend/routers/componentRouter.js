@@ -5,6 +5,7 @@ const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
 const logger = require("../utils/logging/logger");
 const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
+const upload = require("../services/cloudinary");
 
 const componentRoutes = function (componentController, pageController) {
   const router = express.Router();
@@ -248,7 +249,7 @@ const componentRoutes = function (componentController, pageController) {
 
         // check to see if project contains component
         const projectContainsComponent = await req.project.components.find(
-          (component) => component.toString() === component_id
+          (component) => component._id.toString() === component_id
         );
         if (!projectContainsComponent)
           next(
@@ -278,6 +279,76 @@ const componentRoutes = function (componentController, pageController) {
           componentToUpdate
         );
 
+        const updatedComponent = await componentController.updateComponent(
+          component_id,
+          updates
+        );
+
+        if (!updatedComponent) next(createError(500, "error when updating"));
+        if (updatedComponent instanceof Error) next(updatedComponent);
+
+        return res.send(createResponseObject({ updatedComponent }));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
+
+  router.put(
+    "/:component_id/image",
+    requireAuth,
+    extractRole,
+    upload.single("image"),
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "initiating check for component update",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { component_id } = req.params;
+
+        // checks user's role
+        const isAdmin = req.role === "admin";
+        if (!isAdmin) next(createError(403, "Only admins may delete pages"));
+
+        // check to see if component exists
+        const componentToUpdate = await componentController.getComponent(
+          component_id
+        );
+        if (componentToUpdate instanceof Error) next(componentToUpdate);
+        if (!componentToUpdate) next(404, "component does not exist");
+
+        // check to see if project contains component
+        const projectContainsComponent = await req.project.components.find(
+          (component) => component._id.toString() === component_id
+        );
+        if (!projectContainsComponent)
+          next(
+            createError(
+              400,
+              `Project does not contain component ${component_id}`
+            )
+          );
+
+        // check that there is an image in req.file.path
+        const image_url = req.file.path;
+        if (!image_url)
+          next(createError(500, "there was an error uploading the image"));
+
+        // check if there is an image title
+        const image_title = req.body.title;
+        if (!image_title) next(createError(400, "Must provide image title"));
+
+        const updatedImageArray = [
+          ...componentToUpdate.images,
+          { title: image_title, url: image_url },
+        ];
+
+        const updates = { images: updatedImageArray };
+
+        // update and return pag
         const updatedComponent = await componentController.updateComponent(
           component_id,
           updates

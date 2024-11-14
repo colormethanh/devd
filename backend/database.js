@@ -8,6 +8,7 @@ const userController = require("./controllers/user");
 const pageController = require("./controllers/page");
 const componentController = require("./controllers/component");
 const refreshTokenController = require("./controllers/refreshToken");
+const taskController = require("./controllers/task");
 
 const Controllers = {
   authController,
@@ -15,6 +16,7 @@ const Controllers = {
   userController,
   pageController,
   componentController,
+  taskController,
   refreshTokenController,
 };
 

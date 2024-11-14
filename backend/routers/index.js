@@ -4,6 +4,7 @@ const authRouter = require("./authRouter");
 const swaggerRouter = require("./swaggerRouter");
 const pageRouter = require("./pageRouter");
 const componentRouter = require("./componentRouter");
+const taskRouter = require("./taskRouter");
 const errorRouter = require("./errorRouter");
 
 module.exports = {
@@ -14,4 +15,5 @@ module.exports = {
   pageRouter,
   componentRouter,
   errorRouter,
+  taskRouter,
 };

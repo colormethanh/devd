@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const componentsModel = require("./Components");
 const pageModel = require("./Page");
+const userModel = require("./User");
 const logger = require("../utils/logging/logger");
 
 const projectSchema = new Schema({
@@ -23,8 +24,16 @@ projectSchema.pre("findOneAndDelete", async function (next) {
     );
     const projectId = this.getQuery()._id;
 
+    const project = await mongoose.model("Project").findOne({ _id: projectId });
+    const owner = project.owner;
+
     await componentsModel.deleteMany({ project: projectId });
     await pageModel.deleteMany({ project: projectId });
+    await userModel.findOne({ _id: owner });
+    const updates = await userModel.updateOne(
+      { _id: owner },
+      { $pull: { projects: { project_id: projectId } } }
+    );
   } catch (err) {
     logger.error(
       `error in project schema pre-middleware for findOneAndDelete ${err.message}`

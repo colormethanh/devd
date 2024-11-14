@@ -5,7 +5,9 @@ const { tokenForUser, refreshTokenForUser } = require("../services/passport");
 
 exports.login = async (username, password) => {
   try {
-    const user = await UserModel.findOne({ username });
+    const user = await UserModel.findOne({ username }).populate({
+      path: "projects.project_id",
+    });
 
     if (!user) return createError(401, "Incorrect username or password");
 
@@ -17,7 +19,7 @@ exports.login = async (username, password) => {
     const accessToken = tokenForUser(user);
     const refreshToken = await refreshTokenForUser(user);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user };
   } catch (err) {
     return createError(err.statusCode, err.message);
   }
@@ -70,7 +72,7 @@ exports.signup = async (email, username, password) => {
     const accessToken = tokenForUser(user);
     const refreshToken = await refreshTokenForUser(user);
 
-    return { accessToken, refreshToken, user_id: user._id };
+    return { accessToken, refreshToken, user_id: user._id, user: user };
   } catch (err) {
     throw createError(err.statusCode, err.message);
   }

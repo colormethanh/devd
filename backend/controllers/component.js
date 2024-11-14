@@ -69,6 +69,11 @@ exports.postComponent = async (
       })
     );
 
+    const parentProject = await ProjectModel.findById(project_id);
+    parentProject.components.push(newComponent._id);
+
+    await parentProject.save();
+
     return newComponent;
   } catch (err) {
     return createError(err.statusCode, err.message);

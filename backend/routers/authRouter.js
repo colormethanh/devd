@@ -34,11 +34,16 @@ const authRoutes = function (
         return next(tokens);
       }
 
-      const { accessToken, refreshToken } = tokens;
+      const { accessToken, refreshToken, user } = tokens;
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
 
       return res.send(
         createResponseObject(
-          { token: accessToken, refreshToken },
+          { accessToken, user_id: user._id, user: user },
           "Login Successful"
         )
       );
@@ -64,16 +69,58 @@ const authRoutes = function (
 
       if (signupResponse instanceof Error) return next(signupResponse);
 
+      const accessTokenAndUserId = {
+        accessToken: signupResponse.accessToken,
+        user_id: signupResponse.user_id,
+        user: signupResponse.user,
+      };
+
+      const refreshToken = signupResponse.refreshToken;
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
       return res.send(
-        createResponseObject(signupResponse, "signup successful")
+        createResponseObject(accessTokenAndUserId, "signup successful")
       );
     } catch (err) {
       next(createError(err.statusCode, err.message));
     }
   });
 
+  router.post("/logout", async (req, res, next) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return next(createError(400, "RefreshToken is required"));
+    }
+
+    try {
+      const tokenInDB = await refreshTokenController.getRefreshToken(
+        refreshToken.token
+      );
+
+      if (tokenInDB instanceof Error) return next(tokenInDB);
+
+      if (!tokenInDB)
+        return next(createError(403, "Invalid or expired refresh token"));
+
+      const response = await refreshTokenController.deleteRefreshToken(
+        tokenInDB
+      );
+
+      if (response instanceof Error) return response;
+
+      return res.send(createResponseObject({}, "successfully logged outn"));
+    } catch (err) {
+      return next(err.statusCode, err.message);
+    }
+  });
+
   router.post("/refresh-token", async (req, res, next) => {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
       return next(createError(400, "RefreshToken is required"));
@@ -97,10 +144,13 @@ const authRoutes = function (
 
       if (!userInDB) return next(401, "invalid user ID");
 
-      const accessToken = tokenForUser(refreshToken);
+      const accessToken = tokenForUser(userInDB);
 
       return res.send(
-        createResponseObject({ accessToken }, "successfully refreshed token")
+        createResponseObject(
+          { accessToken, user_id: userInDB._id, user: userInDB },
+          "successfully refreshed token"
+        )
       );
     } catch (err) {
       return next(err.statusCode, err.message);
