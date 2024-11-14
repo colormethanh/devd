@@ -19,7 +19,6 @@ export default function ProjectTasks({ project, changeViewTo }) {
   let currentTaskId = task._id || null;
 
   const handleGoToAddTask = () => {
-    console.log("Switching to add task view");
     setIsAddTaskView((prev) => !prev);
   };
 

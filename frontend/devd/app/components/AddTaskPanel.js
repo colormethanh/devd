@@ -21,7 +21,6 @@ export default function AddTaskPanel({
   };
 
   const handleTaskFormSubmit = () => {
-    console.log({ ...formData });
     postNewTask(project._id, formData);
     setIsAddTaskView(false);
   };

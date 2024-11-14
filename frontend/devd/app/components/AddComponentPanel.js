@@ -20,8 +20,6 @@ export default function AddComponentPanel({
   };
 
   const handleComponentFormSubmit = () => {
-    console.log({ ...formData });
-
     // sanitize snippet before posting
     formData.snippet = DOMPurify.sanitize(formData.snippet);
 

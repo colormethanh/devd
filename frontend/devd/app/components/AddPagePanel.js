@@ -16,7 +16,6 @@ export default function AddPagePanel({
   };
 
   const handlePageFormSubmit = () => {
-    console.log({ ...formData });
     postNewPage(project._id, formData);
     setIsAddPageView(false);
   };

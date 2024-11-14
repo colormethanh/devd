@@ -64,7 +64,6 @@ export default function SideBar({ onItemClick, isViewing }) {
       </div>
       <div
         onClick={() => {
-          console.log("nav toggle clicked");
           toggleNav();
         }}
         className="hover:cursor-pointer ms-3 w-12"

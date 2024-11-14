@@ -117,7 +117,6 @@ const taskRoutes = function (taskController) {
       const user = req.user;
       if (!user) return next(createError(401));
 
-      console.log(req.body);
       const { name, description } = req.body;
 
       // todo: Add require auth

@@ -16,7 +16,6 @@ export default function VerticalScrollContainer({ setActiveChild, children }) {
     arrows: false,
     afterChange: (current) => {
       setActiveChild(current);
-      console.log(current);
     },
   };
   const slider = useRef(null);

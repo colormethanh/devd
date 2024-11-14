@@ -19,7 +19,6 @@ export default function HorizontalScrollContainer({
     arrows: false,
     afterChange: (current) => {
       setActiveChild(current);
-      console.log(current);
     },
   };
   const slider = useRef(null);

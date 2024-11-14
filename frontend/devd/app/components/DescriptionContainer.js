@@ -10,7 +10,6 @@ export default function DescriptionContainer({
   const textAreaRef = useRef(null);
 
   const handleDescriptionClick = () => {
-    console.log("double clicked");
     setIsEdit((prev) => !prev);
   };
 
