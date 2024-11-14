@@ -45,11 +45,13 @@ const StartApp = ({
     next();
   });
 
+  app.set("true proxy", true);
+
   const corsOptions = {
     origin: keys.ALLOWED_ORIGIN_URL || "http://localhost:3001", // Specify the allowed origin
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Enable credentials
+    credentials: true,
   };
 
   app.use(cors(corsOptions));
