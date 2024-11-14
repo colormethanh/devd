@@ -1,5 +1,5 @@
 const ComponentModel = require("../models/Components");
-const ProjectModel = require("../models/Project");
+const ProjectModel = require("../models/project");
 const PageModel = require("../models/Page");
 const { createError } = require("../utils/errorHelpers");
 const logger = require("../utils/logging/logger");
