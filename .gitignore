@@ -7,8 +7,8 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
-backend/config/dev.js
-backend/config/test.js
+config/dev.js
+config/test.js
 
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
