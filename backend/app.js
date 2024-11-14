@@ -52,7 +52,7 @@ const StartApp = ({
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    sameSite: false,
+    sameSite: "None",
   };
 
   app.use(cors(corsOptions));
