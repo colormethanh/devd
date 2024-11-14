@@ -66,11 +66,7 @@ export default function ListContainer({
         {items !== undefined &&
           items.map((item, i) => {
             return (
-              // todo: fix this so that we're not using the item as a key
-              <ListContainerItem
-                text={item}
-                key={`task-feature-${itemKeySalt}-${i}`}
-              />
+              <ListContainerItem text={item} key={`task-feature-${item}`} />
             );
           })}
         {items !== undefined && items.length === 0 && (

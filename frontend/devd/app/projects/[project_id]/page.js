@@ -13,10 +13,12 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-export default function ProjectDetails() {
+export default function ProjectDetails({ params }) {
   const router = useRouter();
   // debugger;
-  const project_id = useSelector((state) => state.project.requestedProject);
+  // const project_id = useSelector((state) => state.project.requestedProject);
+
+  const { project_id } = React.use(params);
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
 
   const { project } = useProject(project_id, accessToken);

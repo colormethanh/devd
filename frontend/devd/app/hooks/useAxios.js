@@ -1,5 +1,10 @@
 import { useDispatch } from "react-redux";
-import { signup, login, refreshAccessToken } from "../store/slices/authSlice";
+import {
+  signup,
+  login,
+  refreshAccessToken,
+  logout,
+} from "../store/slices/authSlice";
 import { resetTask } from "../store/slices/taskSlice";
 import { getProject } from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
@@ -28,6 +33,11 @@ export default function useAxios() {
 
   const dispatchSignup = async (formData) => {
     const response = await dispatch(signup(formData));
+    return response;
+  };
+
+  const dispatchLogout = async () => {
+    const response = await dispatch(logout());
     return response;
   };
 
@@ -319,5 +329,6 @@ export default function useAxios() {
     getComponentDetails,
     updateComponent,
     updateComponentImage,
+    dispatchLogout,
   };
 }

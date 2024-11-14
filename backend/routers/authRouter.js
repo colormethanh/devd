@@ -90,8 +90,36 @@ const authRoutes = function (
     }
   });
 
+  router.post("/logout", async (req, res, next) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return next(createError(400, "RefreshToken is required"));
+    }
+
+    try {
+      const tokenInDB = await refreshTokenController.getRefreshToken(
+        refreshToken.token
+      );
+
+      if (tokenInDB instanceof Error) return next(tokenInDB);
+
+      if (!tokenInDB)
+        return next(createError(403, "Invalid or expired refresh token"));
+
+      const response = await refreshTokenController.deleteRefreshToken(
+        tokenInDB
+      );
+
+      if (response instanceof Error) return response;
+
+      return res.send(createResponseObject({}, "successfully logged outn"));
+    } catch (err) {
+      return next(err.statusCode, err.message);
+    }
+  });
+
   router.post("/refresh-token", async (req, res, next) => {
-    // console.log(req.cookies);
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {

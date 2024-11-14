@@ -67,6 +67,7 @@ export default function usePages(project, accessToken) {
         title: title,
         access_token: accessToken,
       });
+      await setPage(page);
       return updatedPage;
     } catch (err) {
       console.log(err);

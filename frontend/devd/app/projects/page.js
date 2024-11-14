@@ -15,7 +15,6 @@ import Form from "../components/utilities/Form";
 
 export default function ProjectsPage() {
   const { deleteProject, postProject } = useProjects();
-  // const [projects, setProjects] = useState([]);
   const projects = useSelector((state) => state?.auth?.user?.projects) || [];
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
   const [selectedProject, setSelectedProject] = useState();
@@ -39,7 +38,8 @@ export default function ProjectsPage() {
 
   const handlePostProject = () => {
     postProject(formData, accessToken);
-    handleCloseModal();
+    setFormData({ name: "", description: "" });
+    setSelectedProject(undefined);
   };
 
   const handleOpenModal = () => {
@@ -52,6 +52,8 @@ export default function ProjectsPage() {
 
   const handleDeleteProject = (project_id) => {
     deleteProject(project_id, accessToken);
+    setFormData({ name: "", description: "" });
+    setSelectedProject(undefined);
     closeModal();
   };
 
@@ -127,7 +129,7 @@ export default function ProjectsPage() {
                     return (
                       <div
                         key={project._id}
-                        className="h-16 my-3 w-full transition-all hover:cursor-pointer border flex items-center px-3"
+                        className={`h-16 my-3 w-full transition-all hover:cursor-pointer border flex flex-col md:flex-row  items-center px-3 hover:bg-white hover:text-black `}
                         onClick={() => handleProjectSelect(i)}
                       >
                         <div className="w-1/2 text-start">
@@ -182,7 +184,7 @@ export default function ProjectsPage() {
                         className="w-full border border-gray-500 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
                         name="description"
                         rows={"3"}
-                        defaultValue={formData["description"]}
+                        value={formData["description"]}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -222,13 +224,13 @@ export default function ProjectsPage() {
                   <div className="w-full h-8 flex justify-end my-3">
                     <Button
                       clickCallback={handleGoToProject}
-                      addStyle="p-0 text text-sm"
+                      addStyle="py-0 px-0 text-sm"
                     >
                       {" "}
                       View Project{" "}
                     </Button>
                     <div
-                      className="w-10 p-1 h-full border border-red-400 hover:border-red-700 mx-3 flex justify-center"
+                      className="w-10 p-1 h-full border border-red-400 hover:border-red-700 mx-3 flex justify-center hover:cursor-pointer"
                       onClick={handleOpenModal}
                     >
                       {" "}

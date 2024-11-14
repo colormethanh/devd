@@ -26,7 +26,6 @@ export const updatePageInDB = createAsyncThunk(
   "page/updatePage",
   async (params, { rejectWithValue }) => {
     try {
-      debugger;
       const response = await axios.put(
         `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}`,
         params.updates,

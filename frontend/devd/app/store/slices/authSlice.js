@@ -34,6 +34,24 @@ export const login = createAsyncThunk(
   }
 );
 
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
 export const refreshAccessToken = createAsyncThunk(
   "auth/refresh",
   async (params, { rejectWithValue }) => {
@@ -74,7 +92,7 @@ const authSlice = createSlice({
         state.is_loading = false;
       })
       .addCase(signup.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.error = action.payload;
         state.is_loading = false;
       })
       .addCase(login.pending, (state, action) => {
@@ -88,7 +106,7 @@ const authSlice = createSlice({
         state.is_loading = false;
       })
       .addCase(login.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.error = action.payload;
         state.is_loading = false;
       })
       .addCase(refreshAccessToken.pending, (state, action) => {
@@ -102,13 +120,27 @@ const authSlice = createSlice({
         state.is_loading = false;
       })
       .addCase(refreshAccessToken.rejected, (state, action) => {
-        state.errorMessage = action.payload;
+        state.error = action.payload;
         state.needs_login = true;
+        state.is_loading = false;
+      })
+      .addCase(logout.pending, (state, action) => {
+        state.is_loading = true;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.is_loading = false;
+        state.token = undefined;
+        state.error = "";
+        state.user_id = undefined;
+        state.user = undefined;
+        state.needs_login = true;
+        state.is_loading = false;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.error = action.payload;
         state.is_loading = false;
       });
   },
 });
-
-// export const {} = authSlice.actions;
 
 export default authSlice.reducer;

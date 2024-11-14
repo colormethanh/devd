@@ -2,6 +2,7 @@
 import { useState } from "react";
 import useAxios from "./useAxios";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const defaultFormData = {
   username: "",
@@ -12,11 +13,17 @@ export default function useLogin() {
   const [loginFormData, setLoginFormData] = useState(defaultFormData);
   const { dispatchLogin } = useAxios();
   const router = useRouter();
+  const auth = useSelector((state) => state.auth);
 
   const handleLogin = async () => {
     try {
       // send login info
       await dispatchLogin(loginFormData);
+
+      if (auth.needs_login === true) {
+        setLoginFormData(defaultFormData);
+        return;
+      }
 
       // Reset form
       setLoginFormData(defaultFormData);
