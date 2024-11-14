@@ -131,6 +131,7 @@ export default function useAxios() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       });
 
       // update project to contain newly added task in frontend
@@ -157,6 +158,7 @@ export default function useAxios() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       });
       const response = await dispatch(getProject(project_id));
       return response;
@@ -230,6 +232,7 @@ export default function useAxios() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+          withCredentials: true,
         }
       );
 
