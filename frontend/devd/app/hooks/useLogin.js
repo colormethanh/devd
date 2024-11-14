@@ -18,18 +18,15 @@ export default function useLogin() {
   const handleLogin = async () => {
     try {
       // send login info
-      await dispatchLogin(loginFormData);
-
-      if (auth.needs_login === true) {
-        setLoginFormData(defaultFormData);
-        return;
-      }
+      const response = await dispatchLogin(loginFormData);
+      debugger;
 
       // Reset form
       setLoginFormData(defaultFormData);
 
-      // todo: redirect
-      router.push("/projects");
+      if (response.meta.requestStatus === "fulfilled") {
+        router.push("/projects");
+      }
     } catch (err) {
       console.log(err);
     }
