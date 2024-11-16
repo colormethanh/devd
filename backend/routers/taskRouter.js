@@ -31,8 +31,6 @@ const taskRoutes = function (taskController) {
         request_id: req.metadata.request_id,
       });
 
-      // todo: Add require Auth
-
       const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
 
       if (!isOwnerOrGuest)
@@ -69,8 +67,6 @@ const taskRoutes = function (taskController) {
         return next(
           createError(400, `Project does not contain task ${task_id}`)
         );
-
-      // Todo: add require auth to this route
 
       const isAdmin = req.role === "admin";
       if (!isAdmin)
@@ -119,7 +115,6 @@ const taskRoutes = function (taskController) {
 
       const { name, description } = req.body;
 
-      // todo: Add require auth
       const isOwner = req.role === "admin";
 
       if (!isOwner)

@@ -99,8 +99,6 @@ const projectRoutes = function (projectController) {
           )
         );
 
-      // todo: Add features to be updated
-
       const allowedUpdates = ["name", "description", "features"];
 
       if (!hasOne(allowedUpdates, req.body))

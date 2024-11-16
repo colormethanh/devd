@@ -20,7 +20,6 @@ exports.postNewProject = async (name, description, userId) => {
     const user = await UserModel.findById(userId);
     if (!user) return createError(404, "Could not find user");
 
-    // todo: If project saves but user does not save? We should delete the project
     let newProject = new ProjectModel({
       name,
       description,
