@@ -3,6 +3,8 @@ import DescriptionContainer from "./DescriptionContainer";
 import useHelpers from "../hooks/useHelpers";
 import RelevantContentsContainer from "./RelevantContentsContainer";
 import DetailPanel from "./utilities/DetailPanel";
+import useModal from "../hooks/useModal";
+import DeleteWarning from "./DeleteWarning";
 
 export default function TaskDetailPanel({
   task,
@@ -11,6 +13,7 @@ export default function TaskDetailPanel({
   project,
   addTaskRelevantContent,
   changeViewTo,
+  deleteTask,
 }) {
   const [selectedStatus, setSelectedStatus] = useState("backlog");
   const [description, setDescription] = useState("");
@@ -26,6 +29,29 @@ export default function TaskDetailPanel({
 
   const handleAddRelevantContent = (content) => {
     addTaskRelevantContent(task, content);
+  };
+
+  const handleDelete = () => {
+    console.log("Deleting", task._id);
+    deleteTask(task);
+    closeModal();
+  };
+
+  const handleCancel = () => {
+    closeModal();
+  };
+
+  const { Modal, openModal, closeModal } = useModal(
+    "Delete Task",
+    <DeleteWarning
+      onDelete={handleDelete}
+      item={task}
+      handleCancel={handleCancel}
+    />
+  );
+
+  const toggleDeleteModal = () => {
+    openModal();
   };
 
   useEffect(() => {
@@ -66,6 +92,16 @@ export default function TaskDetailPanel({
               <option value={"done"}>Done</option>
             </select>
           </div>
+
+          <div className="border-l border-white mr-3"></div>
+
+          {/* Delete Task */}
+          <div
+            onClick={toggleDeleteModal}
+            className="mr-3 text-xs flex items-center border py-1 px-2 hover:cursor-pointer hover:border-red-500"
+          >
+            Delete
+          </div>
         </div>
       </div>
 
@@ -89,6 +125,7 @@ export default function TaskDetailPanel({
         addContent={handleAddRelevantContent}
         changeViewTo={changeViewTo}
       />
+      {Modal}
     </DetailPanel>
   );
 }

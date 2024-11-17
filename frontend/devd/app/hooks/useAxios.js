@@ -150,6 +150,22 @@ export default function useAxios() {
     }
   };
 
+  const deleteTaskInDB = async (task_id, project_id, access_token) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/projects/${project_id}/tasks/${task_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      await getProjectDetails(project_id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // Pages
   const postPage = async (project_id, formData, accessToken) => {
     try {
@@ -330,5 +346,6 @@ export default function useAxios() {
     updateComponent,
     updateComponentImage,
     dispatchLogout,
+    deleteTaskInDB,
   };
 }

@@ -53,13 +53,9 @@ TaskSchema.pre("findOneAndDelete", async function (next) {
     const task = await mongoose.model("Task").findOne({ _id: taskId });
     if (!task) throw Error();
 
-    const project = await ProjectModel.findById(task.project);
-
-    // Delete task from Parent Project's tasks list
     const projectUpdate = await ProjectModel.findByIdAndUpdate(task.project, {
       $pull: { tasks: task._id },
     });
-    console.log(projectUpdate);
   } catch (err) {
     logger.error(`error in task schema pre-middleware for findOneAndDelete`);
     next(err);

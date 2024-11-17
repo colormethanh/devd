@@ -14,6 +14,7 @@ export default function ProjectTasks({ project, changeViewTo }) {
     updateTaskDescription,
     postNewTask,
     addTaskRelevantContent,
+    deleteTask,
   } = useTasks(project);
 
   let currentTaskId = task._id || null;
@@ -71,6 +72,7 @@ export default function ProjectTasks({ project, changeViewTo }) {
               project={project}
               addTaskRelevantContent={addTaskRelevantContent}
               changeViewTo={changeViewTo}
+              deleteTask={deleteTask}
             />
           )}
         </div>
