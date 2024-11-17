@@ -150,7 +150,7 @@ const projectRoutes = function (projectController) {
 
       const deleteMessage = await projectController.deleteProject(project_id);
 
-      if (deleteMessage instanceof Error) next(err);
+      if (deleteMessage instanceof Error) next(deleteMessage);
 
       return res.send(createResponseObject(deleteMessage));
     } catch (err) {
