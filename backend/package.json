@@ -4,7 +4,8 @@
   "main": "server.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --timeout 10000",
-    "start": "npx cross-env NODE_ENV=dev nodemon server.js"
+    "start": "npx cross-env NODE_ENV=dev nodemon server.js",
+    "prod": "node server.js"
   },
   "keywords": [],
   "author": "",

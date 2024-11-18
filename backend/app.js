@@ -5,6 +5,7 @@ const cors = require("cors");
 const passport = require("passport");
 const logger = require("./utils/logging/logger");
 const morgan = require("morgan");
+const keys = require("./config/keys.js");
 const { extractProjectId, extractProject } = require("./utils/middlewares");
 require("./services/passport");
 
@@ -44,11 +45,14 @@ const StartApp = ({
     next();
   });
 
+  app.set("true proxy", true);
+
   const corsOptions = {
-    origin: "http://localhost:3001", // Specify the allowed origin
+    origin: keys.ALLOWED_ORIGIN_URL || "http://localhost:3001", // Specify the allowed origin
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // Enable credentials
+    credentials: true,
+    sameSite: "None",
   };
 
   app.use(cors(corsOptions));

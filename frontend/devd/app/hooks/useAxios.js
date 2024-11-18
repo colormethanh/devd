@@ -128,6 +128,7 @@ export default function useAxios() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       });
 
       const response = await getProjectDetails(project_id);
@@ -169,6 +170,7 @@ export default function useAxios() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        withCredentials: true,
       });
       const response = await dispatch(getProject(project_id));
       return response;
@@ -258,6 +260,7 @@ export default function useAxios() {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+          withCredentials: true,
         }
       );
 
