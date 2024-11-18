@@ -48,7 +48,7 @@ const StartApp = ({
   app.set("true proxy", true);
 
   const corsOptions = {
-    origin: process.env.ALLOWED_ORIGIN_URL || "http://localhost:3001", // Specify the allowed origin
+    origin: keys.ALLOWED_ORIGIN_URL || "http://localhost:3001", // Specify the allowed origin
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
