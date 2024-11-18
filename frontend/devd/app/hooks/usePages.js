@@ -3,7 +3,13 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function usePages(project, accessToken) {
-  const { getPageDetails, updatePage, updatePageImages, postPage } = useAxios();
+  const {
+    getPageDetails,
+    updatePage,
+    updatePageImages,
+    postPage,
+    deletePageInDB,
+  } = useAxios();
 
   const page = useSelector((state) => state.page.page);
 
@@ -88,6 +94,10 @@ export default function usePages(project, accessToken) {
     }
   };
 
+  const deletePage = async (page) => {
+    await deletePageInDB(page._id, project._id, accessToken);
+  };
+
   return {
     page,
     setPage,
@@ -96,5 +106,6 @@ export default function usePages(project, accessToken) {
     addPageImage,
     addPageFeature,
     postNewPage,
+    deletePage,
   };
 }

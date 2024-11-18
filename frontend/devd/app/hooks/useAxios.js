@@ -54,7 +54,6 @@ export default function useAxios() {
     } catch (err) {
       console.error(err);
     }
-    // todo: check if user is authorized
   };
 
   const postProjectToDB = async ({ formData, accessToken }) => {
@@ -98,7 +97,6 @@ export default function useAxios() {
   // Tasks
   const getTaskDetails = async ({ project_id, task_id, access_token }) => {
     try {
-      // debugger;
       const response = await dispatch(
         getTask({ project_id, task_id, access_token })
       );
@@ -126,15 +124,13 @@ export default function useAxios() {
 
   const postTask = async (project_id, formData, accessToken) => {
     try {
-      // post task
       await axios.post(`${BASE_URL}/projects/${project_id}/tasks`, formData, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
 
-      // update project to contain newly added task in frontend
-      const response = await dispatch(getProject(project_id));
+      const response = await getProjectDetails(project_id);
 
       return response;
     } catch (err) {
@@ -160,7 +156,7 @@ export default function useAxios() {
           },
         }
       );
-      await getProjectDetails(project_id);
+      return await getProjectDetails(project_id);
     } catch (err) {
       console.log(err);
     }
@@ -176,6 +172,22 @@ export default function useAxios() {
       });
       const response = await dispatch(getProject(project_id));
       return response;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deletePageInDB = async (page_id, project_id, access_token) => {
+    try {
+      await axios.delete(
+        `${BASE_URL}/projects/${project_id}/pages/${page_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      return await getProjectDetails(project_id);
     } catch (err) {
       console.log(err);
     }
@@ -347,5 +359,6 @@ export default function useAxios() {
     updateComponentImage,
     dispatchLogout,
     deleteTaskInDB,
+    deletePageInDB,
   };
 }
