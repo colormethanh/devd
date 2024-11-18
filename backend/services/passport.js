@@ -92,7 +92,6 @@ const jwtLogin = new JwtStrategy(jwtOptions, async (payload, done) => {
       done(null, false);
     }
   } catch (err) {
-    // todo: I can't find where this error happens!!
     if (err.name === "TokenExpiredError") {
       logger.warn(`Token expired at ${payload.exp} --- Unauthorized`);
       return done(null, false);

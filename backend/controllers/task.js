@@ -61,3 +61,15 @@ exports.updateTask = async (task_id, updates) => {
     return createError(err.statusCode, err.message);
   }
 };
+
+exports.deleteTask = async (task_id) => {
+  try {
+    logger.info(`Initiating deletion of task ${task_id}`);
+    await TaskModel.findByIdAndDelete(task_id);
+    const successMessage = `Successfully deleted task ${task_id}`;
+    logger.info(successMessage);
+    return successMessage;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};

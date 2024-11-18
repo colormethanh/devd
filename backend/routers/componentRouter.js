@@ -393,7 +393,7 @@ const componentRoutes = function (componentController, pageController) {
 
         // check if component is part of project
         const projectContainsComponent = await req.project.components.find(
-          (component) => component.toString() === component_id
+          (component) => component._id.toString() === component_id
         );
         if (!projectContainsComponent)
           next(

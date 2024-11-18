@@ -31,8 +31,6 @@ const taskRoutes = function (taskController) {
         request_id: req.metadata.request_id,
       });
 
-      // todo: Add require Auth
-
       const isOwnerOrGuest = req.role === "admin" || req.role === "guest";
 
       if (!isOwnerOrGuest)
@@ -69,8 +67,6 @@ const taskRoutes = function (taskController) {
         return next(
           createError(400, `Project does not contain task ${task_id}`)
         );
-
-      // Todo: add require auth to this route
 
       const isAdmin = req.role === "admin";
       if (!isAdmin)
@@ -119,7 +115,6 @@ const taskRoutes = function (taskController) {
 
       const { name, description } = req.body;
 
-      // todo: Add require auth
       const isOwner = req.role === "admin";
 
       if (!isOwner)
@@ -148,6 +143,41 @@ const taskRoutes = function (taskController) {
       return next(err);
     }
   });
+
+  router.delete(
+    "/:task_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "Starting check before task deletion",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { task_id } = req.params;
+        const currentTask = await taskController.getTask(task_id);
+
+        if (!currentTask) next(404, "Task could not be found");
+        if (currentTask instanceof Error) next(currentTask);
+
+        // Admin may delete tasks
+        const isAdmin = req.role === "admin";
+
+        if (!isAdmin)
+          next(createError(403, "Only project admins can delete a task"));
+
+        const deleteMessage = await taskController.deleteTask(task_id);
+
+        if (deleteMessage instanceof Error) next(deleteMessage);
+
+        return res.send(createResponseObject(deleteMessage));
+      } catch (err) {
+        return next(createError(err.statusCode, err.message));
+      }
+    }
+  );
 
   return router;
 };

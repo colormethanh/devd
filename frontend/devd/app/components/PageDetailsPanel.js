@@ -6,6 +6,7 @@ import ListContainer from "./utilities/ListContainer";
 import useModal from "../hooks/useModal";
 import ImageForm from "./ImageForm";
 import DetailPanel from "./utilities/DetailPanel";
+import DeleteWarning from "./DeleteWarning";
 
 export default function PageDetailsPanel({
   page,
@@ -13,6 +14,7 @@ export default function PageDetailsPanel({
   updatePageDescription,
   addPageImage,
   addPageFeature,
+  deletePage,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -38,6 +40,22 @@ export default function PageDetailsPanel({
   };
   const modalBody = <ImageForm handleSubmit={handleImageUpload} />;
   const { Modal, openModal, closeModal } = useModal("Add a task", modalBody);
+
+  // Setting up modal for page deletion
+  const handleDeleteCancel = () => closeDeleteModal();
+  const handleDelete = () => deletePage(page);
+  const deleteModalBody = (
+    <DeleteWarning
+      item={page}
+      handleCancel={handleDeleteCancel}
+      onDelete={handleDelete}
+    />
+  );
+  const {
+    Modal: DeleteModal,
+    openModal: openDeleteModal,
+    closeModal: closeDeleteModal,
+  } = useModal("Delete task", deleteModalBody);
 
   useEffect(() => {
     setSelectedVisibility(page.visibility);
@@ -89,6 +107,17 @@ export default function PageDetailsPanel({
           >
             Upload an image
           </div>
+
+          <div className="border-l border-b sm:border-b-0 border-white"></div>
+
+          <div
+            className={
+              "flex text-sm border border-black hover:border-red-500 hover:cursor-pointer p-1 p-y-2"
+            }
+            onClick={openDeleteModal}
+          >
+            Delete Page
+          </div>
         </div>
       </div>
 
@@ -122,6 +151,7 @@ export default function PageDetailsPanel({
         </div>
       </div>
       {Modal}
+      {DeleteModal}
     </DetailPanel>
   );
 }

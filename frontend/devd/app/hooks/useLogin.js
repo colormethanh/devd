@@ -19,8 +19,6 @@ export default function useLogin() {
     try {
       // send login info
       const response = await dispatchLogin(loginFormData);
-      debugger;
-
       // Reset form
       setLoginFormData(defaultFormData);
 

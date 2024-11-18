@@ -3,8 +3,13 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
-  const { getTaskDetails, updateTask, postTask, dispatchResetTask } =
-    useAxios();
+  const {
+    getTaskDetails,
+    updateTask,
+    postTask,
+    dispatchResetTask,
+    deleteTaskInDB,
+  } = useAxios();
   const task = useSelector((state) => state.task.task);
   const accessToken = useSelector((state) => state.auth.token);
 
@@ -77,6 +82,10 @@ export default function useTasks(project) {
     }
   };
 
+  const deleteTask = async (task) => {
+    await deleteTaskInDB(task._id, project._id, accessToken);
+  };
+
   return {
     task,
     setTask,
@@ -84,5 +93,6 @@ export default function useTasks(project) {
     updateTaskDescription,
     postNewTask,
     addTaskRelevantContent,
+    deleteTask,
   };
 }
