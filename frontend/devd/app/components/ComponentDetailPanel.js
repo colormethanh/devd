@@ -4,9 +4,8 @@ import useHelpers from "../hooks/useHelpers";
 import useModal from "../hooks/useModal";
 import DetailPanel from "./utilities/DetailPanel";
 import ImageForm from "./ImageForm";
-import RelevantContentsContainer from "./RelevantContentsContainer";
 import HorizontalImagesSlider from "./utilities/HorizontalImagesSlider";
-
+import DeleteWarning from "./DeleteWarning";
 import CodeSnippetContainer from "./CodeSnippetContainer";
 
 export default function ComponentDetailPanel({
@@ -15,6 +14,7 @@ export default function ComponentDetailPanel({
   addComponentImage,
   updateComponentDescription,
   updateComponentStatus,
+  deleteComponent,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -41,6 +41,22 @@ export default function ComponentDetailPanel({
   };
   const modalBody = <ImageForm handleSubmit={handleImageUpload} />;
   const { Modal, openModal, closeModal } = useModal("Add an image", modalBody);
+
+  // Setting up modal for page deletion
+  const handleDeleteCancel = () => closeDeleteModal();
+  const handleDelete = () => deleteComponent(component);
+  const deleteModalBody = (
+    <DeleteWarning
+      item={component}
+      handleCancel={handleDeleteCancel}
+      onDelete={handleDelete}
+    />
+  );
+  const {
+    Modal: DeleteModal,
+    openModal: openDeleteModal,
+    closeModal: closeDeleteModal,
+  } = useModal("Delete task", deleteModalBody);
 
   useEffect(() => {
     setSelectedVisibility(component.visibility);
@@ -110,6 +126,16 @@ export default function ComponentDetailPanel({
           >
             Upload an image
           </div>
+
+          <div className="border-l border-white mr-3"></div>
+
+          {/* Delete Component */}
+          <div
+            onClick={openDeleteModal}
+            className="mr-3 text-xs flex items-center border py-1 px-2 hover:cursor-pointer hover:border-red-500"
+          >
+            Delete Component
+          </div>
         </div>
       </div>
 
@@ -138,6 +164,7 @@ export default function ComponentDetailPanel({
       </div>
 
       {Modal}
+      {DeleteModal}
     </DetailPanel>
   );
 }

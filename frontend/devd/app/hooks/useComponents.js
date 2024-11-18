@@ -8,6 +8,7 @@ export default function useComponents(project, accessToken) {
     postComponent,
     updateComponent,
     updateComponentImage,
+    deleteComponentInDB,
   } = useAxios();
 
   const component = useSelector((state) => state.component.component);
@@ -95,6 +96,9 @@ export default function useComponents(project, accessToken) {
     }
   };
 
+  const deleteComponent = async (component) =>
+    deleteComponentInDB(component._id, project._id, accessToken);
+
   return {
     component,
     setComponent,
@@ -103,5 +107,6 @@ export default function useComponents(project, accessToken) {
     addComponentImage,
     updateComponentStatus,
     updateComponentDescription,
+    deleteComponent,
   };
 }

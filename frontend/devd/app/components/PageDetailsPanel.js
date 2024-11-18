@@ -41,6 +41,7 @@ export default function PageDetailsPanel({
   const modalBody = <ImageForm handleSubmit={handleImageUpload} />;
   const { Modal, openModal, closeModal } = useModal("Add a task", modalBody);
 
+  // Setting up modal for page deletion
   const handleDeleteCancel = () => closeDeleteModal();
   const handleDelete = () => deletePage(page);
   const deleteModalBody = (

@@ -270,6 +270,27 @@ export default function useAxios() {
     }
   };
 
+  const deleteComponentInDB = async (
+    component_id,
+    project_id,
+    access_token
+  ) => {
+    try {
+      await axios.delete(
+        `${BASE_URL}/projects/${project_id}/components/${component_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+
+      return await getProjectDetails(project_id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const updateComponent = async ({
     component_id,
     project_id,
@@ -360,5 +381,6 @@ export default function useAxios() {
     dispatchLogout,
     deleteTaskInDB,
     deletePageInDB,
+    deleteComponentInDB,
   };
 }
