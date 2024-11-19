@@ -49,6 +49,32 @@ const projectRoutes = function (projectController) {
     }
   });
 
+  // get project by id
+  router.get("/:projectId/showcase", async (req, res, next) => {
+    try {
+      const projectId = req.params.projectId;
+
+      logger.info({
+        message: `searching DB for project: ${projectId} for showcase`,
+        request_id: req.metadata.request_id,
+      });
+      const project = await projectController.getProjectForShowcase(projectId);
+
+      if (project instanceof Error) return next(project);
+
+      if (!project) return next(createError(404));
+
+      return res.send(
+        createResponseObject(
+          project,
+          "successfully retrieved project for showcase"
+        )
+      );
+    } catch (err) {
+      next(createError(err.statusCode, err.message));
+    }
+  });
+
   // post a new project to db
   router.post("/", requireAuth, async (req, res, next) => {
     try {
