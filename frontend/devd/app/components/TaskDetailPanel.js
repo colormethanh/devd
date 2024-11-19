@@ -98,7 +98,7 @@ export default function TaskDetailPanel({
           {/* Delete Task */}
           <div
             onClick={toggleDeleteModal}
-            className="mr-3 text-xs flex items-center border py-1 px-2 hover:cursor-pointer hover:border-red-500"
+            className="mr-3 text-xs flex items-center border border-black py-1 px-2 hover:cursor-pointer hover:border-red-500"
           >
             Delete Task
           </div>

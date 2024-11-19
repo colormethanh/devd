@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import SideBarItem from "./SideBarItem";
 
-export default function SideBar({ onItemClick, isViewing }) {
+export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNav = () => {
@@ -59,6 +59,15 @@ export default function SideBar({ onItemClick, isViewing }) {
             isSelected={isViewing === "components"}
           >
             Components
+          </SideBarItem>
+          <SideBarItem
+            src="/static/showcaseIcon-white.png"
+            onHoverSrc={"/static/showcaseIcon.png"}
+            onClickCallback={routeToShowcase}
+            isOpen={isOpen}
+            isSelected={isViewing === "showcase"}
+          >
+            Showcase
           </SideBarItem>
         </ul>
       </div>
