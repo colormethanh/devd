@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, use } from "react";
+import React, { useEffect } from "react";
 import useProject from "@/app/hooks/useProject";
 import SideBar from "@/app/components/utilities/SideBar";
 import ProjectTasks from "@/app/components/ProjectTasks";
@@ -8,29 +8,24 @@ import ProjectComponents from "@/app/components/ProjectComponents";
 import ProjectTeam from "@/app/components/ProjectTeam";
 import useAuth from "@/app/hooks/useAuth";
 import useViews from "@/app/hooks/useViews";
-import { Router } from "next/router";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 
 export default function ProjectDetails({ params }) {
   const router = useRouter();
-  // debugger;
-  // const project_id = useSelector((state) => state.project.requestedProject);
 
   const { project_id } = React.use(params);
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
-
   const { project } = useProject(project_id, accessToken);
   const { isViewing, changeViewTo } = useViews(project);
 
   const handleChangeView = (view) => {
-    // if view array is not empty then set the first item as the default
     if (project[view] !== undefined && project[view].length !== 0) {
       return changeViewTo(view, project[view][0]._id);
     }
     changeViewTo(view);
   };
+
+  const routeToShowcase = () => router.push(`/projects/${project_id}/showcase`);
 
   useEffect(() => {
     const setupPage = async () => {
@@ -46,7 +41,12 @@ export default function ProjectDetails({ params }) {
 
   return (
     <div className="flex h-full w-full">
-      <SideBar onItemClick={handleChangeView} isViewing={isViewing} />
+      <SideBar
+        onItemClick={handleChangeView}
+        isViewing={isViewing}
+        routeToShowcase={routeToShowcase}
+      />
+
       {needsLogin === true ? (
         <div className="w-full"> Please login to continue </div>
       ) : (
