@@ -65,7 +65,7 @@ exports.getProjectForShowcase = async (projectId) => {
       .populate({
         path: "pages",
         select: "name _id description features components images",
-        match: { visibility: "public", status: "done" },
+        match: { visibility: "public" },
       })
       .populate({
         path: "owner",
