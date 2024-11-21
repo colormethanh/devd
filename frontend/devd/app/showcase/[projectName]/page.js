@@ -4,7 +4,6 @@ import useShowcase from "@/app/hooks/useShowcase";
 import Image from "next/image";
 import ShowcasePageItem from "@/app/components/ShowcasePageItem";
 import HorizontalDivider from "@/app/components/utilities/HorizontalDivider";
-import VerticalDivider from "@/app/components/utilities/VerticalDivider";
 import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
 
 export default function ProjectShowcase({ params }) {
@@ -50,9 +49,7 @@ export default function ProjectShowcase({ params }) {
         {/* Pages Section*/}
         <div className="w-full">
           <h2 className="text-4xl mb-1"> Pages </h2>
-
           <HorizontalDivider />
-
           {/* Pages list*/}
           {project.pages !== undefined &&
             project.pages.map((page) => (
@@ -65,6 +62,7 @@ export default function ProjectShowcase({ params }) {
           <div className="mb-3">
             <h2 className="text-4xl">Components</h2>
             <HorizontalDivider />
+            {/* Components List */}
             {project.components.map((component) => (
               <ShowcaseComponentItem
                 key={`component-${component._id}`}

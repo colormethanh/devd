@@ -6,6 +6,11 @@ import { useSelector } from "react-redux";
 export default function useProjects() {
   const { deleteProjectInDB, postProjectToDB } = useAxios();
 
+  const projects = useSelector((state) => state?.auth?.user?.projects) || [];
+  const requestedProject = useSelector(
+    (state) => state.project.requestedProject
+  );
+
   const deleteProject = (projectId, access_token) => {
     deleteProjectInDB(projectId, access_token);
   };
@@ -14,5 +19,5 @@ export default function useProjects() {
     postProjectToDB({ formData, accessToken });
   };
 
-  return { deleteProject, postProject };
+  return { projects, requestedProject, deleteProject, postProject };
 }
