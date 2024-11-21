@@ -94,9 +94,9 @@ export default function useAxios() {
     }
   };
 
-  const getProjectForShowcase = async (project_id) => {
+  const getProjectForShowcase = async (projectName) => {
     try {
-      const response = await dispatch(getShowcaseData(project_id));
+      const response = await dispatch(getShowcaseData(projectName));
       return response;
     } catch (err) {
       console.log(err);

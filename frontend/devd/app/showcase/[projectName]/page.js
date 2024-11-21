@@ -8,8 +8,8 @@ import VerticalDivider from "@/app/components/utilities/VerticalDivider";
 import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
 
 export default function ProjectShowcase({ params }) {
-  const { project_id } = React.use(params);
-  const { project } = useShowcase(project_id);
+  const { projectName } = React.use(params);
+  const { project } = useShowcase(projectName);
 
   console.log(project);
   return (

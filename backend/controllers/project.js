@@ -52,11 +52,11 @@ exports.getProject = async (projectId) => {
   }
 };
 
-exports.getProjectForShowcase = async (projectId) => {
+exports.getProjectForShowcase = async (projectName) => {
   try {
-    if (!projectId) return createError("Project Id is required", 400);
+    if (!projectName) return createError("Project Id is required", 400);
 
-    const project = await ProjectModel.findById(projectId)
+    const project = await ProjectModel.findOne({ name: projectName })
       .populate({
         path: "components",
         select: "name _id description images",

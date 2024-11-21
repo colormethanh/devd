@@ -50,15 +50,17 @@ const projectRoutes = function (projectController) {
   });
 
   // get project by id
-  router.get("/:projectId/showcase", async (req, res, next) => {
+  router.get("/:projectName/showcase", async (req, res, next) => {
     try {
-      const projectId = req.params.projectId;
+      const { projectName } = req.params;
 
       logger.info({
-        message: `searching DB for project: ${projectId} for showcase`,
+        message: `searching DB for project: ${projectName} for showcase`,
         request_id: req.metadata.request_id,
       });
-      const project = await projectController.getProjectForShowcase(projectId);
+      const project = await projectController.getProjectForShowcase(
+        projectName
+      );
 
       if (project instanceof Error) return next(project);
 
@@ -105,7 +107,6 @@ const projectRoutes = function (projectController) {
   });
 
   // edits an existing project
-  // *User should only be able to update name and description
   router.put("/:project_id", requireAuth, async (req, res, next) => {
     try {
       const { project_id } = req.params;
