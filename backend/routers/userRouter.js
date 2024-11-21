@@ -22,6 +22,22 @@ const userRoutes = function (userController) {
     }
   });
 
+  router.get("/user/:user_id", async (req, res, next) => {
+    try {
+      const { user_id } = req.params;
+      const user = await userController.getUser(user_id);
+      if (!user) return next(createError(404, "User could not be found"));
+
+      if (user instanceof Error) return next(user);
+
+      res.send(
+        createResponseObject({ user: user }, "successfully retrieved used data")
+      );
+    } catch (err) {
+      next(createError(err.statusCode, err.message));
+    }
+  });
+
   return router;
 };
 

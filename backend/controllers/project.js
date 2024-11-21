@@ -52,6 +52,32 @@ exports.getProject = async (projectId) => {
   }
 };
 
+exports.getProjectForShowcase = async (projectId) => {
+  try {
+    if (!projectId) return createError("Project Id is required", 400);
+
+    const project = await ProjectModel.findById(projectId)
+      .populate({
+        path: "components",
+        select: "name _id description images",
+        match: { visibility: "public" },
+      })
+      .populate({
+        path: "pages",
+        select: "name _id description features components images",
+        match: { visibility: "public" },
+      })
+      .populate({
+        path: "owner",
+        select: "username _id projects",
+      });
+
+    return project;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};
+
 exports.updateProject = async (projectId, updates) => {
   try {
     const updatedProject = await ProjectModel.findByIdAndUpdate(
