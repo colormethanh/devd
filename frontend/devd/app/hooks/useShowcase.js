@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import useAuth from "./useAuth";
 import useAxios from "./useAxios";
 
-export default function useShowcase(project_id) {
+export default function useShowcase(projectName) {
   const access_token = useSelector((state) => state.auth.token);
   const project = useSelector((state) => state.project.project);
   const { getProjectForShowcase, getUser } = useAxios();
@@ -16,9 +16,9 @@ export default function useShowcase(project_id) {
       }
     };
 
-    if (project_id !== undefined) getProjectForShowcase(project_id);
+    if (projectName !== undefined) getProjectForShowcase(projectName);
     setupPage();
-  }, [project_id]);
+  }, [projectName]);
 
   return { project };
 }

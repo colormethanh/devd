@@ -8,8 +8,8 @@ import VerticalDivider from "@/app/components/utilities/VerticalDivider";
 import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
 
 export default function ProjectShowcase({ params }) {
-  const { project_id } = React.use(params);
-  const { project } = useShowcase(project_id);
+  const { projectName } = React.use(params);
+  const { project } = useShowcase(projectName);
 
   console.log(project);
   return (
@@ -42,7 +42,10 @@ export default function ProjectShowcase({ params }) {
             <h2 className="text-4xl">Components</h2>
             <HorizontalDivider />
             {project.components.map((component) => (
-              <ShowcaseComponentItem component={component} />
+              <ShowcaseComponentItem
+                key={`component-${component._id}`}
+                component={component}
+              />
             ))}
           </div>
         )}

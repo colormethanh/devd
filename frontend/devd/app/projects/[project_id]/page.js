@@ -25,7 +25,7 @@ export default function ProjectDetails({ params }) {
     changeViewTo(view);
   };
 
-  const routeToShowcase = () => router.push(`/projects/${project_id}/showcase`);
+  const routeToShowcase = () => router.push(`/showcase/${project.name}`);
 
   useEffect(() => {
     const setupPage = async () => {

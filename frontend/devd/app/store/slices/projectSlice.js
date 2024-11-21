@@ -18,10 +18,10 @@ export const getProject = createAsyncThunk(
 
 export const getShowcaseData = createAsyncThunk(
   "project/getShowcaseData",
-  async (project_id, { rejectWithValue }) => {
+  async (projectName, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/projects/${project_id}/showcase`
+        `${BASE_URL}/projects/${projectName}/showcase`
       );
       return response.data.payload;
     } catch (err) {
