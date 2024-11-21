@@ -163,7 +163,6 @@ const pageRoutes = function (pageController) {
   });
 
   // update a page
-  // *user should only update name, description, features, visibility
   router.put("/:page_id", requireAuth, extractRole, async (req, res, next) => {
     try {
       logger.info({
