@@ -14,6 +14,7 @@ export default function ProjectInfoContainer({
   handleOpenModal,
   handleGoToProjectShowcase,
 }) {
+  // todo: Either delete or implement
   const { formatDate } = useHelpers();
   return (
     <div className="h-full w-1/2 p-3">

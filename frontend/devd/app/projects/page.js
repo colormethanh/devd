@@ -3,28 +3,23 @@ import { useEffect, useState } from "react";
 import useProjects from "../hooks/useProjects";
 import { useRouter } from "next/navigation";
 import useAuth from "../hooks/useAuth";
-import { useSelector } from "react-redux";
-import { setRequestedProject } from "@/app/store/slices/projectSlice";
-import { useDispatch } from "react-redux";
 import useModal from "../hooks/useModal";
 import DeleteProjectWarning from "../components/DeleteProjectWarning";
 import UserProjectsContainer from "../components/UserProjectsContainer";
-import ProjectInfoContainer from "../components/ProjectInfoContainer";
+import AddProjectForm from "../components/AddProjectForm";
 
 export default function ProjectsPage() {
-  const dispatch = useDispatch();
   const router = useRouter();
 
-  const { projects, requestedProject, deleteProject, postProject } =
-    useProjects();
+  // custom hooks
+  const { projects, requestedProject, postProject } = useProjects();
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
-  const [selectedProject, setSelectedProject] = useState();
-  const [isAddProjectView, setIsAddProjectView] = useState(false);
 
-  // add project form data
+  // todo: refactor into a useFormData hook
+
+  // Add Project Form setup
   const [formData, setFormData] = useState({ name: "", description: "" });
 
-  // input change for formData
   const handleInputChange = (e) => {
     const name = e.target.name;
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
@@ -32,51 +27,39 @@ export default function ProjectsPage() {
 
   const handlePostProject = () => {
     postProject(formData, accessToken);
-    setFormData({ name: "", description: "" });
-    setSelectedProject(undefined);
-  };
-
-  const handleOpenModal = () => openModal();
-
-  const handleCloseModal = () => closeModal();
-
-  const handleDeleteProject = (project_id) => {
-    deleteProject(project_id, accessToken);
-    setFormData({ name: "", description: "" });
-    setSelectedProject(undefined);
     closeModal();
-  };
-
-  const handleAddProjectView = () => {
-    setIsAddProjectView((prev) => !prev);
     setFormData({ name: "", description: "" });
   };
 
-  // Project delete modal
-  const { Modal, openModal, closeModal } = useModal(
-    "Delete project?",
-    <DeleteProjectWarning
-      project={selectedProject}
-      handleCancel={handleCloseModal}
-      onDelete={handleDeleteProject}
+  const handleCancel = () => {
+    handleCloseModal();
+    setFormData({ name: "", description: "" });
+  };
+
+  const ProjectForm = (
+    <AddProjectForm
+      handleSubmit={handlePostProject}
+      formData={formData}
+      handleInputChange={handleInputChange}
+      handleCancel={handleCancel}
     />
   );
 
-  const handleProjectSelect = (i) => {
-    setSelectedProject({
-      project: projects[i].project_id,
-      role: projects[i].role,
-    });
-    setIsAddProjectView(false);
-    setFormData({ name: "", description: "" });
-    dispatch(setRequestedProject(projects[i].project_id._id));
+  // Modal Setup
+  const handleCloseModal = () => closeModal();
+
+  const {
+    Modal: AddProjectModal,
+    openModal,
+    closeModal,
+  } = useModal("", ProjectForm, () =>
+    setFormData({ name: "", description: "" })
+  );
+
+  const handleRouteToProject = (project_id) => {
+    console.log(project_id);
+    router.push(`/projects/${project_id}`);
   };
-
-  const handleGoToProjectEdit = () =>
-    router.push(`/projects/${requestedProject}`);
-
-  const handleGoToProjectShowcase = () =>
-    router.push(`/showcase/${selectedProject.project.name}`);
 
   useEffect(() => {
     const setupPage = async () => {
@@ -96,24 +79,12 @@ export default function ProjectsPage() {
           {/* User Projects container */}
           <UserProjectsContainer
             user={user}
-            handleAddProjectView={handleAddProjectView}
-            handleProjectSelect={handleProjectSelect}
-          />
-
-          {/* Project Info Container */}
-          <ProjectInfoContainer
-            selectedProject={selectedProject}
-            isAddProjectView={isAddProjectView}
-            handlePostProject={handlePostProject}
-            formData={formData}
-            handleInputChange={handleInputChange}
-            handleGoToProjectEdit={handleGoToProjectEdit}
-            handleOpenModal={handleOpenModal}
-            handleGoToProjectShowcase={handleGoToProjectShowcase}
+            handleRouteToProject={handleRouteToProject}
+            openAddProjectModal={openModal}
           />
         </div>
       </div>
-      {Modal}
+      {AddProjectModal}
     </div>
   );
 }

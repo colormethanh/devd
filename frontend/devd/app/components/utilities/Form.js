@@ -4,6 +4,7 @@ export default function Form({
   onSubmit,
   title,
   submitButtonStyle = "",
+  submitText = "Submit",
   children,
 }) {
   return (
@@ -29,7 +30,7 @@ export default function Form({
                 p-3 py-0 ${submitButtonStyle}`}
             type="submit"
           >
-            Submit
+            {submitText}
           </button>
         </div>
       </form>
