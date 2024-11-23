@@ -1,12 +1,12 @@
 import React from "react";
 import UserProjectsListItem from "./UserProjectsListItem";
 import Dropdown from "./utilities/Dropdown";
-import useOutsideClick from "../hooks/useOutsideClick";
 
 export default function UserProjectsContainer({
   user,
   handleRouteToProject,
   openAddProjectModal,
+  openDeleteProjectModal,
 }) {
   const dropdownItems = [
     {
@@ -33,7 +33,7 @@ export default function UserProjectsContainer({
 
       <div className="h-full w-full">
         <div
-          className="gap-4 overflow-auto no-scrollbar w-full h-full border border-gray-500 p-3
+          className="overflow-auto no-scrollbar w-full h-full border border-gray-500 p-3
           "
         >
           {user !== undefined &&
@@ -43,6 +43,7 @@ export default function UserProjectsContainer({
                   key={project._id}
                   project={project}
                   handleRouteToProject={handleRouteToProject}
+                  openDeleteProjectModal={openDeleteProjectModal}
                 />
               );
             })}

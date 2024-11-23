@@ -7,13 +7,15 @@ export default function DeleteProjectWarning({
   handleCancel,
 }) {
   const onConfirm = () => {
-    onDelete(project.project._id);
+    onDelete();
   };
 
   return (
     <div className="h-48 p-3 flex flex-col gap-4 justify-center items-center">
       <h1>You're about to delete this project are you sure? </h1>
-      <h1 className="text-lg"> {project.project.name} </h1>
+      <h1 className="text-lg">
+        Deleting project...<span className="font-bold">{project?.name}</span>{" "}
+      </h1>
 
       <div className="flex flex-row gap-4 mt-3">
         <Button addStyle="p-0 border-yellow-500" clickCallback={handleCancel}>

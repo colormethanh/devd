@@ -12,7 +12,8 @@ export default function ProjectsPage() {
   const router = useRouter();
 
   // custom hooks
-  const { projects, requestedProject, postProject } = useProjects();
+  const { projects, deleteProject, requestedProject, postProject } =
+    useProjects();
   const { accessToken, needsLogin, checkAndRefreshToken, user } = useAuth();
 
   // todo: refactor into a useFormData hook
@@ -45,7 +46,7 @@ export default function ProjectsPage() {
     />
   );
 
-  // Modal Setup
+  // Add Project Modal Setup
   const handleCloseModal = () => closeModal();
 
   const {
@@ -60,6 +61,38 @@ export default function ProjectsPage() {
     console.log(project_id);
     router.push(`/projects/${project_id}`);
   };
+
+  // Delete Project Modal Setup
+  const [projectToDelete, setProjectToDelete] = useState(undefined);
+
+  const handleOpenDeleteModal = (project) => {
+    setProjectToDelete(project);
+    openDeleteProjectModal();
+  };
+
+  const handleDeleteCancel = () => {
+    setProjectToDelete(undefined);
+    closeDeleteProjectModal();
+  };
+
+  const handleDeleteProject = () => {
+    deleteProject(projectToDelete._id, accessToken);
+    closeDeleteProjectModal();
+    setProjectToDelete(undefined);
+  };
+
+  const {
+    Modal: DeleteProjectModal,
+    openModal: openDeleteProjectModal,
+    closeModal: closeDeleteProjectModal,
+  } = useModal(
+    "Delete Project?",
+    <DeleteProjectWarning
+      project={projectToDelete}
+      handleCancel={handleDeleteCancel}
+      onDelete={handleDeleteProject}
+    />
+  );
 
   useEffect(() => {
     const setupPage = async () => {
@@ -81,10 +114,12 @@ export default function ProjectsPage() {
             user={user}
             handleRouteToProject={handleRouteToProject}
             openAddProjectModal={openModal}
+            openDeleteProjectModal={handleOpenDeleteModal}
           />
         </div>
       </div>
       {AddProjectModal}
+      {DeleteProjectModal}
     </div>
   );
 }
