@@ -28,6 +28,17 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
 
         <ul className="w-full">
           <SideBarItem
+            src={"/static/projectIcon-white.png"}
+            onHoverSrc={"/static/projectIcon.png"}
+            onClickCallback={() => {
+              onItemClick("project");
+            }}
+            isOpen={isOpen}
+            isSelected={isViewing === "project"}
+          >
+            Project
+          </SideBarItem>
+          <SideBarItem
             src={"/static/taskIcon-white.png"}
             onHoverSrc={"/static/taskIcon.png"}
             onClickCallback={() => {

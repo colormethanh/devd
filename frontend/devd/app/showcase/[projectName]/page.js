@@ -10,7 +10,6 @@ export default function ProjectShowcase({ params }) {
   const { projectName } = React.use(params);
   const { project } = useShowcase(projectName);
 
-  console.log(project);
   return (
     <div className="w-full h-[90%] p-3 overflow-auto">
       <div className="w-full flex flex-col gap-6">

@@ -70,8 +70,11 @@ exports.getProjectForShowcase = async (projectName) => {
       .populate({
         path: "owner",
         select: "username _id projects",
+      })
+      .populate({
+        path: "tasks",
+        select: "name _id",
       });
-
     return project;
   } catch (err) {
     return createError(err.statusCode, err.message);

@@ -9,6 +9,7 @@ import ProjectTeam from "@/app/components/ProjectTeam";
 import useAuth from "@/app/hooks/useAuth";
 import useViews from "@/app/hooks/useViews";
 import { useRouter } from "next/navigation";
+import ProjectProject from "@/app/components/ProjectProject";
 
 export default function ProjectDetails({ params }) {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function ProjectDetails({ params }) {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
       }
-      handleChangeView("tasks");
+      handleChangeView("project");
     };
 
     setupPage();
@@ -52,6 +53,10 @@ export default function ProjectDetails({ params }) {
       ) : (
         // todo add needs login view
         <div className="w-full overflow-hidden">
+          {isViewing === "project" && (
+            <ProjectProject project={project} changeViewTo={changeViewTo} />
+          )}
+
           {isViewing === "tasks" && (
             <ProjectTasks project={project} changeViewTo={changeViewTo} />
           )}
