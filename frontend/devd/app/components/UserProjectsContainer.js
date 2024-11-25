@@ -24,9 +24,9 @@ export default function UserProjectsContainer({
 
         <div>
           <Dropdown
-            toggleText={"..."}
+            toggleText={"+"}
             items={dropdownItems}
-            addStyle={"py-0 px-3"}
+            addStyle={"px-2 text-lg"}
           />
         </div>
       </div>

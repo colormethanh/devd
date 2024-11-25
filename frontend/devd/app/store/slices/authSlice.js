@@ -12,7 +12,6 @@ export const signup = createAsyncThunk(
         withCredentials: true,
       });
       debugger;
-      !isServer && localStorage.setItem("token", response.data.payload.token);
       return response.data.payload;
     } catch (err) {
       return rejectWithValue({ status: err.status, message: err.message });
@@ -85,10 +84,6 @@ const authSlice = createSlice({
         state.is_loading = true;
       })
       .addCase(signup.fulfilled, (state, action) => {
-        state.token = action.payload.accessToken;
-        state.user_id = action.payload.user_id;
-        state.user = action.payload.user;
-        state.needs_login = false;
         state.is_loading = false;
       })
       .addCase(signup.rejected, (state, action) => {

@@ -15,25 +15,19 @@ export default function useSignup() {
   const { dispatchSignup } = useAxios();
   const router = useRouter();
 
-  const handleSignup = async () => {
+  const handleSignup = async (onSuccessCallback) => {
     try {
-      console.log("Submitting Form: ");
-      console.log(signupFormData);
-
       // Check passwords match
       if (!setSignupFormData.password === setSignupFormData.password2)
         throw Error("passwords don't match");
 
       // send login info
       const response = await dispatchSignup(signupFormData);
-      // set response as cookie
-      console.log("signup success!");
 
-      // Reset form
-      setSignupFormData(defaultFormData);
-
-      // redirect
-      router.push("/projects");
+      if (response.meta?.requestStatus === "fulfilled") {
+        setSignupFormData(defaultFormData);
+        onSuccessCallback();
+      }
     } catch (err) {
       console.log(err);
     }

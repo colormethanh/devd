@@ -62,17 +62,7 @@ export default function RelevantContentsContainer({
     <div className="flex flex-col gap-2 h-full">
       <div className="flex gap-4">
         <h5 className="text-xl font-bold"> Relevant contents </h5>
-        <Dropdown
-          toggleText={
-            <Image
-              src={"/static/ellipseIcon-white.png"}
-              alt={"Ellipse icon"}
-              height={10}
-              width={10}
-            />
-          }
-          items={dropdownItems}
-        />
+        <Dropdown toggleText={"..."} items={dropdownItems} addStyle={"px-2"} />
       </div>
 
       {/* Contents list */}

@@ -17,11 +17,14 @@ export default function Dropdown({ toggleText, items, addStyle }) {
   const dropdownClickRef = useOutsideClick(() => closeDropdown());
 
   return (
-    <div ref={dropdownClickRef} className="relative inline-block text-left">
+    <div
+      ref={dropdownClickRef}
+      className="relative inline-block text-left border border-black hover:border-white"
+    >
       <div>
         <button
           onClick={toggleDropdown}
-          className={`inline-flex justify-between w-full border border-black hover:border-white px-2 py-2 bg-black text-xs  text-white focus:outline-none focus:ring-0 ${addStyle}`}
+          className={`inline-flex justify-between w-full text-white focus:outline-none focus:ring-0 ${addStyle}`}
         >
           {toggleText}
         </button>

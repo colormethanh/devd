@@ -71,10 +71,8 @@ const authRoutes = function (
 
       if (signupResponse instanceof Error) return next(signupResponse);
 
-      const accessTokenAndUserId = {
+      const accessToken = {
         accessToken: signupResponse.accessToken,
-        user_id: signupResponse.user_id,
-        user: signupResponse.user,
       };
 
       const refreshToken = signupResponse.refreshToken;
@@ -84,9 +82,7 @@ const authRoutes = function (
         maxAge: 24 * 60 * 60 * 1000,
       });
 
-      return res.send(
-        createResponseObject(accessTokenAndUserId, "signup successful")
-      );
+      return res.send(createResponseObject(accessToken, "signup successful"));
     } catch (err) {
       next(createError(err.statusCode, err.message));
     }
