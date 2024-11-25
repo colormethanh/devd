@@ -34,6 +34,7 @@ export default function ComponentDetailPanel({
     updateComponentStatus(component, e.target.value);
   };
 
+  // Todo: How Can I improve this?
   // Setting up modal for image upload
   const handleImageUpload = (name, image) => {
     addComponentImage(component, image, name);

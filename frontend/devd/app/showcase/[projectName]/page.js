@@ -4,7 +4,6 @@ import useShowcase from "@/app/hooks/useShowcase";
 import Image from "next/image";
 import ShowcasePageItem from "@/app/components/ShowcasePageItem";
 import HorizontalDivider from "@/app/components/utilities/HorizontalDivider";
-import VerticalDivider from "@/app/components/utilities/VerticalDivider";
 import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
 
 export default function ProjectShowcase({ params }) {
@@ -14,21 +13,43 @@ export default function ProjectShowcase({ params }) {
   console.log(project);
   return (
     <div className="w-full h-[90%] p-3 overflow-auto">
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-6">
         {/* Title container */}
-        <div className="h-32 w-full flex flex-col justify-center items-center">
-          <h1 className="text-6xl mb-3">
-            {project !== undefined && project.name}
-          </h1>
-          <p> By: {project.owner !== undefined && project.owner.username} </p>
+        <div className=" w-full flex flex-col justify-center items-center">
+          <div>
+            <h1 className="text-8xl mb-2">{project.name}</h1>
+            <div className=" flex gap-4 text-gray-500 justify-center">
+              <div className="flex">
+                <Image
+                  src={"/static/userIcon-white.png"}
+                  width={25}
+                  height={20}
+                  alt="user Icon"
+                  className="mr-1 opacity-60 "
+                />
+                {project.owner !== undefined && project.owner.username}{" "}
+              </div>
+              <div className="flex">
+                <Image
+                  src={"/static/linkIcon-white.png"}
+                  width={25}
+                  height={20}
+                  alt="user Icon"
+                  className="mr-1 opacity-60 "
+                />
+                {"Link to website"}{" "}
+              </div>
+            </div>
+          </div>
+          <div className="w-full text-center mt-3">
+            <p className="italic text-xl"> {project.description} </p>
+          </div>
         </div>
 
         {/* Pages Section*/}
-        <div className="mb-3 w-full">
+        <div className="w-full">
           <h2 className="text-4xl mb-1"> Pages </h2>
-
           <HorizontalDivider />
-
           {/* Pages list*/}
           {project.pages !== undefined &&
             project.pages.map((page) => (
@@ -41,6 +62,7 @@ export default function ProjectShowcase({ params }) {
           <div className="mb-3">
             <h2 className="text-4xl">Components</h2>
             <HorizontalDivider />
+            {/* Components List */}
             {project.components.map((component) => (
               <ShowcaseComponentItem
                 key={`component-${component._id}`}
