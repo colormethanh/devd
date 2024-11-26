@@ -53,10 +53,10 @@ export default function ProjectProject({
                 updateCallback={updateProjectUrl}
               />
             </div>
+
+            {/* Project tasks */}
             <div className="flex-grow">
               <h1 className="text-2xl font-bold"> Project Tasks: </h1>
-              {/* Project tasks */}
-
               <div className="flex h-5/6 gap-3 p-2 w-full">
                 {project.tasks !== undefined && (
                   <>
