@@ -143,6 +143,7 @@ export default function useAxios() {
 
       if (updateResponse.meta?.requestStatus === "fulfilled") {
         await getTaskDetails({ project_id, task_id, access_token });
+        await getProjectDetails(project_id);
       }
 
       return updateResponse;

@@ -37,7 +37,6 @@ export default function ProjectDetails({ params }) {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
       }
-      handleChangeView("project");
     };
 
     setupPage();

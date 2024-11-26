@@ -44,7 +44,7 @@ exports.getProject = async (projectId) => {
 
     const project = await ProjectModel.findById(projectId).populate(
       "tasks components pages",
-      "name _id"
+      "name _id status"
     );
 
     return project;
