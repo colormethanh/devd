@@ -15,6 +15,7 @@ export default function PageDetailsPanel({
   addPageImage,
   addPageFeature,
   deletePage,
+  patchFeature,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -31,6 +32,10 @@ export default function PageDetailsPanel({
 
   const handleAddFeature = (featureText) => {
     addPageFeature(page, featureText);
+  };
+
+  const handlePatchFeature = (feature) => {
+    patchFeature(page, feature);
   };
 
   // Setting up modal for image upload
@@ -136,7 +141,7 @@ export default function PageDetailsPanel({
         title={"Features"}
         items={page.features}
         addItem={handleAddFeature}
-        itemKeySalt={page._id}
+        patchItem={handlePatchFeature}
       />
 
       {/* Container for horizontal image scrolls */}

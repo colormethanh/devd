@@ -216,6 +216,68 @@ const pageRoutes = function (pageController) {
     }
   });
 
+  router.patch(
+    "/:page_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "initiating check for page patch",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { page_id } = req.params;
+        const project = req.project;
+
+        // check to see if page exists
+        const originalPage = await pageController.getPage(page_id);
+        if (!originalPage) next(createError(404, "page could not be found"));
+        if (originalPage instanceof Error) next(originalPage);
+
+        // check to see if project contains page id
+        const projectContainsPage = await project.pages.find(
+          (page) => page._id.toString() === page_id
+        );
+        if (!projectContainsPage)
+          next(createError(400, `Project does not contain page ${page_id}`));
+
+        // check to see if user is authorized to modify page
+        const isAdmin = req.role === "admin";
+        if (!isAdmin)
+          return next(
+            createError(403, "Only admin may make changes to project pages")
+          );
+
+        // checking the request body
+        const allowedUpdates = ["feature"];
+
+        // req.body = {feature: {_id, text}}
+
+        if (!hasOne(allowedUpdates, req.body))
+          next(createError(400, "Must update at least one property"));
+
+        const updatedFeatures = originalPage.features.map((feature) => {
+          return feature._id.toString() === req.body.feature._id
+            ? { ...feature._id, text: req.body.feature.text }
+            : feature;
+        });
+
+        const updatedPage = await pageController.updatePage(page_id, {
+          features: updatedFeatures,
+        });
+
+        if (!updatedPage) next(createError(500, "error when updating"));
+        if (updatedPage instanceof Error) next(updatedPage);
+
+        return res.send(createResponseObject({ updatedPage }));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
+
   router.put(
     "/:page_id/image",
     requireAuth,

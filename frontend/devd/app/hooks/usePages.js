@@ -9,6 +9,7 @@ export default function usePages(project, accessToken) {
     updatePageImages,
     postPage,
     deletePageInDB,
+    patchPageFeature,
   } = useAxios();
 
   const page = useSelector((state) => state.page.page);
@@ -86,9 +87,24 @@ export default function usePages(project, accessToken) {
         project_id: project._id,
         page_id: page._id,
         access_token: accessToken,
-        updates: { features: [feature] },
+        updates: { features: [{ text: feature }] },
       });
       return updatedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const patchFeature = async (page, feature) => {
+    try {
+      const patchedPage = await patchPageFeature({
+        page_id: page._id,
+        project_id: project._id,
+        updates: feature,
+        access_token: accessToken,
+      });
+
+      return patchedPage;
     } catch (err) {
       console.log(err);
     }
@@ -107,5 +123,6 @@ export default function usePages(project, accessToken) {
     addPageFeature,
     postNewPage,
     deletePage,
+    patchFeature,
   };
 }

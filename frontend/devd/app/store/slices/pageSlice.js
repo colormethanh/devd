@@ -42,9 +42,30 @@ export const updatePageInDB = createAsyncThunk(
   }
 );
 
+export const patchPageFeatureInDB = createAsyncThunk(
+  "page/patchPageFeature",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}`,
+        params.updates,
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
 export const uploadImageToPage = createAsyncThunk(
   "page/uploadPageImage",
   async (params, { rejectWithValue }) => {
+    // todo: add try catch
     const response = await axios.put(
       `${BASE_URL}/projects/${[params.project_id]}/pages/${
         params.page_id
@@ -94,6 +115,17 @@ const pageSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updatePageInDB.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(patchPageFeatureInDB.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(patchPageFeatureInDB.fulfilled, (state, action) => {
+        state.page = action.payload.updatedPage;
+        state.isLoading = false;
+      })
+      .addCase(patchPageFeatureInDB.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
       })

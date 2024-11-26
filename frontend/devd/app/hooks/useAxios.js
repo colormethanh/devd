@@ -21,6 +21,7 @@ import {
   getPage,
   updatePageInDB,
   uploadImageToPage,
+  patchPageFeatureInDB,
 } from "../store/slices/pageSlice";
 import axios from "axios";
 
@@ -233,6 +234,31 @@ export default function useAxios() {
     }
   };
 
+  const patchPageFeature = async ({
+    page_id,
+    project_id,
+    updates,
+    access_token,
+  }) => {
+    try {
+      const patchResponse = await dispatch(
+        patchPageFeatureInDB({
+          page_id,
+          project_id,
+          updates: { feature: updates },
+          access_token,
+        })
+      );
+
+      if (patchResponse.meta?.requestStatus === "fulfilled") {
+        await getPageDetails({ project_id, page_id, access_token });
+      }
+      return patchResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getPageDetails = async ({ project_id, page_id, access_token }) => {
     try {
       const pageDetails = await dispatch(
@@ -400,6 +426,7 @@ export default function useAxios() {
     postPage,
     getPageDetails,
     updatePage,
+    patchPageFeature,
     updatePageImages,
     postComponent,
     getComponentDetails,

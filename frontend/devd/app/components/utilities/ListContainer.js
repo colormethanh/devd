@@ -5,10 +5,9 @@ import Button from "./Button";
 export default function ListContainer({
   addStyles,
   items,
-  onItemEdit,
   title,
   addItem,
-  itemKeySalt,
+  patchItem,
 }) {
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
@@ -18,6 +17,10 @@ export default function ListContainer({
     addItem(newItemText);
     setNewItemText("");
     setIsAddingItem(false);
+  };
+
+  const handleItemPatch = (item) => {
+    patchItem(item);
   };
 
   return (
@@ -72,7 +75,11 @@ export default function ListContainer({
         {items !== undefined &&
           items.map((item, i) => {
             return (
-              <ListContainerItem text={item} key={`task-feature-${item}`} />
+              <ListContainerItem
+                item={item}
+                key={`task-feature-${item._id}`}
+                handleItemPatch={handleItemPatch}
+              />
             );
           })}
         {items !== undefined && items.length === 0 && (
