@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Dropdown from "./utilities/Dropdown";
+import DescriptionContainer from "./DescriptionContainer";
+import TextAndInputContainer from "./utilities/TextAndInputContainer";
 
 export default function ProjectProject({ project, changeViewTo }) {
   const filterItems = [
@@ -9,34 +11,41 @@ export default function ProjectProject({ project, changeViewTo }) {
     { text: "Done", callback: () => {} },
   ];
 
+  useEffect(() => {
+    console.log(project);
+  });
+
   return (
     <div className="h-5/6 border border-white mr-1 mt-4">
-      <div className="flex flex-col h-full">
-        <h1 className="text-3xl p-3"> {project.name} </h1>
+      <div className="flex flex-col h-full px-3">
+        <h1 className="text-4xl p-1"> {project.name} </h1>
+        <hr className="my-2"></hr>
 
-        {/* Project tasks viewer */}
-        <div className="border w-1/4 h-60 flex flex-col">
-          <div className="border-b h-8 flex justify-between">
-            <div className="h-full flex flex-col justify-center px-3">
+        <div className="flex flex-col gap-4">
+          {/* Project Description */}
+          <div>
+            <h3 className="text-3xl"> Project Description: </h3>
+            <p className="text-xs text-gray-400">
               {" "}
-              Tasks{" "}
-            </div>
-
-            <Dropdown
-              items={filterItems}
-              toggleText={
-                <Image
-                  className=""
-                  src={"/static/filterIcon-white.png"}
-                  height={20}
-                  width={20}
-                  alt="Filter icon"
-                />
-              }
-              addStyle={"p-1"}
+              Click text below to modify project description{" "}
+            </p>
+            <DescriptionContainer
+              classString={"my-3"}
+              description={project.description}
+              updateCallback={() => {}}
             />
           </div>
-          <h1> asdasda </h1>
+
+          {/* Project tasks viewer */}
+          <div className="flex w-full">
+            <h3 className="text-lg"> Project URL: </h3>
+            <TextAndInputContainer
+              text={project.url}
+              classString={"flex-grow px-3"}
+            />
+          </div>
+
+          <div className="h-40 w-40 border"></div>
         </div>
       </div>
     </div>

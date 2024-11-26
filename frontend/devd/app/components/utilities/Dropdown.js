@@ -3,7 +3,12 @@ import DropdownItem from "./DropdownItem";
 import useOutsideClick from "@/app/hooks/useOutsideClick";
 
 // Dropdown items should be  [{text: "", callback: () => {}}, ...]
-export default function Dropdown({ toggleText, items, addStyle }) {
+export default function Dropdown({
+  toggleText,
+  items,
+  addStyle,
+  offset = "right",
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -32,7 +37,11 @@ export default function Dropdown({ toggleText, items, addStyle }) {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute left-0 z-10 mt-2 w-56 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div
+          className={`absolute ${
+            offset === "right" ? "left-0" : "right-0"
+          }  z-10 mt-2 w-56 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
+        >
           <div className="py-1" role="none">
             {items.map((item, i) => (
               <DropdownItem

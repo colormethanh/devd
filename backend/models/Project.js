@@ -7,6 +7,7 @@ const logger = require("../utils/logging/logger");
 
 const projectSchema = new Schema({
   description: { type: String, required: true },
+  url: { type: String },
   date_created: { type: Number, required: true },
   name: { type: String, required: true, unique: true },
   owner: { type: Schema.Types.ObjectId, ref: "User", required: true },

@@ -25,6 +25,7 @@ exports.postNewProject = async (name, description, userId) => {
       description,
       owner: userId,
       date_created: Date.now(),
+      url: "",
     });
     newProject = await newProject.save();
 
