@@ -17,6 +17,7 @@ export default function DescriptionContainer({
     if (textAreaRef.current) {
       updateCallback(textAreaRef.current.value);
     }
+    setIsEdit(false);
   };
 
   useEffect(() => {

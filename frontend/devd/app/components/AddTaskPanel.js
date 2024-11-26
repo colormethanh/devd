@@ -10,6 +10,7 @@ export default function AddTaskPanel({
   setIsAddTaskView,
   project,
   postNewTask,
+  error,
 }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -20,8 +21,10 @@ export default function AddTaskPanel({
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleTaskFormSubmit = () => {
-    postNewTask(project._id, formData);
+  const handleTaskFormSubmit = async () => {
+    await postNewTask(project._id, formData);
+    debugger;
+    if (error) return;
     setIsAddTaskView(false);
   };
 
@@ -57,6 +60,7 @@ export default function AddTaskPanel({
               className="bg-black w-full border border-gray-500 focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
               id="description"
               name="description"
+              required
               onChange={handleInputChange}
               rows={"3"}
             />

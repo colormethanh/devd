@@ -5,7 +5,7 @@ import {
   refreshAccessToken,
   logout,
 } from "../store/slices/authSlice";
-import { resetTask } from "../store/slices/taskSlice";
+import { resetTask, setTaskError } from "../store/slices/taskSlice";
 import {
   getProject,
   getShowcaseData,
@@ -160,20 +160,13 @@ export default function useAxios() {
         },
         withCredentials: true,
       });
-
       const response = await getProjectDetails(project_id);
 
       return response;
     } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const dispatchResetTask = async () => {
-    try {
-      return await dispatch(resetTask());
-    } catch (err) {
-      console.log(err);
+      debugger;
+      await dispatch(setTaskError("error during task post"));
+      return Error(err.message);
     }
   };
 
@@ -408,7 +401,6 @@ export default function useAxios() {
     getPageDetails,
     updatePage,
     updatePageImages,
-    dispatchResetTask,
     postComponent,
     getComponentDetails,
     updateComponent,

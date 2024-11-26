@@ -3,22 +3,13 @@ import useAxios from "./useAxios";
 import { useSelector } from "react-redux";
 
 export default function useTasks(project) {
-  const {
-    getTaskDetails,
-    updateTask,
-    postTask,
-    dispatchResetTask,
-    deleteTaskInDB,
-  } = useAxios();
+  const { getTaskDetails, updateTask, postTask, deleteTaskInDB } = useAxios();
   const task = useSelector((state) => state.task.task);
   const accessToken = useSelector((state) => state.auth.token);
+  const error = useSelector((state) => state.task.error);
 
   const setTask = async (task) => {
     try {
-      // debugger;
-
-      if (task === undefined) return dispatchResetTask();
-
       const retrievedTask = await getTaskDetails({
         project_id: project._id,
         task_id: task._id,
@@ -26,7 +17,6 @@ export default function useTasks(project) {
       });
       return retrievedTask;
     } catch (err) {
-      // debugger;
       console.log(err);
     }
   };
@@ -94,5 +84,6 @@ export default function useTasks(project) {
     postNewTask,
     addTaskRelevantContent,
     deleteTask,
+    error,
   };
 }

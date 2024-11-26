@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { UNDERSCORE_NOT_FOUND_ROUTE } from "next/dist/shared/lib/constants";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -37,7 +38,11 @@ export const updateTaskInDB = createAsyncThunk(
       );
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue({ status: err.status, message: err.message });
+      return rejectWithValue({
+        status: err.status,
+        message: err.message,
+        response_message: err.response.data.payload.message,
+      });
     }
   }
 );
@@ -53,10 +58,14 @@ const taskSlice = createSlice({
     resetTask: (state, action) => {
       state.task = {};
     },
+    setTaskError: (state, action) => {
+      state.error = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getTask.pending, (state, action) => {
+        state.error = undefined;
         state.isLoading = true;
       })
       .addCase(getTask.fulfilled, (state, action) => {
@@ -68,6 +77,7 @@ const taskSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(updateTaskInDB.pending, (state, action) => {
+        state.error = undefined;
         state.isLoading = true;
       })
       .addCase(updateTaskInDB.fulfilled, (state, action) => {
@@ -81,6 +91,6 @@ const taskSlice = createSlice({
   },
 });
 
-export const { resetTask } = taskSlice.actions;
+export const { resetTask, setTaskError } = taskSlice.actions;
 
 export default taskSlice.reducer;

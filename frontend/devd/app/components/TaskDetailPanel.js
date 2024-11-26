@@ -17,7 +17,7 @@ export default function TaskDetailPanel({
 }) {
   const [selectedStatus, setSelectedStatus] = useState("backlog");
   const [description, setDescription] = useState("");
-  const { formatDate } = useHelpers();
+  const { formatDate, filterRelevantContents } = useHelpers();
 
   const handleStatusChange = (e) => {
     updateTaskStatus(task, e.target.value);
@@ -118,8 +118,11 @@ export default function TaskDetailPanel({
 
       <RelevantContentsContainer
         projectContents={{
-          components: project.components,
-          pages: project.pages,
+          components: filterRelevantContents(
+            project.components,
+            task.relevant_contents
+          ),
+          pages: filterRelevantContents(project.pages, task.relevant_contents),
         }}
         relevantContents={task.relevant_contents}
         addContent={handleAddRelevantContent}
