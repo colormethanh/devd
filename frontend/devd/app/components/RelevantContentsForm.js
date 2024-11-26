@@ -22,9 +22,9 @@ export default function RelevantContentsForm({
         <Form onSubmit={handleSubmit} title={""}>
           <label
             htmlFor="content"
-            className="block text-sm font-medium text-gray-500"
+            className="block text-lg font-medium text-white"
           >
-            Choose content:
+            Choose contents from below:
           </label>
           <select
             id="content"

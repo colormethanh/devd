@@ -12,6 +12,7 @@ export default function ListContainer({
 }) {
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
+  const featuresFormRef = useRef();
 
   const handleAddItem = () => {
     addItem(newItemText);
@@ -36,31 +37,36 @@ export default function ListContainer({
 
       {/* Add new feature */}
       {isAddingItem && (
-        <div className="flex gap-4 mx-3 my-4">
-          {" "}
-          <input
-            type="text"
-            className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3"
-            value={newItemText}
-            onChange={(e) => setNewItemText(e.target.value)}
-          />
-          <Button
-            addStyle={"py-0 border-red-500"}
-            clickCallback={() => {
-              setIsAddingItem(false);
-            }}
-          >
+        <form ref={featuresFormRef} onSubmit={handleAddItem}>
+          <div className="flex gap-4 mx-3 my-4">
             {" "}
-            Cancel{" "}
-          </Button>
-          <Button
-            addStyle={"py-0 border-green-500"}
-            clickCallback={handleAddItem}
-          >
-            {" "}
-            Submit{" "}
-          </Button>{" "}
-        </div>
+            <input
+              type="text"
+              className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3"
+              value={newItemText}
+              required
+              onChange={(e) => setNewItemText(e.target.value)}
+            />
+            <Button
+              addStyle={"py-0 border-red-500"}
+              clickCallback={() => {
+                setIsAddingItem(false);
+              }}
+            >
+              {" "}
+              Cancel{" "}
+            </Button>
+            <button
+              className={
+                "bg-[#000000] text-white border hover:bg-white  hover:text-black  focus:outline-black w-48 p-3 py-0 border-green-500"
+              }
+              type="submit"
+            >
+              {" "}
+              Submit{" "}
+            </button>{" "}
+          </div>
+        </form>
       )}
       <ul className={`overflow-y-auto ${addStyles}`}>
         {items !== undefined &&
