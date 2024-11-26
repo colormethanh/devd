@@ -3,7 +3,12 @@ import React from "react";
 import Form from "./utilities/Form";
 import { useRouter } from "next/navigation";
 
-export default function LoginForm({ formData, setFormData, handleSubmit }) {
+export default function LoginForm({
+  formData,
+  setFormData,
+  handleSubmit,
+  error,
+}) {
   const handleInputChange = (e) => {
     const name = e.target.name;
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
@@ -11,7 +16,11 @@ export default function LoginForm({ formData, setFormData, handleSubmit }) {
 
   return (
     <div className="w-1/2">
-      <Form onSubmit={handleSubmit} title={"Sign In"}>
+      <Form
+        onSubmit={handleSubmit}
+        title={"Sign In"}
+        error={error?.status === 401 ? error.response_message : false}
+      >
         <div>
           <label
             htmlFor="username"

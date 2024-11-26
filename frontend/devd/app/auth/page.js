@@ -3,7 +3,7 @@ import LoginForm from "../components/LoginForm";
 import useLogin from "../hooks/useLogin";
 
 export default function AuthPage() {
-  const { loginFormData, setLoginFormData, handleLogin } = useLogin();
+  const { loginFormData, setLoginFormData, handleLogin, error } = useLogin();
 
   return (
     <div className="p-1 w-full flex justify-center">
@@ -11,6 +11,7 @@ export default function AuthPage() {
         formData={loginFormData}
         setFormData={setLoginFormData}
         handleSubmit={handleLogin}
+        error={error}
       />
     </div>
   );

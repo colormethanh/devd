@@ -6,6 +6,7 @@ export default function Form({
   submitButtonStyle = "",
   submitText = "Submit",
   children,
+  error,
 }) {
   return (
     <div className="min-h-20 w-full flex justify-center text-white ">
@@ -17,6 +18,7 @@ export default function Form({
         }}
       >
         <h1 className="text-2xl text-white font-bold">{title}</h1>
+        {<p className="text-red-500"> {error} </p>}
         {children}
         <div className="w-full flex justify-end">
           <button
