@@ -13,7 +13,11 @@ export const signup = createAsyncThunk(
       });
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue({ status: err.status, message: err.message });
+      return rejectWithValue({
+        status: err.status,
+        message: err.message,
+        response_message: err.response.data.payload.message,
+      });
     }
   }
 );

@@ -7,7 +7,8 @@ import Button from "@/app/components/utilities/Button";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const { signupFormData, setSignupFormData, handleSignup } = useSignup();
+  const { signupFormData, setSignupFormData, handleSignup, error } =
+    useSignup();
   const router = useRouter();
 
   const { Modal, openModal } = useModal(
@@ -32,6 +33,7 @@ export default function SignupPage() {
         formData={signupFormData}
         setFormData={setSignupFormData}
         handleSubmit={() => handleSignup(openModal)}
+        error={error}
       />
       {Modal}
     </div>

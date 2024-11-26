@@ -1,6 +1,11 @@
 import Form from "./utilities/Form";
 
-export default function SignupForm({ formData, setFormData, handleSubmit }) {
+export default function SignupForm({
+  formData,
+  setFormData,
+  handleSubmit,
+  error,
+}) {
   const handleInputChange = (e) => {
     const name = e.target.name;
     setFormData((prev) => ({ ...prev, [name]: e.target.value }));
@@ -8,7 +13,11 @@ export default function SignupForm({ formData, setFormData, handleSubmit }) {
 
   return (
     <div className="w-1/2">
-      <Form onSubmit={handleSubmit} title={"Sign Up"}>
+      <Form
+        onSubmit={handleSubmit}
+        title={"Sign Up"}
+        error={error?.status === 400 ? error.response_message : false}
+      >
         <div>
           <label
             htmlFor="email"
@@ -17,7 +26,7 @@ export default function SignupForm({ formData, setFormData, handleSubmit }) {
             email address
           </label>
           <input
-            type="text"
+            type="email"
             id="email"
             name="email"
             value={formData["email"]}

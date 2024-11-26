@@ -18,7 +18,7 @@ export default function Form({
         }}
       >
         <h1 className="text-2xl text-white font-bold">{title}</h1>
-        {<p className="text-red-500"> {error} </p>}
+        {error && <p className="text-red-500"> Oh No! {error}. Try again. </p>}
         {children}
         <div className="w-full flex justify-end">
           <button
