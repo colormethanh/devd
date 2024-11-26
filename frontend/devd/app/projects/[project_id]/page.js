@@ -9,13 +9,17 @@ import ProjectTeam from "@/app/components/ProjectTeam";
 import useAuth from "@/app/hooks/useAuth";
 import useViews from "@/app/hooks/useViews";
 import { useRouter } from "next/navigation";
+import ProjectProject from "@/app/components/ProjectProject";
 
 export default function ProjectDetails({ params }) {
   const router = useRouter();
 
   const { project_id } = React.use(params);
   const { accessToken, needsLogin, checkAndRefreshToken } = useAuth();
-  const { project } = useProject(project_id, accessToken);
+  const { project, updateProjectDescription, updateProjectUrl } = useProject(
+    project_id,
+    accessToken
+  );
   const { isViewing, changeViewTo } = useViews(project);
 
   const handleChangeView = (view) => {
@@ -33,7 +37,6 @@ export default function ProjectDetails({ params }) {
         await checkAndRefreshToken(accessToken);
         if (needsLogin === true) router.push("/auth");
       }
-      handleChangeView("tasks");
     };
 
     setupPage();
@@ -50,8 +53,17 @@ export default function ProjectDetails({ params }) {
       {needsLogin === true ? (
         <div className="w-full"> Please login to continue </div>
       ) : (
-        // todo add needs login view
         <div className="w-full overflow-hidden">
+          {isViewing === "project" && (
+            <ProjectProject
+              project={project}
+              access_token={accessToken}
+              changeViewTo={changeViewTo}
+              updateProjectDescription={updateProjectDescription}
+              updateProjectUrl={updateProjectUrl}
+            />
+          )}
+
           {isViewing === "tasks" && (
             <ProjectTasks project={project} changeViewTo={changeViewTo} />
           )}

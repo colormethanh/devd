@@ -61,7 +61,7 @@ export default function TaskDetailPanel({
 
   return (
     <DetailPanel>
-      <div className="w-full flex flex-col">
+      <div className="w-full flex flex-col ">
         <h1 className="text-4xl"> {task.name} </h1>
         <hr className="my-2 "></hr>
 

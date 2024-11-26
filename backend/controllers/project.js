@@ -25,6 +25,7 @@ exports.postNewProject = async (name, description, userId) => {
       description,
       owner: userId,
       date_created: Date.now(),
+      url: "",
     });
     newProject = await newProject.save();
 
@@ -43,7 +44,7 @@ exports.getProject = async (projectId) => {
 
     const project = await ProjectModel.findById(projectId).populate(
       "tasks components pages",
-      "name _id"
+      "name _id status"
     );
 
     return project;
@@ -70,8 +71,11 @@ exports.getProjectForShowcase = async (projectName) => {
       .populate({
         path: "owner",
         select: "username _id projects",
+      })
+      .populate({
+        path: "tasks",
+        select: "name _id",
       });
-
     return project;
   } catch (err) {
     return createError(err.statusCode, err.message);

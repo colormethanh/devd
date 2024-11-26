@@ -10,9 +10,8 @@ export default function ProjectShowcase({ params }) {
   const { projectName } = React.use(params);
   const { project } = useShowcase(projectName);
 
-  console.log(project);
   return (
-    <div className="w-full h-[90%] p-3 overflow-auto">
+    <div className="w-full h-[90%] p-3 overflow-auto ">
       <div className="w-full flex flex-col gap-6">
         {/* Title container */}
         <div className=" w-full flex flex-col justify-center items-center">
@@ -29,16 +28,18 @@ export default function ProjectShowcase({ params }) {
                 />
                 {project.owner !== undefined && project.owner.username}{" "}
               </div>
-              <div className="flex">
-                <Image
-                  src={"/static/linkIcon-white.png"}
-                  width={25}
-                  height={20}
-                  alt="user Icon"
-                  className="mr-1 opacity-60 "
-                />
-                {"Link to website"}{" "}
-              </div>
+              <a href={`${project.url}`}>
+                <div className="flex">
+                  <Image
+                    src={"/static/linkIcon-white.png"}
+                    width={25}
+                    height={20}
+                    alt="user Icon"
+                    className="mr-1 opacity-60 "
+                  />
+                  {`Visit ${project.name}`}{" "}
+                </div>
+              </a>
             </div>
           </div>
           <div className="w-full text-center mt-3">
