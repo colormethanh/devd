@@ -3,14 +3,15 @@ import Image from "next/image";
 import Dropdown from "./utilities/Dropdown";
 import DescriptionContainer from "./DescriptionContainer";
 import TextAndInputContainer from "./utilities/TextAndInputContainer";
+import useAxios from "../hooks/useAxios";
 
-export default function ProjectProject({ project, changeViewTo }) {
-  const filterItems = [
-    { text: "BackLog", callback: () => {} },
-    { text: "In Progress", callback: () => {} },
-    { text: "Done", callback: () => {} },
-  ];
-
+export default function ProjectProject({
+  project,
+  changeViewTo,
+  access_token,
+  updateProjectDescription,
+  updateProjectUrl,
+}) {
   useEffect(() => {
     console.log(project);
   });
@@ -32,7 +33,7 @@ export default function ProjectProject({ project, changeViewTo }) {
             <DescriptionContainer
               classString={"my-3"}
               description={project.description}
-              updateCallback={() => {}}
+              updateCallback={updateProjectDescription}
             />
           </div>
 
@@ -42,6 +43,7 @@ export default function ProjectProject({ project, changeViewTo }) {
             <TextAndInputContainer
               text={project.url}
               classString={"flex-grow px-3"}
+              updateCallback={updateProjectUrl}
             />
           </div>
 

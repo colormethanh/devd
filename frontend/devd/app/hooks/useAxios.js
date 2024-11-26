@@ -6,7 +6,11 @@ import {
   logout,
 } from "../store/slices/authSlice";
 import { resetTask } from "../store/slices/taskSlice";
-import { getProject, getShowcaseData } from "../store/slices/projectSlice";
+import {
+  getProject,
+  getShowcaseData,
+  updateProjectInDB,
+} from "../store/slices/projectSlice";
 import { getTask, updateTaskInDB } from "../store/slices/taskSlice";
 import {
   getComponent,
@@ -51,6 +55,22 @@ export default function useAxios() {
     try {
       const response = await axios.get(`${BASE_URL}/projects`);
       return response.data.payload;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updateProject = async ({ project_id, updates, access_token }) => {
+    try {
+      const response = await dispatch(
+        updateProjectInDB({ project_id, updates, access_token })
+      );
+
+      if (response.meta?.requestStatus === "fulfilled") {
+        await getProjectDetails(project_id);
+      }
+
+      return response;
     } catch (err) {
       console.error(err);
     }
@@ -375,6 +395,7 @@ export default function useAxios() {
     dispatchSignup,
     refreshToken,
     getProjects,
+    updateProject,
     postProjectToDB,
     deleteProjectInDB,
     getProjectDetails,

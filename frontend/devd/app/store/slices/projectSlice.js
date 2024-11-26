@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const isServer = typeof window === "undefined";
 
 export const getProject = createAsyncThunk(
   "project/getProject",
@@ -29,6 +28,25 @@ export const getShowcaseData = createAsyncThunk(
     }
   }
 );
+
+export const updateProjectInDB = createAsyncThunk(
+  "project/updateProject",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/projects/${params.project_id}`,
+        params.updates,
+        {
+          headers: { Authorization: `Bearer ${params.access_token}` },
+        }
+      );
+      return response.data.payload;
+    } catch (err) {
+      rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
 const projectSlice = createSlice({
   name: "project",
   initialState: {
