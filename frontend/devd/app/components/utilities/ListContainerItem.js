@@ -10,8 +10,12 @@ export default function ListContainerItem({ item, handleItemPatch }) {
     setIsEdit(true);
   };
 
-  const handleFeatureSubmit = () => {
+  const handleEditClose = () => {
+    setItemText(item?.text);
     setIsEdit(false);
+  };
+
+  const handleFeatureSubmit = () => {
     handleItemPatch({ ...item, text: itemText });
     console.log("submitting form");
   };
@@ -22,7 +26,12 @@ export default function ListContainerItem({ item, handleItemPatch }) {
 
   return isEdit ? (
     <div className="ms-3 w-5/6 my-2">
-      <form onSubmit={handleFeatureSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleFeatureSubmit();
+        }}
+      >
         <div className="w-full flex gap-2">
           <div className="mr-1"> {"-"} </div>
           <input
@@ -34,9 +43,7 @@ export default function ListContainerItem({ item, handleItemPatch }) {
           />
           <Button
             addStyle={"py-0 border-red-500"}
-            clickCallback={() => {
-              setIsEdit(false);
-            }}
+            clickCallback={handleEditClose}
           >
             {" "}
             Cancel{" "}
