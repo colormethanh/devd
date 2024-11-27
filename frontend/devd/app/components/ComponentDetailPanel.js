@@ -163,12 +163,11 @@ export default function ComponentDetailPanel({
       <div className="flex flex-col">
         <h4 className="text-xl font-bold underline mb-2"> Images </h4>
         {/* Page Images, should open a modal on click */}
-        <div className="w-full h-full">
-          <HorizontalImagesSlider
-            outerContainerRef={detailsContainerRef}
-            images={component.images}
-          />
-        </div>
+
+        <HorizontalImagesSlider
+          outerContainerRef={detailsContainerRef}
+          images={component.images}
+        />
       </div>
 
       {Modal}

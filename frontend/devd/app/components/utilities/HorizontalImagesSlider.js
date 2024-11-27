@@ -1,6 +1,9 @@
 import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 import useModal from "@/app/hooks/useModal";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 
 export default function HorizontalImagesSlider({ images, outerContainerRef }) {
   const containerRef = useRef(null);
@@ -28,12 +31,12 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
   };
   const { Modal, openModal, closeModal } = useModal("", modalBody());
 
-  const handleMouseEnter = () => {
-    outerContainerRef.current.style.overflow = "hidden";
-  };
-
-  const handleMouseLeave = () => {
-    outerContainerRef.current.style.overflow = "auto";
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
   };
 
   const handleImageClick = (image) => {
@@ -41,46 +44,45 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
     openModal();
   };
 
-  // Handle mouse wheel scroll
-  const handleWheel = (e) => {
-    if (containerRef.current) {
-      containerRef.current.scrollLeft += e.deltaY;
-    }
-  };
-
   return (
-    <div
-      className="h-full w-full"
-      ref={containerRef}
-      onWheel={handleWheel}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="flex items-center gap-5">
-        {images !== undefined && images.length !== 0 ? (
-          images.map((image, i) => (
-            <div
-              key={`page-image-${i}`}
-              className="min-w-[300px] h-full flex items-center justify-center overflow-hidden hover:cursor-pointer"
-              onClick={() => handleImageClick(image)}
-            >
-              <Image
-                height={400}
-                width={500}
-                src={image.url}
-                alt={image.title}
-              />
-            </div>
-          ))
-        ) : (
-          <div className="h-12">
-            <h1 className="text-lg">
-              {" "}
-              📸 No images to show...Upload an image to view them here
-            </h1>
-          </div>
-        )}
-      </div>
+    <div className="h-full w-full" ref={containerRef}>
+      {images !== undefined && images.length !== 0 ? (
+        <div className="slider-container">
+          <Slider {...sliderSettings}>
+            {images.map((image, i) => (
+              <div
+                key={`page-image-${i._id}`}
+                className="h-52 hover:cursor-pointer p-3"
+                onDoubleClick={() => handleImageClick(image)}
+              >
+                <div className="flex h-full flex-col justify-between">
+                  <div className="h-[80%] flex items-center m-3">
+                    <Image
+                      height={400}
+                      width={600}
+                      className=""
+                      src={image.url}
+                      alt={image.title}
+                    />
+                  </div>
+
+                  <h4 className="text-center text-lg italic  float-end">
+                    {" "}
+                    {image.title}{" "}
+                  </h4>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
+      ) : (
+        <div className="h-12">
+          <h1 className="text-lg">
+            {" "}
+            📸 No images to show...Upload an image to view them here
+          </h1>
+        </div>
+      )}
       {Modal}
     </div>
   );

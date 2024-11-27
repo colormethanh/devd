@@ -152,15 +152,13 @@ export default function PageDetailsPanel({
       />
 
       {/* Container for horizontal image scrolls */}
-      <div className="flex flex-col flex-grow">
+      <div className="flex flex-col">
         <h4 className="text-xl font-bold underline mb-2"> Images </h4>
         {/* Page Images, should open a modal on click */}
-        <div className="w-full">
-          <HorizontalImagesSlider
-            outerContainerRef={detailsContainerRef}
-            images={page.images}
-          />
-        </div>
+        <HorizontalImagesSlider
+          outerContainerRef={detailsContainerRef}
+          images={page.images}
+        />
       </div>
       {Modal}
       {DeleteModal}
