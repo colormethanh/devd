@@ -5,6 +5,7 @@ export default function DescriptionContainer({
   description,
   classString,
   updateCallback,
+  rows = 3,
 }) {
   const [isEdit, setIsEdit] = useState(false);
   const textAreaRef = useRef(null);
@@ -33,7 +34,7 @@ export default function DescriptionContainer({
               ref={textAreaRef}
               className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
               name="description-textarea"
-              rows={"3"}
+              rows={rows}
               defaultValue={description}
             />
             <div className="flex justify-end">

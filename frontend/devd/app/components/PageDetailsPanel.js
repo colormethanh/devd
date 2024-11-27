@@ -16,6 +16,7 @@ export default function PageDetailsPanel({
   addPageFeature,
   deletePage,
   patchFeature,
+  deleteFeature,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -36,6 +37,10 @@ export default function PageDetailsPanel({
 
   const handlePatchFeature = (feature) => {
     patchFeature(page, feature);
+  };
+
+  const handleDeleteFeature = (feature) => {
+    deleteFeature(page, feature);
   };
 
   // Setting up modal for image upload
@@ -69,6 +74,7 @@ export default function PageDetailsPanel({
 
   return (
     <DetailPanel detailsContainerRef={detailsContainerRef}>
+      {/* Tittle bar */}
       <div className="w-full flex flex-col">
         <h1 className="text-4xl"> {page.name} </h1>
         <hr className="my-2 "></hr>
@@ -142,13 +148,14 @@ export default function PageDetailsPanel({
         items={page.features}
         addItem={handleAddFeature}
         patchItem={handlePatchFeature}
+        deleteItem={handleDeleteFeature}
       />
 
       {/* Container for horizontal image scrolls */}
-      <div className="flex flex-col">
+      <div className="flex flex-col flex-grow">
         <h4 className="text-xl font-bold underline mb-2"> Images </h4>
         {/* Page Images, should open a modal on click */}
-        <div className="w-full h-full">
+        <div className="w-full">
           <HorizontalImagesSlider
             outerContainerRef={detailsContainerRef}
             images={page.images}

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import Button from "./Button";
+import Image from "next/image";
 
-export default function ListContainerItem({ item, handleItemPatch }) {
+export default function ListContainerItem({
+  item,
+  handleItemPatch,
+  handleItemDelete,
+}) {
   const [itemText, setItemText] = useState();
   const [isEdit, setIsEdit] = useState(false);
 
@@ -20,12 +25,17 @@ export default function ListContainerItem({ item, handleItemPatch }) {
     console.log("submitting form");
   };
 
+  const handleDeleteButtonClick = () => {
+    handleItemDelete(item);
+    setIsEdit(false);
+  };
+
   useState(() => {
     setItemText(item?.text);
   }, [item]);
 
   return isEdit ? (
-    <div className="ms-3 w-5/6 my-2">
+    <div className="ms-3 my-2">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -41,12 +51,25 @@ export default function ListContainerItem({ item, handleItemPatch }) {
             required
             onChange={(e) => setItemText(e.target.value)}
           />
+          <button
+            className={
+              "border hover:border-red-500 hover:text-black  w-10 flex justify-center items-center"
+            }
+            type="button"
+            onClick={handleDeleteButtonClick}
+          >
+            <Image
+              src={"/static/trashIcon-white.png"}
+              height={15}
+              width={15}
+              alt="delete feature button"
+            />
+          </button>
           <Button
             addStyle={"py-0 border-red-500"}
             clickCallback={handleEditClose}
           >
-            {" "}
-            Cancel{" "}
+            Cancel
           </Button>
           <button
             className={
@@ -55,16 +78,16 @@ export default function ListContainerItem({ item, handleItemPatch }) {
             type="submit"
           >
             {" "}
-            Submit{" "}
+            Update{" "}
           </button>{" "}
         </div>
       </form>
     </div>
   ) : (
-    <li onClick={handleSetEdit} className="ms-3 w-5/6 my-2">
-      <div className={"w-full flex"}>
+    <li onClick={handleSetEdit} className="ms-3 my-2">
+      <div className={"w-full flex gap-2"}>
         <div className="mr-1"> {"-"} </div>
-        <div className="border border-black hover:border-white ps-3 w-2/3">
+        <div className="border border-black hover:border-white ps-3 flex-grow">
           {itemText}
         </div>
       </div>

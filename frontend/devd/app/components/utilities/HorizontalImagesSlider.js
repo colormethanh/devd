@@ -50,13 +50,13 @@ export default function HorizontalImagesSlider({ images, outerContainerRef }) {
 
   return (
     <div
-      className="relative h-full w-full overflow-y-hidden"
+      className="h-full w-full"
       ref={containerRef}
       onWheel={handleWheel}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="flex h-4/5 items-center gap-5">
+      <div className="flex items-center gap-5">
         {images !== undefined && images.length !== 0 ? (
           images.map((image, i) => (
             <div

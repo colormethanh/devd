@@ -10,6 +10,7 @@ export default function usePages(project, accessToken) {
     postPage,
     deletePageInDB,
     patchPageFeature,
+    deletePageFeature,
   } = useAxios();
 
   const page = useSelector((state) => state.page.page);
@@ -110,6 +111,21 @@ export default function usePages(project, accessToken) {
     }
   };
 
+  const deleteFeature = async (page, feature) => {
+    try {
+      const updatedPage = await deletePageFeature({
+        page_id: page._id,
+        project_id: project._id,
+        feature_id: feature._id,
+        access_token: accessToken,
+      });
+
+      return updatedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const deletePage = async (page) => {
     await deletePageInDB(page._id, project._id, accessToken);
   };
@@ -124,5 +140,6 @@ export default function usePages(project, accessToken) {
     postNewPage,
     deletePage,
     patchFeature,
+    deleteFeature,
   };
 }

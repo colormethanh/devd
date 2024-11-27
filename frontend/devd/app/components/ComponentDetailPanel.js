@@ -67,11 +67,11 @@ export default function ComponentDetailPanel({
 
   return (
     <DetailPanel detailsContainerRef={detailsContainerRef}>
+      {/* Title and info bar */}
       <div className="w-full flex flex-col">
         <h1 className="text-4xl"> {component.name} </h1>
         <hr className="my-2 "></hr>
 
-        {/* Title and info bar */}
         <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
           {/* Posted date */}
           <div className="mr-3 ">
@@ -154,7 +154,7 @@ export default function ComponentDetailPanel({
 
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
-        <h4 className="text-xl font-bold"> Images </h4>
+        <h4 className="text-xl font-bold underline mb-2"> Images </h4>
         {/* Page Images, should open a modal on click */}
         <div className="w-full h-full">
           <HorizontalImagesSlider

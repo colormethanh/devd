@@ -8,6 +8,7 @@ export default function ListContainer({
   title,
   addItem,
   patchItem,
+  deleteItem,
 }) {
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
@@ -17,6 +18,11 @@ export default function ListContainer({
     addItem(newItemText);
     setNewItemText("");
     setIsAddingItem(false);
+  };
+
+  const handleItemDelete = (item) => {
+    console.log("deleting item:", item);
+    deleteItem(item);
   };
 
   const handleItemPatch = (item) => {
@@ -38,7 +44,7 @@ export default function ListContainer({
         </div>
       </div>
 
-      {/* Add new feature */}
+      {/* Add new feature input and toggler */}
       {isAddingItem && (
         <form ref={featuresFormRef} onSubmit={handleAddItem}>
           <div className="flex gap-4 mx-3 my-4">
@@ -71,6 +77,8 @@ export default function ListContainer({
           </div>
         </form>
       )}
+
+      {/* List items */}
       <ul className={`overflow-y-auto ${addStyles}`}>
         {items !== undefined &&
           items.map((item, i) => {
@@ -79,11 +87,12 @@ export default function ListContainer({
                 item={item}
                 key={`task-feature-${item._id}`}
                 handleItemPatch={handleItemPatch}
+                handleItemDelete={handleItemDelete}
               />
             );
           })}
         {items !== undefined && items.length === 0 && (
-          <div>{"😦 No features added yet. Add on now!"}</div>
+          <div>{"😦 No features added yet. Add one now!"}</div>
         )}
       </ul>
     </div>

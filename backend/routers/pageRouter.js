@@ -216,6 +216,7 @@ const pageRoutes = function (pageController) {
     }
   });
 
+  // Patch a project attribute
   router.patch(
     "/:page_id",
     requireAuth,
@@ -253,8 +254,6 @@ const pageRoutes = function (pageController) {
         // checking the request body
         const allowedUpdates = ["feature"];
 
-        // req.body = {feature: {_id, text}}
-
         if (!hasOne(allowedUpdates, req.body))
           next(createError(400, "Must update at least one property"));
 
@@ -278,6 +277,7 @@ const pageRoutes = function (pageController) {
     }
   );
 
+  // Add Upload image to cloudinary and add an image URL to page
   router.put(
     "/:page_id/image",
     requireAuth,
@@ -322,8 +322,7 @@ const pageRoutes = function (pageController) {
         const image_title = req.body.title;
         if (!image_title) next(createError(400, "Must provide image title"));
 
-        // create the updates object {title: "image title", url: "cloudinary url"}
-
+        // Add image url to current images array
         const updatedImagesArray = [
           ...originalPage.images,
           { title: image_title, url: image_url },
@@ -332,6 +331,63 @@ const pageRoutes = function (pageController) {
         const updates = { images: updatedImagesArray };
 
         const updatedPage = await pageController.updatePage(page_id, updates);
+
+        if (!updatedPage) next(createError(500, "error when updating"));
+        if (updatedPage instanceof Error) next(updatedPage);
+
+        return res.send(createResponseObject({ updatedPage }));
+      } catch (err) {
+        next(createError(err.statusCode, err.message));
+      }
+    }
+  );
+
+  // delete page feature
+  router.delete(
+    "/:page_id/feature/:feature_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      try {
+        logger.info({
+          message: "initiating checks for page feature delete",
+          user: req.user._id,
+          request_id: req.metadata.request_id,
+        });
+
+        const { page_id, feature_id } = req.params;
+        const project = req.project;
+
+        // check to see if page exists
+        const originalPage = await pageController.getPage(page_id);
+        if (!originalPage) next(createError(404, "page could not be found"));
+        if (originalPage instanceof Error) next(originalPage);
+
+        // check to see if project contains page id
+        const projectContainsPage = await project.pages.find(
+          (page) => page._id.toString() === page_id
+        );
+        if (!projectContainsPage)
+          next(createError(400, `Project does not contain page ${page_id}`));
+
+        // check to see if user is authorized to modify page
+        const isAdmin = req.role === "admin";
+        if (!isAdmin)
+          return next(
+            createError(403, "Only admin may make changes to project pages")
+          );
+
+        // remove feature from current feature array
+        const originalFeatures = originalPage.features;
+
+        const updatedFeatures = originalFeatures.filter(
+          (feature) => feature._id.toString() !== feature_id
+        );
+
+        // Update page to contain new features array
+        const updatedPage = await pageController.updatePage(page_id, {
+          features: updatedFeatures,
+        });
 
         if (!updatedPage) next(createError(500, "error when updating"));
         if (updatedPage instanceof Error) next(updatedPage);

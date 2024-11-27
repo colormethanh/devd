@@ -30,7 +30,10 @@ export default function ShowcasePageItem({ page }) {
           <h3 className="text-4xl"> Features </h3>
           {page.features !== undefined &&
             page.features.map((feature, i) => (
-              <li key={`${page._id}-feature-${i}}`}> {feature} </li>
+              <li key={`${page._id}-feature-${feature._id}}`}>
+                {" "}
+                {feature.text}{" "}
+              </li>
             ))}
         </ul>
       </div>

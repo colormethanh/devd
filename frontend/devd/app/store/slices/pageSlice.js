@@ -62,6 +62,26 @@ export const patchPageFeatureInDB = createAsyncThunk(
   }
 );
 
+export const deletePageFeatureInDB = createAsyncThunk(
+  "page/deletePageFeature",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${BASE_URL}/projects/${params.project_id}/pages/${params.page_id}/feature/${params.feature_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${params.access_token}`,
+          },
+        }
+      );
+
+      return response.data.payload;
+    } catch (err) {
+      rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
 export const uploadImageToPage = createAsyncThunk(
   "page/uploadPageImage",
   async (params, { rejectWithValue }) => {
@@ -126,6 +146,17 @@ const pageSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(patchPageFeatureInDB.rejected, (state, action) => {
+        state.error = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(deletePageFeatureInDB.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(deletePageFeatureInDB.fulfilled, (state, action) => {
+        state.page = action.payload.updatedPage;
+        state.isLoading = false;
+      })
+      .addCase(deletePageFeatureInDB.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
       })
