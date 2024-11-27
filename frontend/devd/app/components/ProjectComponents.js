@@ -16,6 +16,7 @@ export default function ProjectComponents({ project, accessToken }) {
     updateComponentStatus,
     updateComponentDescription,
     deleteComponent,
+    updateComponentSnippet,
   } = useComponents(project, accessToken);
   const currentComponentId = component._id || null;
 
@@ -69,6 +70,7 @@ export default function ProjectComponents({ project, accessToken }) {
               updateComponentStatus={updateComponentStatus}
               updateComponentDescription={updateComponentDescription}
               deleteComponent={deleteComponent}
+              updateComponentSnippet={updateComponentSnippet}
             />
           )}
         </div>

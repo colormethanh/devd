@@ -14,6 +14,7 @@ export default function ComponentDetailPanel({
   addComponentImage,
   updateComponentDescription,
   updateComponentStatus,
+  updateComponentSnippet,
   deleteComponent,
 }) {
   const { formatDate } = useHelpers();
@@ -30,11 +31,14 @@ export default function ComponentDetailPanel({
     updateComponentDescription(component, updatedDescription);
   };
 
+  const handleSnippetUpdate = (updatedSnipper) => {
+    updateComponentSnippet(component, updatedSnipper);
+  };
+
   const handleStatusChange = (e) => {
     updateComponentStatus(component, e.target.value);
   };
 
-  // Todo: How Can I improve this?
   // Setting up modal for image upload
   const handleImageUpload = (name, image) => {
     addComponentImage(component, image, name);
@@ -150,7 +154,10 @@ export default function ComponentDetailPanel({
       <div className="border-b border-gray-500 mr-3 w-full"></div>
 
       {/* Code Snippet */}
-      <CodeSnippetContainer snippet={component.snippet} />
+      <CodeSnippetContainer
+        snippet={component.snippet}
+        handleSnippetUpdate={handleSnippetUpdate}
+      />
 
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
