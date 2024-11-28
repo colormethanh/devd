@@ -154,6 +154,7 @@ export default function PageDetailsPanel({
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
         <h4 className="text-xl font-bold underline mb-2"> Images </h4>
+        <p className="text-gray-500"> Double Click images to view them! </p>
         {/* Page Images, should open a modal on click */}
         <HorizontalImagesSlider
           outerContainerRef={detailsContainerRef}

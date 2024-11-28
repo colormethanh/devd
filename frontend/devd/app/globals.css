@@ -27,3 +27,11 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.slick-dots li button:before {
+  color: white !important;
+}
+
+.slick-dots li.slick-active button:before {
+  color: green !important;
+}
