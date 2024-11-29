@@ -22,10 +22,8 @@ export default function useHelpers() {
       return prev;
     }, []);
     contents.forEach((content) => {
-      // debugger;
       if (!currentContentsId.includes(content._id)) filteredArray.push(content);
     });
-    // debugger;
     return filteredArray;
   };
 

@@ -96,7 +96,6 @@ export const deletePageImageInDB = createAsyncThunk(
       );
       return response.data.payload;
     } catch (err) {
-      debugger;
       return rejectWithValue(err);
     }
   }

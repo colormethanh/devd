@@ -10,7 +10,6 @@ export default function ListContainerItem({
   const [itemText, setItemText] = useState();
   const [isEdit, setIsEdit] = useState(false);
 
-  // debugger;
   const handleSetEdit = () => {
     setIsEdit(true);
   };

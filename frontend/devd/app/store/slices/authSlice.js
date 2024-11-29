@@ -31,7 +31,6 @@ export const login = createAsyncThunk(
       });
       return response.data.payload;
     } catch (err) {
-      debugger;
       return rejectWithValue({
         status: err.status,
         message: err.message,

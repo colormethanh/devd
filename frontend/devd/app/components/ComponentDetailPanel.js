@@ -54,7 +54,10 @@ export default function ComponentDetailPanel({
 
   // Setting up modal for page deletion
   const handleDeleteCancel = () => closeDeleteModal();
-  const handleDelete = () => deleteComponent(component);
+  const handleDelete = () => {
+    deleteComponent(component);
+    closeDeleteModal();
+  };
   const deleteModalBody = (
     <DeleteWarning
       item={component}
