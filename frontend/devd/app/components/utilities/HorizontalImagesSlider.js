@@ -4,10 +4,17 @@ import useModal from "@/app/hooks/useModal";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import Button from "./Button";
 
 export default function HorizontalImagesSlider({ images, handleImageDelete }) {
   const containerRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState();
+  const [isDeleteWarning, setIsDeleteWarning] = useState(false);
+
+  const handleDeleteSubmission = () => {
+    handleImageDelete(selectedImage);
+    closeModal();
+  };
 
   const ModalBody = () => {
     return (
@@ -25,14 +32,34 @@ export default function HorizontalImagesSlider({ images, handleImageDelete }) {
                 {" "}
                 {selectedImage.title}{" "}
               </h1>
-              <Image
-                src={"/static/trashIcon-white.png"}
-                width={30}
-                height={25}
-                alt="Delete image Icon"
-                className="border p-1 hover:border-red-500 hover:cursor-pointer"
-                onClick={() => handleImageDelete(selectedImage)}
-              />
+              {!isDeleteWarning ? (
+                <Image
+                  src={"/static/trashIcon-white.png"}
+                  width={30}
+                  height={25}
+                  alt="Delete image Icon"
+                  className="border p-1 hover:border-red-500 hover:cursor-pointer"
+                  onClick={() => setIsDeleteWarning(true)}
+                />
+              ) : (
+                <div className="flex justify-center items-center gap-4">
+                  <p> Delete this image? </p>
+                  <Button
+                    addStyle="py-0 border-yellow-500"
+                    clickCallback={() => setIsDeleteWarning(false)}
+                  >
+                    {" "}
+                    {"No, nevermind!"}{" "}
+                  </Button>
+                  <Button
+                    addStyle="py-0 border-red-500"
+                    clickCallback={handleDeleteSubmission}
+                  >
+                    {" "}
+                    {"Yes, Delete!"}{" "}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}
