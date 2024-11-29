@@ -167,8 +167,7 @@ export default function ComponentDetailPanel({
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
         <h4 className="text-xl font-bold underline mb-2"> Images </h4>
-        {/* Page Images, should open a modal on click */}
-
+        <p className="text-gray-500"> Double Click images to view them! </p>
         <HorizontalImagesSlider
           outerContainerRef={detailsContainerRef}
           images={component.images}
