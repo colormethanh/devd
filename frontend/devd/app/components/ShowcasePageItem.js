@@ -27,7 +27,7 @@ export default function ShowcasePageItem({ page }) {
         <div className="slider-container w-5/6">
           <Slider {...sliderSettings}>
             {page?.images &&
-              page.images.map((image) => (
+              page.images.map((image, i) => (
                 <div
                   key={`showcase-image-${image._id}`}
                   className="w-full p-2 flex justify-center"
@@ -36,7 +36,7 @@ export default function ShowcasePageItem({ page }) {
                     <Image
                       src={
                         page.images !== undefined
-                          ? page.images[0].url
+                          ? page.images[i].url
                           : "/static/loadingIcon-white.png"
                       }
                       width={1000}
