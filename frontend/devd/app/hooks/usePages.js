@@ -136,7 +136,7 @@ export default function usePages(project, accessToken) {
         access_token: accessToken,
       });
 
-      return updatePage;
+      return updatedPage;
     } catch (err) {
       console.log(err);
     }

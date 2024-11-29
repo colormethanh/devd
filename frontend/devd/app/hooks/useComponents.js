@@ -8,6 +8,7 @@ export default function useComponents(project, accessToken) {
     postComponent,
     updateComponent,
     updateComponentImage,
+    deleteComponentImage,
     deleteComponentInDB,
   } = useAxios();
 
@@ -109,6 +110,20 @@ export default function useComponents(project, accessToken) {
     }
   };
 
+  const deleteImage = async (component, image) => {
+    try {
+      const updatedComponent = await deleteComponentImage({
+        component_id: component._id,
+        project_id: project._id,
+        image: image,
+        access_token: accessToken,
+      });
+      return updatedComponent;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const deleteComponent = async (component) =>
     deleteComponentInDB(component._id, project._id, accessToken);
 
@@ -122,5 +137,6 @@ export default function useComponents(project, accessToken) {
     updateComponentDescription,
     deleteComponent,
     updateComponentSnippet,
+    deleteImage,
   };
 }

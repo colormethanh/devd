@@ -180,7 +180,6 @@ const pageSlice = createSlice({
         state.error = action.payload;
         state.isLoading = false;
       })
-
       .addCase(deletePageImageInDB.pending, (state, action) => {
         state.isLoading = true;
       })

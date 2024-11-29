@@ -16,6 +16,7 @@ import {
   getComponent,
   updateComponentInDB,
   uploadImageToComponent,
+  deleteComponentImageInDB,
 } from "../store/slices/componentSlice";
 import {
   getPage,
@@ -424,6 +425,31 @@ export default function useAxios() {
     }
   };
 
+  const deleteComponentImage = async ({
+    component_id,
+    project_id,
+    image,
+    access_token,
+  }) => {
+    try {
+      const deleteResponse = await dispatch(
+        deleteComponentImageInDB({
+          component_id,
+          project_id,
+          image,
+          access_token,
+        })
+      );
+
+      if (deleteResponse.meta?.requestStatus === "fulfilled") {
+        await getComponentDetails({ project_id, component_id, access_token });
+      }
+      return deleteResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const updateComponentImage = async ({
     project_id,
     component_id,
@@ -485,5 +511,6 @@ export default function useAxios() {
     deletePageInDB,
     deleteComponentInDB,
     deletePageFeature,
+    deleteComponentImage,
   };
 }

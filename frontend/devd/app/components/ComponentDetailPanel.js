@@ -16,6 +16,7 @@ export default function ComponentDetailPanel({
   updateComponentStatus,
   updateComponentSnippet,
   deleteComponent,
+  deleteImage,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -37,6 +38,10 @@ export default function ComponentDetailPanel({
 
   const handleStatusChange = (e) => {
     updateComponentStatus(component, e.target.value);
+  };
+
+  const handleDeleteImage = (image) => {
+    deleteImage(component, image);
   };
 
   // Setting up modal for image upload
@@ -167,6 +172,7 @@ export default function ComponentDetailPanel({
         <HorizontalImagesSlider
           outerContainerRef={detailsContainerRef}
           images={component.images}
+          handleImageDelete={handleDeleteImage}
         />
       </div>
 
