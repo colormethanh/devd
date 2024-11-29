@@ -2,6 +2,7 @@
 import { useState } from "react";
 import useAxios from "./useAxios";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const defaultFormData = {
   email: "",
@@ -12,6 +13,8 @@ const defaultFormData = {
 
 export default function useSignup() {
   const [signupFormData, setSignupFormData] = useState(defaultFormData);
+  const error = useSelector((state) => state.auth.error);
+  const isLoading = useSelector((state) => state.auth.isLoading);
   const { dispatchSignup } = useAxios();
   const router = useRouter();
 
@@ -33,5 +36,5 @@ export default function useSignup() {
     }
   };
 
-  return { signupFormData, setSignupFormData, handleSignup };
+  return { signupFormData, setSignupFormData, handleSignup, error, isLoading };
 }

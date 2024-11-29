@@ -57,7 +57,6 @@ export default function RelevantContentsContainer({
       },
     },
   ];
-
   return (
     <div className="flex flex-col gap-2 h-full">
       <div className="flex gap-4">

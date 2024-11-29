@@ -11,10 +11,13 @@ export const signup = createAsyncThunk(
       const response = await axios.post(`${BASE_URL}/auth/signup`, formProps, {
         withCredentials: true,
       });
-      debugger;
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue({ status: err.status, message: err.message });
+      return rejectWithValue({
+        status: err.status,
+        message: err.message,
+        response_message: err.response.data.payload.message,
+      });
     }
   }
 );
@@ -28,7 +31,12 @@ export const login = createAsyncThunk(
       });
       return response.data.payload;
     } catch (err) {
-      return rejectWithValue({ status: err.status, message: err.message });
+      debugger;
+      return rejectWithValue({
+        status: err.status,
+        message: err.message,
+        response_message: err.response.data.payload.message,
+      });
     }
   }
 );
@@ -81,6 +89,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(signup.pending, (state, action) => {
+        state.error = undefined;
         state.is_loading = true;
       })
       .addCase(signup.fulfilled, (state, action) => {
@@ -91,6 +100,7 @@ const authSlice = createSlice({
         state.is_loading = false;
       })
       .addCase(login.pending, (state, action) => {
+        state.error = undefined;
         state.is_loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
@@ -105,6 +115,7 @@ const authSlice = createSlice({
         state.is_loading = false;
       })
       .addCase(refreshAccessToken.pending, (state, action) => {
+        state.error = undefined;
         state.is_loading = true;
       })
       .addCase(refreshAccessToken.fulfilled, (state, action) => {
@@ -120,6 +131,7 @@ const authSlice = createSlice({
         state.is_loading = false;
       })
       .addCase(logout.pending, (state, action) => {
+        state.error = undefined;
         state.is_loading = true;
       })
       .addCase(logout.fulfilled, (state, action) => {

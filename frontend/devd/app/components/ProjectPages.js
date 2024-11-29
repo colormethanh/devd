@@ -16,6 +16,9 @@ export default function ProjectPages({ project, accessToken }) {
     addPageFeature,
     postNewPage,
     deletePage,
+    patchFeature,
+    deleteFeature,
+    deleteImage,
   } = usePages(project, accessToken);
   const currentPageId = page._id || null;
 
@@ -69,6 +72,9 @@ export default function ProjectPages({ project, accessToken }) {
               addPageImage={addPageImage}
               addPageFeature={addPageFeature}
               deletePage={deletePage}
+              patchFeature={patchFeature}
+              deleteFeature={deleteFeature}
+              deleteImage={deleteImage}
             />
           )}
         </div>

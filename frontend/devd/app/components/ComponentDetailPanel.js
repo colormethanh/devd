@@ -14,7 +14,9 @@ export default function ComponentDetailPanel({
   addComponentImage,
   updateComponentDescription,
   updateComponentStatus,
+  updateComponentSnippet,
   deleteComponent,
+  deleteImage,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -30,11 +32,18 @@ export default function ComponentDetailPanel({
     updateComponentDescription(component, updatedDescription);
   };
 
+  const handleSnippetUpdate = (updatedSnipper) => {
+    updateComponentSnippet(component, updatedSnipper);
+  };
+
   const handleStatusChange = (e) => {
     updateComponentStatus(component, e.target.value);
   };
 
-  // Todo: How Can I improve this?
+  const handleDeleteImage = (image) => {
+    deleteImage(component, image);
+  };
+
   // Setting up modal for image upload
   const handleImageUpload = (name, image) => {
     addComponentImage(component, image, name);
@@ -67,11 +76,11 @@ export default function ComponentDetailPanel({
 
   return (
     <DetailPanel detailsContainerRef={detailsContainerRef}>
+      {/* Title and info bar */}
       <div className="w-full flex flex-col">
         <h1 className="text-4xl"> {component.name} </h1>
         <hr className="my-2 "></hr>
 
-        {/* Title and info bar */}
         <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
           {/* Posted date */}
           <div className="mr-3 ">
@@ -150,18 +159,21 @@ export default function ComponentDetailPanel({
       <div className="border-b border-gray-500 mr-3 w-full"></div>
 
       {/* Code Snippet */}
-      <CodeSnippetContainer snippet={component.snippet} />
+      <CodeSnippetContainer
+        snippet={component.snippet}
+        handleSnippetUpdate={handleSnippetUpdate}
+      />
 
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
-        <h4 className="text-xl font-bold"> Images </h4>
+        <h4 className="text-xl font-bold underline mb-2"> Images </h4>
         {/* Page Images, should open a modal on click */}
-        <div className="w-full h-full">
-          <HorizontalImagesSlider
-            outerContainerRef={detailsContainerRef}
-            images={component.images}
-          />
-        </div>
+
+        <HorizontalImagesSlider
+          outerContainerRef={detailsContainerRef}
+          images={component.images}
+          handleImageDelete={handleDeleteImage}
+        />
       </div>
 
       {Modal}

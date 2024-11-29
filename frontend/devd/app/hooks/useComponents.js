@@ -8,6 +8,7 @@ export default function useComponents(project, accessToken) {
     postComponent,
     updateComponent,
     updateComponentImage,
+    deleteComponentImage,
     deleteComponentInDB,
   } = useAxios();
 
@@ -81,6 +82,19 @@ export default function useComponents(project, accessToken) {
     }
   };
 
+  const updateComponentSnippet = async (component, snippet) => {
+    try {
+      const updatedComponent = await updateComponent({
+        project_id: project._id,
+        component_id: component._id,
+        updates: { snippet: snippet },
+        access_token: accessToken,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addComponentImage = async (component, image, title) => {
     try {
       const updatedComponent = await updateComponentImage({
@@ -88,6 +102,20 @@ export default function useComponents(project, accessToken) {
         component_id: component._id,
         image: image,
         title: title,
+        access_token: accessToken,
+      });
+      return updatedComponent;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteImage = async (component, image) => {
+    try {
+      const updatedComponent = await deleteComponentImage({
+        component_id: component._id,
+        project_id: project._id,
+        image: image,
         access_token: accessToken,
       });
       return updatedComponent;
@@ -108,5 +136,7 @@ export default function useComponents(project, accessToken) {
     updateComponentStatus,
     updateComponentDescription,
     deleteComponent,
+    updateComponentSnippet,
+    deleteImage,
   };
 }

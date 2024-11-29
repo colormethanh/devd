@@ -5,18 +5,28 @@ import Button from "./Button";
 export default function ListContainer({
   addStyles,
   items,
-  onItemEdit,
   title,
   addItem,
-  itemKeySalt,
+  patchItem,
+  deleteItem,
 }) {
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
+  const featuresFormRef = useRef();
 
   const handleAddItem = () => {
     addItem(newItemText);
     setNewItemText("");
     setIsAddingItem(false);
+  };
+
+  const handleItemDelete = (item) => {
+    console.log("deleting item:", item);
+    deleteItem(item);
+  };
+
+  const handleItemPatch = (item) => {
+    patchItem(item);
   };
 
   return (
@@ -34,43 +44,55 @@ export default function ListContainer({
         </div>
       </div>
 
-      {/* Add new feature */}
+      {/* Add new feature input and toggler */}
       {isAddingItem && (
-        <div className="flex gap-4 mx-3 my-4">
-          {" "}
-          <input
-            type="text"
-            className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3"
-            value={newItemText}
-            onChange={(e) => setNewItemText(e.target.value)}
-          />
-          <Button
-            addStyle={"py-0 border-red-500"}
-            clickCallback={() => {
-              setIsAddingItem(false);
-            }}
-          >
+        <form ref={featuresFormRef} onSubmit={handleAddItem}>
+          <div className="flex gap-4 mx-3 my-4">
             {" "}
-            Cancel{" "}
-          </Button>
-          <Button
-            addStyle={"py-0 border-green-500"}
-            clickCallback={handleAddItem}
-          >
-            {" "}
-            Submit{" "}
-          </Button>{" "}
-        </div>
+            <input
+              type="text"
+              className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3"
+              value={newItemText}
+              required
+              onChange={(e) => setNewItemText(e.target.value)}
+            />
+            <Button
+              addStyle={"py-0 border-red-500"}
+              clickCallback={() => {
+                setIsAddingItem(false);
+              }}
+            >
+              {" "}
+              Cancel{" "}
+            </Button>
+            <button
+              className={
+                "bg-[#000000] text-white border hover:bg-white  hover:text-black  focus:outline-black w-48 p-3 py-0 border-green-500"
+              }
+              type="submit"
+            >
+              {" "}
+              Submit{" "}
+            </button>{" "}
+          </div>
+        </form>
       )}
+
+      {/* List items */}
       <ul className={`overflow-y-auto ${addStyles}`}>
         {items !== undefined &&
           items.map((item, i) => {
             return (
-              <ListContainerItem text={item} key={`task-feature-${item}`} />
+              <ListContainerItem
+                item={item}
+                key={`task-feature-${item._id}`}
+                handleItemPatch={handleItemPatch}
+                handleItemDelete={handleItemDelete}
+              />
             );
           })}
         {items !== undefined && items.length === 0 && (
-          <div>{"😦 No features added yet. Add on now!"}</div>
+          <div>{"😦 No features added yet. Add one now!"}</div>
         )}
       </ul>
     </div>

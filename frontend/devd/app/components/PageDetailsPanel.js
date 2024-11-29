@@ -15,6 +15,9 @@ export default function PageDetailsPanel({
   addPageImage,
   addPageFeature,
   deletePage,
+  patchFeature,
+  deleteFeature,
+  deleteImage,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -31,6 +34,18 @@ export default function PageDetailsPanel({
 
   const handleAddFeature = (featureText) => {
     addPageFeature(page, featureText);
+  };
+
+  const handlePatchFeature = (feature) => {
+    patchFeature(page, feature);
+  };
+
+  const handleDeleteFeature = (feature) => {
+    deleteFeature(page, feature);
+  };
+
+  const handleDeleteImage = (image) => {
+    deleteImage(page, image);
   };
 
   // Setting up modal for image upload
@@ -64,6 +79,7 @@ export default function PageDetailsPanel({
 
   return (
     <DetailPanel detailsContainerRef={detailsContainerRef}>
+      {/* Tittle bar */}
       <div className="w-full flex flex-col">
         <h1 className="text-4xl"> {page.name} </h1>
         <hr className="my-2 "></hr>
@@ -136,19 +152,20 @@ export default function PageDetailsPanel({
         title={"Features"}
         items={page.features}
         addItem={handleAddFeature}
-        itemKeySalt={page._id}
+        patchItem={handlePatchFeature}
+        deleteItem={handleDeleteFeature}
       />
 
       {/* Container for horizontal image scrolls */}
       <div className="flex flex-col">
         <h4 className="text-xl font-bold underline mb-2"> Images </h4>
+        <p className="text-gray-500"> Double Click images to view them! </p>
         {/* Page Images, should open a modal on click */}
-        <div className="w-full h-full">
-          <HorizontalImagesSlider
-            outerContainerRef={detailsContainerRef}
-            images={page.images}
-          />
-        </div>
+        <HorizontalImagesSlider
+          outerContainerRef={detailsContainerRef}
+          images={page.images}
+          handleImageDelete={handleDeleteImage}
+        />
       </div>
       {Modal}
       {DeleteModal}

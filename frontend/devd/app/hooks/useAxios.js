@@ -5,7 +5,7 @@ import {
   refreshAccessToken,
   logout,
 } from "../store/slices/authSlice";
-import { resetTask } from "../store/slices/taskSlice";
+import { resetTask, setTaskError } from "../store/slices/taskSlice";
 import {
   getProject,
   getShowcaseData,
@@ -16,11 +16,15 @@ import {
   getComponent,
   updateComponentInDB,
   uploadImageToComponent,
+  deleteComponentImageInDB,
 } from "../store/slices/componentSlice";
 import {
   getPage,
   updatePageInDB,
   uploadImageToPage,
+  patchPageFeatureInDB,
+  deletePageFeatureInDB,
+  deletePageImageInDB,
 } from "../store/slices/pageSlice";
 import axios from "axios";
 
@@ -160,20 +164,13 @@ export default function useAxios() {
         },
         withCredentials: true,
       });
-
       const response = await getProjectDetails(project_id);
 
       return response;
     } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const dispatchResetTask = async () => {
-    try {
-      return await dispatch(resetTask());
-    } catch (err) {
-      console.log(err);
+      debugger;
+      await dispatch(setTaskError("error during task post"));
+      return Error(err.message);
     }
   };
 
@@ -225,6 +222,26 @@ export default function useAxios() {
     }
   };
 
+  const deletePageImage = async ({
+    page_id,
+    project_id,
+    image,
+    access_token,
+  }) => {
+    try {
+      const deleteResponse = await dispatch(
+        deletePageImageInDB({ page_id, project_id, image, access_token })
+      );
+
+      if (deleteResponse.meta?.requestStatus === "fulfilled") {
+        await getPageDetails({ project_id, page_id, access_token });
+      }
+      return deleteResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const updatePage = async ({ page_id, project_id, updates, access_token }) => {
     try {
       const updateResponse = await dispatch(
@@ -235,6 +252,56 @@ export default function useAxios() {
         await getPageDetails({ project_id, page_id, access_token });
       }
       return updateResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const patchPageFeature = async ({
+    page_id,
+    project_id,
+    updates,
+    access_token,
+  }) => {
+    try {
+      const patchResponse = await dispatch(
+        patchPageFeatureInDB({
+          page_id,
+          project_id,
+          updates: { feature: updates },
+          access_token,
+        })
+      );
+
+      if (patchResponse.meta?.requestStatus === "fulfilled") {
+        await getPageDetails({ project_id, page_id, access_token });
+      }
+      return patchResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deletePageFeature = async ({
+    page_id,
+    project_id,
+    feature_id,
+    access_token,
+  }) => {
+    try {
+      const deleteResponse = await dispatch(
+        deletePageFeatureInDB({
+          page_id,
+          project_id,
+          feature_id,
+          access_token,
+        })
+      );
+
+      if (deleteResponse.meta?.requestStatus === "fulfilled") {
+        await getPageDetails({ project_id, page_id, access_token });
+      }
+      return deleteResponse;
     } catch (err) {
       console.log(err);
     }
@@ -358,6 +425,31 @@ export default function useAxios() {
     }
   };
 
+  const deleteComponentImage = async ({
+    component_id,
+    project_id,
+    image,
+    access_token,
+  }) => {
+    try {
+      const deleteResponse = await dispatch(
+        deleteComponentImageInDB({
+          component_id,
+          project_id,
+          image,
+          access_token,
+        })
+      );
+
+      if (deleteResponse.meta?.requestStatus === "fulfilled") {
+        await getComponentDetails({ project_id, component_id, access_token });
+      }
+      return deleteResponse;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const updateComponentImage = async ({
     project_id,
     component_id,
@@ -407,8 +499,9 @@ export default function useAxios() {
     postPage,
     getPageDetails,
     updatePage,
+    patchPageFeature,
+    deletePageImage,
     updatePageImages,
-    dispatchResetTask,
     postComponent,
     getComponentDetails,
     updateComponent,
@@ -417,5 +510,7 @@ export default function useAxios() {
     deleteTaskInDB,
     deletePageInDB,
     deleteComponentInDB,
+    deletePageFeature,
+    deleteComponentImage,
   };
 }

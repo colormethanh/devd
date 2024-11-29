@@ -8,7 +8,7 @@ export default function DetailPanel({ detailsContainerRef, children }) {
         ref={
           detailsContainerRef !== undefined ? detailsContainerRef : defaultRef
         }
-        className="mx-3 h-full flex flex-col gap-y-10 overflow-y-auto overflow-x-auto no-scrollbar"
+        className="mx-3 h-full flex flex-col gap-y-4 overflow-y-auto overflow-x-auto no-scrollbar"
       >
         {children}
       </div>

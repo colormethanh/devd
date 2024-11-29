@@ -13,7 +13,8 @@ export default function useLogin() {
   const [loginFormData, setLoginFormData] = useState(defaultFormData);
   const { dispatchLogin } = useAxios();
   const router = useRouter();
-  const auth = useSelector((state) => state.auth);
+  const error = useSelector((state) => state.auth.error);
+  const isLoading = useSelector((state) => state.auth.isLoading);
 
   const handleLogin = async () => {
     try {
@@ -30,5 +31,5 @@ export default function useLogin() {
     }
   };
 
-  return { loginFormData, setLoginFormData, handleLogin };
+  return { loginFormData, setLoginFormData, handleLogin, error, isLoading };
 }

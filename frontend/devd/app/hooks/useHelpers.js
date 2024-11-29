@@ -11,5 +11,19 @@ export default function useHelpers() {
     return `${string.slice(0, length - 1)}...`;
   };
 
-  return { formatDate, ellipsifyString };
+  const filterRelevantContents = (contents, relevantContents) => {
+    const filteredArray = [];
+    const currentContentsId = relevantContents.reduce((prev, cur) => {
+      prev.push(cur.content_id);
+      return prev;
+    }, []);
+    contents.forEach((content) => {
+      // debugger;
+      if (!currentContentsId.includes(content._id)) filteredArray.push(content);
+    });
+    // debugger;
+    return filteredArray;
+  };
+
+  return { formatDate, ellipsifyString, filterRelevantContents };
 }

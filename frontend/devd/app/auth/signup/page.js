@@ -7,7 +7,8 @@ import Button from "@/app/components/utilities/Button";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const { signupFormData, setSignupFormData, handleSignup } = useSignup();
+  const { signupFormData, setSignupFormData, handleSignup, error, isLoading } =
+    useSignup();
   const router = useRouter();
 
   const { Modal, openModal } = useModal(
@@ -27,11 +28,14 @@ export default function SignupPage() {
   );
 
   return (
-    <div className="p-1 w-full flex justify-center">
+    <div
+      className={`p-1 w-full flex justify-center ${isLoading && "cursor-wait"}`}
+    >
       <SignupForm
         formData={signupFormData}
         setFormData={setSignupFormData}
         handleSubmit={() => handleSignup(openModal)}
+        error={error}
       />
       {Modal}
     </div>

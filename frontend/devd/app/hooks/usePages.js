@@ -9,6 +9,9 @@ export default function usePages(project, accessToken) {
     updatePageImages,
     postPage,
     deletePageInDB,
+    patchPageFeature,
+    deletePageFeature,
+    deletePageImage,
   } = useAxios();
 
   const page = useSelector((state) => state.page.page);
@@ -86,8 +89,53 @@ export default function usePages(project, accessToken) {
         project_id: project._id,
         page_id: page._id,
         access_token: accessToken,
-        updates: { features: [feature] },
+        updates: { features: [{ text: feature }] },
       });
+      return updatedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const patchFeature = async (page, feature) => {
+    try {
+      const patchedPage = await patchPageFeature({
+        page_id: page._id,
+        project_id: project._id,
+        updates: feature,
+        access_token: accessToken,
+      });
+
+      return patchedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteFeature = async (page, feature) => {
+    try {
+      const updatedPage = await deletePageFeature({
+        page_id: page._id,
+        project_id: project._id,
+        feature_id: feature._id,
+        access_token: accessToken,
+      });
+
+      return updatedPage;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteImage = async (page, image) => {
+    try {
+      const updatedPage = await deletePageImage({
+        page_id: page._id,
+        project_id: project._id,
+        image: image,
+        access_token: accessToken,
+      });
+
       return updatedPage;
     } catch (err) {
       console.log(err);
@@ -107,5 +155,8 @@ export default function usePages(project, accessToken) {
     addPageFeature,
     postNewPage,
     deletePage,
+    patchFeature,
+    deleteFeature,
+    deleteImage,
   };
 }

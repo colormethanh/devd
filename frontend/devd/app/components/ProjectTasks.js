@@ -15,6 +15,7 @@ export default function ProjectTasks({ project, changeViewTo }) {
     postNewTask,
     addTaskRelevantContent,
     deleteTask,
+    error,
   } = useTasks(project);
 
   let currentTaskId = task._id || null;
@@ -63,6 +64,7 @@ export default function ProjectTasks({ project, changeViewTo }) {
               setIsAddTaskView={setIsAddTaskView}
               project={project}
               postNewTask={postNewTask}
+              error={error}
             />
           ) : (
             <TaskDetailPanel

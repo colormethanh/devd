@@ -5,7 +5,7 @@ const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
 const logger = require("../utils/logging/logger");
 const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
-const upload = require("../services/cloudinary");
+const { upload, deleteCloudinaryImage } = require("../services/cloudinary");
 
 const componentRoutes = function (componentController, pageController) {
   const router = express.Router();
@@ -360,6 +360,78 @@ const componentRoutes = function (componentController, pageController) {
         return res.send(createResponseObject({ updatedComponent }));
       } catch (err) {
         next(createError(err.statusCode, err.message));
+      }
+    }
+  );
+
+  router.delete(
+    "/:component_id/image/:image_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      logger.info({
+        message: "initiating checks for component image delete",
+        user: req.user._id,
+        request_id: req.metadata.request_id,
+      });
+
+      try {
+        const { component_id, image_id } = req.params;
+        const project = req.project;
+
+        // check to see if page exists
+        const originalComponent = await componentController.getComponent(
+          component_id
+        );
+        if (!originalComponent)
+          next(createError(404, "page could not be found"));
+        if (originalComponent instanceof Error) next(originalComponent);
+
+        // check to see if project contains page id
+        const projectContainsComponent = await project.components.find(
+          (component) => component._id.toString() === component_id
+        );
+
+        if (!projectContainsComponent)
+          next(
+            createError(400, `Project does not contain page ${component_id}`)
+          );
+
+        // check to see if user is authorized to modify page
+        const isAdmin = req.role === "admin";
+        if (!isAdmin)
+          return next(
+            createError(403, "Only admin may make changes to project pages")
+          );
+
+        const currentImages = originalComponent.images;
+        const imageToDelete = currentImages.find(
+          (image) => image._id.toString() === image_id
+        );
+        req.body.image = imageToDelete;
+        if (req.body.image) {
+          await deleteCloudinaryImage(req, res, next);
+
+          const updatedImageArray = currentImages.filter(
+            (image) => image._id.toString() !== req.body.image._id.toString()
+          );
+
+          const updatedComponent = await componentController.updateComponent(
+            component_id,
+            {
+              images: updatedImageArray,
+            }
+          );
+
+          if (!updatedComponent) next(createError(500, "error when updating"));
+          if (updatedComponent instanceof Error) next(updatedComponent);
+
+          return res.send(createResponseObject({ updatedComponent }));
+        } else {
+          next(createError(400, "image not sent in body"));
+        }
+      } catch (err) {
+        return next(err);
       }
     }
   );
