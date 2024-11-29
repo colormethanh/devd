@@ -5,31 +5,44 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-export default function HorizontalImagesSlider({ images, outerContainerRef }) {
+export default function HorizontalImagesSlider({ images, handleImageDelete }) {
   const containerRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState();
 
-  const modalBody = () => {
+  const ModalBody = () => {
     return (
       <div className="w-full h-full flex justify-center">
         {selectedImage !== undefined && (
-          <div className="w-2/3 h-2/3 flex-col justify-center items-center">
+          <div className="w-2/3 h-2/3 mt-4 flex-col justify-center items-center">
             <Image
               height={1080}
               width={1920}
               src={selectedImage.url}
               alt={selectedImage.title}
             />
-            <h1 className="text-center text-3xl mt-3 underline">
-              {" "}
-              {selectedImage.title}{" "}
-            </h1>
+            <div className="flex w-full justify-between items-center ">
+              <h1 className="text-start text-3xl mt-3 underline">
+                {" "}
+                {selectedImage.title}{" "}
+              </h1>
+              <Image
+                src={"/static/trashIcon-white.png"}
+                width={30}
+                height={25}
+                alt="Delete image Icon"
+                className="border p-1 hover:border-red-500 hover:cursor-pointer"
+                onClick={() => handleImageDelete(selectedImage)}
+              />
+            </div>
           </div>
         )}
       </div>
     );
   };
-  const { Modal, openModal, closeModal } = useModal("", modalBody());
+  const { Modal, openModal, closeModal } = useModal(
+    "Image View",
+    <ModalBody />
+  );
 
   const sliderSettings = {
     dots: true,

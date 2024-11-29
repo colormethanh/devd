@@ -5,7 +5,7 @@ const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
 const logger = require("../utils/logging/logger");
 const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
-const upload = require("../services/cloudinary");
+const { upload } = require("../services/cloudinary");
 
 const componentRoutes = function (componentController, pageController) {
   const router = express.Router();

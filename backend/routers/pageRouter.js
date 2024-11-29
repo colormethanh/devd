@@ -5,7 +5,8 @@ const { createResponseObject } = require("../utils/responseHelpers");
 const { extractRole } = require("../utils/middlewares");
 const logger = require("../utils/logging/logger");
 const { hasOne, fillObjectWithFromBody } = require("../utils/requestHelpers");
-const upload = require("../services/cloudinary");
+const { upload, deleteCloudinaryImage } = require("../services/cloudinary");
+const { updatePage } = require("../controllers/page");
 
 const pageRoutes = function (pageController) {
   const router = express.Router();
@@ -395,6 +396,69 @@ const pageRoutes = function (pageController) {
         return res.send(createResponseObject({ updatedPage }));
       } catch (err) {
         next(createError(err.statusCode, err.message));
+      }
+    }
+  );
+
+  router.delete(
+    "/:page_id/image/:image_id",
+    requireAuth,
+    extractRole,
+    async (req, res, next) => {
+      logger.info({
+        message: "initiating checks for page image delete",
+        user: req.user._id,
+        request_id: req.metadata.request_id,
+      });
+
+      try {
+        const { page_id, image_id } = req.params;
+        const project = req.project;
+
+        // check to see if page exists
+        const originalPage = await pageController.getPage(page_id);
+        if (!originalPage) next(createError(404, "page could not be found"));
+        if (originalPage instanceof Error) next(originalPage);
+
+        // check to see if project contains page id
+        const projectContainsPage = await project.pages.find(
+          (page) => page._id.toString() === page_id
+        );
+        if (!projectContainsPage)
+          next(createError(400, `Project does not contain page ${page_id}`));
+
+        // check to see if user is authorized to modify page
+        const isAdmin = req.role === "admin";
+        if (!isAdmin)
+          return next(
+            createError(403, "Only admin may make changes to project pages")
+          );
+
+        const currentImages = originalPage.images;
+        const imageToDelete = currentImages.find(
+          (image) => image._id.toString() === image_id
+        );
+        req.body.image = imageToDelete;
+        if (req.body.image) {
+          await deleteCloudinaryImage(req, res, next);
+
+          const updatedImageArray = currentImages.filter(
+            (image) => image._id.toString() !== req.body.image._id.toString()
+          );
+
+          const updatedPage = await pageController.updatePage(page_id, {
+            images: updatedImageArray,
+          });
+
+          if (!updatedPage) next(createError(500, "error when updating"));
+          if (updatedPage instanceof Error) next(updatedPage);
+
+          return res.send(createResponseObject({ updatedPage }));
+        } else {
+          next(createError(400, "image not sent in body"));
+        }
+      } catch (err) {
+        return next(err);
       }
     }
   );

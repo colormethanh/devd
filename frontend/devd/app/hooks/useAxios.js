@@ -23,6 +23,7 @@ import {
   uploadImageToPage,
   patchPageFeatureInDB,
   deletePageFeatureInDB,
+  deletePageImageInDB,
 } from "../store/slices/pageSlice";
 import axios from "axios";
 
@@ -215,6 +216,26 @@ export default function useAxios() {
         }
       );
       return await getProjectDetails(project_id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deletePageImage = async ({
+    page_id,
+    project_id,
+    image,
+    access_token,
+  }) => {
+    try {
+      const deleteResponse = await dispatch(
+        deletePageImageInDB({ page_id, project_id, image, access_token })
+      );
+
+      if (deleteResponse.meta?.requestStatus === "fulfilled") {
+        await getPageDetails({ project_id, page_id, access_token });
+      }
+      return deleteResponse;
     } catch (err) {
       console.log(err);
     }
@@ -453,6 +474,7 @@ export default function useAxios() {
     getPageDetails,
     updatePage,
     patchPageFeature,
+    deletePageImage,
     updatePageImages,
     postComponent,
     getComponentDetails,

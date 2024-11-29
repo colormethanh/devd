@@ -17,6 +17,7 @@ export default function PageDetailsPanel({
   deletePage,
   patchFeature,
   deleteFeature,
+  deleteImage,
 }) {
   const { formatDate } = useHelpers();
   const [description, setDescription] = useState("");
@@ -41,6 +42,10 @@ export default function PageDetailsPanel({
 
   const handleDeleteFeature = (feature) => {
     deleteFeature(page, feature);
+  };
+
+  const handleDeleteImage = (image) => {
+    deleteImage(page, image);
   };
 
   // Setting up modal for image upload
@@ -159,6 +164,7 @@ export default function PageDetailsPanel({
         <HorizontalImagesSlider
           outerContainerRef={detailsContainerRef}
           images={page.images}
+          handleImageDelete={handleDeleteImage}
         />
       </div>
       {Modal}
