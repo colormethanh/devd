@@ -100,7 +100,7 @@ export default function HorizontalImagesSlider({ images, handleImageDelete }) {
                     <Image
                       height={400}
                       width={600}
-                      className=""
+                      className="h-full"
                       src={image.url}
                       alt={image.title}
                     />
