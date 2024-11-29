@@ -13,6 +13,10 @@ export default function useHelpers() {
 
   const filterRelevantContents = (contents, relevantContents) => {
     const filteredArray = [];
+
+    if (relevantContents === undefined || !relevantContents)
+      return filteredArray;
+
     const currentContentsId = relevantContents.reduce((prev, cur) => {
       prev.push(cur.content_id);
       return prev;
