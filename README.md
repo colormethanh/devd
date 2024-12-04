@@ -1,6 +1,6 @@
 # Devd
 
-##[url]("https://devd-iota.vercel.app/)
+## URL: https://devd-iota.vercel.app/
 
 Devd is a web application that has two goals.
 
