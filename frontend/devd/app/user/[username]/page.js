@@ -7,8 +7,12 @@ import TextAndTextBox from "@/app/components/utilities/TextAndTextBox";
 
 export default function page({ params }) {
   const { username } = React.use(params);
-  const { user } = useUser(username);
+  const { user, handlePatchUser } = useUser(username);
   const { checkAndRefreshToken, accessToken, needsLogin } = useAuth();
+
+  const handleEmailUpdate = (updatedEmail) => {
+    handlePatchUser(user._id, { email: updatedEmail });
+  };
 
   useEffect(() => {
     const setupPage = async () => {
@@ -41,6 +45,7 @@ export default function page({ params }) {
           <p className="text-2xl"> Email: </p>
           <TextAndInputContainer
             text={user?.email ? user.email : "Oh no! Add a email now!"}
+            updateCallback={handleEmailUpdate}
           />
         </div>
 

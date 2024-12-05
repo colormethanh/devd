@@ -4,6 +4,7 @@ import {
   login,
   refreshAccessToken,
   logout,
+  patchUserInDB,
 } from "../store/slices/authSlice";
 import { resetTask, setTaskError } from "../store/slices/taskSlice";
 import {
@@ -51,6 +52,18 @@ export default function useAxios() {
 
   const refreshToken = async () => {
     const response = await dispatch(refreshAccessToken());
+    return response;
+  };
+
+  // User
+  const patchUser = async (user_id, updates, access_token) => {
+    const response = await dispatch(
+      patchUserInDB({ user_id, updates, access_token })
+    );
+
+    if (response.meta?.requestStatus === "fulfilled") {
+      await refreshToken();
+    }
     return response;
   };
 
@@ -487,7 +500,7 @@ export default function useAxios() {
     dispatchLogin,
     dispatchSignup,
     refreshToken,
-    getProjects,
+    patchUser,
     updateProject,
     postProjectToDB,
     deleteProjectInDB,

@@ -75,6 +75,24 @@ export const refreshAccessToken = createAsyncThunk(
   }
 );
 
+export const patchUserInDB = createAsyncThunk(
+  "auth/patchUser",
+  async (params, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/user/${params.user_id}`,
+        params.updates,
+        {
+          headers: { Authorization: `Bearer ${params.access_token}` },
+        }
+      );
+      return response.data.payload;
+    } catch (err) {
+      return rejectWithValue({ status: err.status, message: err.message });
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -146,6 +164,17 @@ const authSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         state.error = action.payload;
         state.is_loading = false;
+      })
+      .addCase(patchUserInDB.pending, (state, action) => {
+        state.is_loading = true;
+      })
+      .addCase(patchUserInDB.fulfilled, (state, action) => {
+        state.is_loading = false;
+        state.user = action.payload;
+      })
+      .addCase(patchUserInDB.rejected, (state, action) => {
+        state.is_loading = false;
+        state.error = action.payload;
       });
   },
 });
