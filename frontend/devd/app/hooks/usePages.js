@@ -54,7 +54,6 @@ export default function usePages(project, accessToken) {
 
   const updatePageDescription = async (page, description) => {
     try {
-      // debugger;
       const updatedPage = await updatePage({
         project_id: project._id,
         page_id: page._id,

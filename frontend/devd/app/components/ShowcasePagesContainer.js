@@ -20,15 +20,14 @@ export default function ShowcasePagesContainer({ project, addNewPage }) {
     setPageFormData((prev) => ({ ...pageFormData, [inputName]: value }));
   };
 
+  const handleFormPost = () => {
+    addNewPage(pageFormData);
+    closeModal();
+  };
+
   const { Modal, closeModal, openModal } = useModal(
     "Add a new page",
-    <Form
-      title={""}
-      onSubmit={() => {
-        addNewPage(pageFormData);
-        closeModal();
-      }}
-    >
+    <Form title={""} onSubmit={handleFormPost}>
       <div>
         <label
           htmlFor="name"
@@ -88,7 +87,7 @@ export default function ShowcasePagesContainer({ project, addNewPage }) {
           width={15}
           height={15}
           alt="add-pages-icon"
-          className="w-7 h-7 hover:bg-gray-500 p-1 m-1 rounded-lg hover:cursor-pointer"
+          className="w-[2rem] h-[2rem] hover:bg-gray-500 p-1 m-1 rounded-lg hover:cursor-pointer"
           onClick={openModal}
         />
       </div>

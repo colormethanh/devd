@@ -13,6 +13,7 @@ export default function ShowcasePageItem({ page }) {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    adaptiveHeight: true,
     appendDots: (dots) => (
       <div style={{}}>
         <ul style={{ color: "white" }}> {dots} </ul>
@@ -56,7 +57,17 @@ export default function ShowcasePageItem({ page }) {
       <VerticalDivider />
       {/* Page details */}
       <div className="w-[40%] p-3 flex flex-col gap-3">
-        <h1 className="text-6xl font-bold"> {page.name} </h1>
+        <div className="w-full flex flex-row justify-between">
+          <h1 className="text-6xl font-bold"> {page.name} </h1>
+          <Image
+            src={"/static/pencilIcon.png"}
+            width={30}
+            height={30}
+            alt="Modify project data Icon"
+            className="h-[2rem] w-[2rem] hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
+            onClick={() => {}}
+          />
+        </div>
         <p className="text-xl italic"> {page.description} </p>
 
         <ul className="list-disc list-inside">

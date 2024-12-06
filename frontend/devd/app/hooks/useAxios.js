@@ -82,13 +82,11 @@ export default function useAxios() {
     successCallback = undefined
   ) => {
     try {
-      debugger;
       const response = await dispatch(
         updateProjectInDB({ project_id, updates, access_token })
       );
 
       if (response.meta?.requestStatus === "fulfilled") {
-        await successCallback();
         if (successCallback !== undefined) {
           await successCallback();
         } else {
@@ -190,7 +188,6 @@ export default function useAxios() {
 
       return response;
     } catch (err) {
-      debugger;
       await dispatch(setTaskError("error during task post"));
       return Error(err.message);
     }

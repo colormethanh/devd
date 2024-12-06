@@ -23,7 +23,6 @@ export default function AddTaskPanel({
 
   const handleTaskFormSubmit = async () => {
     await postNewTask(project._id, formData);
-    debugger;
     if (error) return;
     setIsAddTaskView(false);
   };
