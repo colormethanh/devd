@@ -144,10 +144,12 @@ const pageRoutes = function (pageController) {
         message: "attempting to post new page to DB",
         request_id: req.metadata.request_id,
       });
+      let visibility = req.body.visibility ? req.body.visibility : "private";
       const newPage = await pageController.postPage(
         name,
         description,
-        req.project_id
+        req.project_id,
+        visibility
       );
 
       if (newPage instanceof Error) return next(newPage);

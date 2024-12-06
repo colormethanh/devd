@@ -7,10 +7,12 @@ import HorizontalDivider from "@/app/components/utilities/HorizontalDivider";
 import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
 import useAuth from "@/app/hooks/useAuth";
 import ShowcaseProjectInfoContainer from "@/app/components/ShowcaseProjectInfoContainer";
+import ShowcasePagesContainer from "@/app/components/ShowcasePagesContainer";
 
 export default function ProjectShowcase({ params }) {
   const { projectName } = React.use(params);
-  const { project, updateProjectDetails } = useShowcase(projectName);
+  const { project, updateProjectDetails, addNewPage } =
+    useShowcase(projectName);
   const { needsLogin } = useAuth();
 
   return (
@@ -22,16 +24,7 @@ export default function ProjectShowcase({ params }) {
           updateProjectDetails={updateProjectDetails}
         />
 
-        {/* Pages Section*/}
-        <div className="w-full">
-          <h2 className="text-4xl mb-1"> Pages </h2>
-          <HorizontalDivider />
-          {/* Pages list*/}
-          {project.pages !== undefined &&
-            project.pages.map((page) => (
-              <ShowcasePageItem key={`page-${page._id}`} page={page} />
-            ))}
-        </div>
+        <ShowcasePagesContainer project={project} addNewPage={addNewPage} />
 
         {/* Component Section */}
         {project.components !== undefined && (

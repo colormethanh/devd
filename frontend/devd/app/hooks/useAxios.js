@@ -213,16 +213,30 @@ export default function useAxios() {
   };
 
   // Pages
-  const postPage = async (project_id, formData, accessToken) => {
+  const postPage = async (
+    project_id,
+    formData,
+    accessToken,
+    successCallback = undefined
+  ) => {
     try {
-      await axios.post(`${BASE_URL}/projects/${project_id}/pages`, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
-      });
-      const response = await dispatch(getProject(project_id));
-      return response;
+      const postResponse = await axios.post(
+        `${BASE_URL}/projects/${project_id}/pages`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      if (!successCallback) {
+        await dispatch(getProject(project_id));
+      } else {
+        await successCallback();
+      }
+
+      return postResponse;
     } catch (err) {
       console.log(err);
     }

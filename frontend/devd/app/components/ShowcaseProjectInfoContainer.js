@@ -76,7 +76,7 @@ export default function ShowcaseProjectInfoContainer({
             width={30}
             height={30}
             alt="Modify project data Icon"
-            className="absolute left-[98%] bottom-[85%] hover:cursor-pointer border border-black hover:border-white rounded-lg"
+            className="absolute left-[98%] bottom-[85%] hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
             onClick={openModal}
           />
         )}

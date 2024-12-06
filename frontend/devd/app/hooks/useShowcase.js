@@ -6,11 +6,10 @@ import useAxios from "./useAxios";
 export default function useShowcase(projectName) {
   const access_token = useSelector((state) => state.auth.token);
   const project = useSelector((state) => state.project.project);
-  const { getProjectForShowcase, updateProject } = useAxios();
+  const { getProjectForShowcase, updateProject, postPage } = useAxios();
   const { checkAndRefreshToken } = useAuth();
 
   const updateProjectDetails = async (updates) => {
-    debugger;
     try {
       const updatedProject = await updateProject(
         {
@@ -26,6 +25,12 @@ export default function useShowcase(projectName) {
     }
   };
 
+  const addNewPage = async (formData) => {
+    postPage(project._id, formData, access_token, async () =>
+      getProjectForShowcase(project.name)
+    );
+  };
+
   useEffect(() => {
     const setupPage = async () => {
       if (access_token !== undefined) {
@@ -37,5 +42,5 @@ export default function useShowcase(projectName) {
     setupPage();
   }, [projectName]);
 
-  return { project, updateProjectDetails };
+  return { project, updateProjectDetails, addNewPage };
 }

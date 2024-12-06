@@ -58,7 +58,10 @@ export default function PageDetailsPanel({
 
   // Setting up modal for page deletion
   const handleDeleteCancel = () => closeDeleteModal();
-  const handleDelete = () => deletePage(page);
+  const handleDelete = () => {
+    deletePage(page);
+    closeDeleteModal();
+  };
   const deleteModalBody = (
     <DeleteWarning
       item={page}
