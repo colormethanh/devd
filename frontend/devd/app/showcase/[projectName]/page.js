@@ -5,47 +5,22 @@ import Image from "next/image";
 import ShowcasePageItem from "@/app/components/ShowcasePageItem";
 import HorizontalDivider from "@/app/components/utilities/HorizontalDivider";
 import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
+import useAuth from "@/app/hooks/useAuth";
+import ShowcaseProjectInfoContainer from "@/app/components/ShowcaseProjectInfoContainer";
 
 export default function ProjectShowcase({ params }) {
   const { projectName } = React.use(params);
-  const { project } = useShowcase(projectName);
+  const { project, updateProjectDetails } = useShowcase(projectName);
+  const { needsLogin } = useAuth();
 
   return (
     <div className="w-full h-[90%] p-3 overflow-auto ">
       <div className="w-full flex flex-col gap-6">
-        {/* Title container */}
-        <div className=" w-full flex flex-col justify-center items-center">
-          <div>
-            <h1 className="text-8xl mb-2">{project.name}</h1>
-            <div className=" flex gap-4 text-gray-500 justify-center">
-              <div className="flex">
-                <Image
-                  src={"/static/userIcon-white.png"}
-                  width={25}
-                  height={20}
-                  alt="user Icon"
-                  className="mr-1 opacity-60 "
-                />
-                {project.owner !== undefined && project.owner.username}{" "}
-              </div>
-              <a href={`${project.url}`}>
-                <div className="flex">
-                  <Image
-                    src={"/static/linkIcon-white.png"}
-                    width={25}
-                    height={20}
-                    alt="user Icon"
-                    className="mr-1 opacity-60 "
-                  />
-                  {`Visit ${project.name}`}{" "}
-                </div>
-              </a>
-            </div>
-          </div>
-          <div className="w-full text-center mt-3">
-            <p className="italic text-xl"> {project.description} </p>
-          </div>
-        </div>
+        <ShowcaseProjectInfoContainer
+          project={project}
+          needsLogin={needsLogin}
+          updateProjectDetails={updateProjectDetails}
+        />
 
         {/* Pages Section*/}
         <div className="w-full">

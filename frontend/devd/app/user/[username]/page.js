@@ -14,6 +14,18 @@ export default function page({ params }) {
     handlePatchUser(user._id, { email: updatedEmail });
   };
 
+  const handleFirstNameUpdate = (updatedName) => {
+    handlePatchUser(user._id, { fName: updatedName });
+  };
+
+  const handleLastNameUpdate = (updatedName) => {
+    handlePatchUser(user._id, { lName: updatedName });
+  };
+
+  const handleBioUpdate = (updatedBio) => {
+    handlePatchUser(user._id, { bio: updatedBio });
+  };
+
   useEffect(() => {
     const setupPage = async () => {
       if (accessToken !== undefined) {
@@ -53,6 +65,7 @@ export default function page({ params }) {
           <p className="text-2xl"> First Name: </p>
           <TextAndInputContainer
             text={user?.fName ? user.fName : "Oh no! Add a first name now!"}
+            updateCallback={handleFirstNameUpdate}
           />
         </div>
 
@@ -60,6 +73,7 @@ export default function page({ params }) {
           <p className="text-2xl"> Last Name: </p>
           <TextAndInputContainer
             text={user?.lName ? user.lName : "Oh no! Add a last name now!"}
+            updateCallback={handleLastNameUpdate}
           />
         </div>
 
@@ -67,6 +81,7 @@ export default function page({ params }) {
           <h2 className="text-2xl"> Bio: </h2>
           <TextAndTextBox
             text={user?.bio ? user.bio : "Oh no! Add a user Bio now!"}
+            updateCallback={handleBioUpdate}
           />
         </div>
       </div>

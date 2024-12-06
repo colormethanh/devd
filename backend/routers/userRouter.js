@@ -54,7 +54,7 @@ const userRoutes = function (userController) {
       if (!originalUser)
         return next(createError(400, `user ${user_id} does not exist`));
 
-      const allowedUpdates = ["fname", "lname", "bio", "email"];
+      const allowedUpdates = ["fName", "lName", "bio", "email"];
 
       if (!hasOne(allowedUpdates, req.body))
         next(createError(400, "Must update at least one property"));

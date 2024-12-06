@@ -77,14 +77,23 @@ export default function useAxios() {
     }
   };
 
-  const updateProject = async ({ project_id, updates, access_token }) => {
+  const updateProject = async (
+    { project_id, updates, access_token },
+    successCallback = undefined
+  ) => {
     try {
+      debugger;
       const response = await dispatch(
         updateProjectInDB({ project_id, updates, access_token })
       );
 
       if (response.meta?.requestStatus === "fulfilled") {
-        await getProjectDetails(project_id);
+        await successCallback();
+        if (successCallback !== undefined) {
+          await successCallback();
+        } else {
+          await getProjectDetails(project_id);
+        }
       }
 
       return response;

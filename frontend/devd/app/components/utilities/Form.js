@@ -24,10 +24,11 @@ export default function Form({
           <button
             className={`bg-[#000000] 
                 text-white border 
-                border-white 
-                hover:bg-white 
-                hover:text-black 
-                focus:outline-black 
+                border-green-500 
+                hover:bg-green-500
+                hover:border-green-800
+                hover:text-white
+                focus:outline-green-500 
                 w-48 
                 p-3 py-0 ${submitButtonStyle}`}
             type="submit"
