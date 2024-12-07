@@ -78,7 +78,7 @@ export default function ShowcasePageItem({
         )}
         <div className="slider-container w-5/6">
           <Slider {...sliderSettings}>
-            {page?.images &&
+            {page?.images?.length >= 1 ? (
               page.images.map((image, i) => (
                 <div
                   key={`showcase-image-${image._id}`}
@@ -101,7 +101,26 @@ export default function ShowcasePageItem({
                     {image.title}{" "}
                   </p>
                 </div>
-              ))}
+              ))
+            ) : (
+              <div
+                key={`placeholder-image`}
+                className="w-full p-2 flex justify-center"
+              >
+                <div className="flex-grow flex justify-center">
+                  <Image
+                    src={"/static/imagePlaceHolder.png"}
+                    width={1000}
+                    height={300}
+                    alt={"page picture"}
+                  />
+                </div>
+                <p className="italic text-center underline">
+                  {" "}
+                  {"Placeholder"}{" "}
+                </p>
+              </div>
+            )}
           </Slider>
         </div>
       </div>
