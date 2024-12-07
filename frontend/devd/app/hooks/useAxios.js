@@ -255,19 +255,21 @@ export default function useAxios() {
     }
   };
 
-  const deletePageImage = async ({
-    page_id,
-    project_id,
-    image,
-    access_token,
-  }) => {
+  const deletePageImage = async (
+    { page_id, project_id, image, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const deleteResponse = await dispatch(
         deletePageImageInDB({ page_id, project_id, image, access_token })
       );
 
       if (deleteResponse.meta?.requestStatus === "fulfilled") {
-        await getPageDetails({ project_id, page_id, access_token });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        } else {
+          await getPageDetails({ project_id, page_id, access_token });
+        }
       }
       return deleteResponse;
     } catch (err) {

@@ -6,8 +6,13 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import useModal from "../hooks/useModal";
 import ShowcaseUpdatePageModal from "./ShowcaseUpdatePageModal";
+import ShowcaseImageModal from "./ShowcaseImageModal";
 
-export default function ShowcasePageItem({ page, updatePage }) {
+export default function ShowcasePageItem({
+  page,
+  updatePage,
+  handleDeletePageImage,
+}) {
   const sliderSettings = {
     dots: true,
     arrows: true,
@@ -33,10 +38,32 @@ export default function ShowcasePageItem({ page, updatePage }) {
     <ShowcaseUpdatePageModal page={page} handleSubmit={handleUpdatePage} />
   );
 
+  const handleImageDelete = (image) => {
+    handleDeletePageImage(image, page._id);
+  };
+
+  // Modal for updating page image
+  const {
+    Modal: ImageModal,
+    openModal: openImageModal,
+    closeModal: closeImageModal,
+  } = useModal(
+    "Manage Page Images",
+    <ShowcaseImageModal images={page.images} handleDelete={handleImageDelete} />
+  );
+
   return (
     <div className="w-full my-3 flex">
       {/* Page Image */}
-      <div className="w-[60%] flex justify-center p-5">
+      <div className="relative w-[60%] flex justify-center p-5">
+        <Image
+          src={"/static/pencilIcon.png"}
+          width={30}
+          height={30}
+          alt="Modify project data Icon"
+          className="absolute hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg right-3 top-1"
+          onClick={openImageModal}
+        />
         <div className="slider-container w-5/6">
           <Slider {...sliderSettings}>
             {page?.images &&
@@ -93,6 +120,7 @@ export default function ShowcasePageItem({ page, updatePage }) {
         </ul>
       </div>
       {Modal}
+      {ImageModal}
     </div>
   );
 }

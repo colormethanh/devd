@@ -11,8 +11,13 @@ import ShowcasePagesContainer from "@/app/components/ShowcasePagesContainer";
 
 export default function ProjectShowcase({ params }) {
   const { projectName } = React.use(params);
-  const { project, updateProjectDetails, addNewPage, handlePageUpdate } =
-    useShowcase(projectName);
+  const {
+    project,
+    updateProjectDetails,
+    addNewPage,
+    handlePageUpdate,
+    handleDeletePageImage,
+  } = useShowcase(projectName);
   const { needsLogin } = useAuth();
 
   return (
@@ -28,6 +33,7 @@ export default function ProjectShowcase({ params }) {
           project={project}
           addNewPage={addNewPage}
           updatePage={handlePageUpdate}
+          handleDeletePageImage={handleDeletePageImage}
         />
 
         {/* Component Section */}

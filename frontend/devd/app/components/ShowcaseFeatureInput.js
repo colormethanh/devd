@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from "react";
-import useOutsideClick from "../hooks/useOutsideClick";
 
 export default function ShowcaseFeatureInput({ text, onFinish }) {
   const [inputValue, setInputValue] = useState("");
-  const [isEdit, setIsEdit] = useState(false);
-
-  const outsideClickRef = useOutsideClick(() => {
-    setIsEdit(false);
-  });
-
-  const handleTextClick = () => {
-    setIsEdit((prev) => !prev);
-  };
 
   const handleTextUpdate = (e) => {
     if (e.key === "Enter") {

@@ -11,7 +11,7 @@ export default function useShowcase(projectName) {
     updateProject,
     postPage,
     updatePage,
-    patchPageFeature,
+    deletePageImage,
   } = useAxios();
   const { checkAndRefreshToken } = useAuth();
 
@@ -49,6 +49,15 @@ export default function useShowcase(projectName) {
     );
   };
 
+  const handleDeletePageImage = async (image, page_id) => {
+    deletePageImage(
+      { page_id, project_id: project._id, image, access_token },
+      () => {
+        getProjectForShowcase(project.name);
+      }
+    );
+  };
+
   useEffect(() => {
     const setupPage = async () => {
       if (access_token !== undefined) {
@@ -65,5 +74,6 @@ export default function useShowcase(projectName) {
     updateProjectDetails,
     addNewPage,
     handlePageUpdate,
+    handleDeletePageImage,
   };
 }
