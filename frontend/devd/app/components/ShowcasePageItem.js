@@ -7,7 +7,7 @@ import Slider from "react-slick";
 import useModal from "../hooks/useModal";
 import ShowcaseUpdatePageModal from "./ShowcaseUpdatePageModal";
 
-export default function ShowcasePageItem({ page, updatePageTitleAndDesc }) {
+export default function ShowcasePageItem({ page, updatePage }) {
   const sliderSettings = {
     dots: true,
     arrows: true,
@@ -24,16 +24,13 @@ export default function ShowcasePageItem({ page, updatePageTitleAndDesc }) {
   };
 
   // Modal for updating page title and descriptions
-  const handleUpdatePageTitleAndDesc = (formData, page_id) => {
-    updatePageTitleAndDesc(formData, page_id);
+  const handleUpdatePage = (formData, page_id) => {
+    updatePage(formData, page_id);
     closeModal();
   };
   const { Modal, openModal, closeModal } = useModal(
-    `Edit Page: ${page.name}`,
-    <ShowcaseUpdatePageModal
-      page={page}
-      handleSubmit={handleUpdatePageTitleAndDesc}
-    />
+    "Edit Page Title and Description",
+    <ShowcaseUpdatePageModal page={page} handleSubmit={handleUpdatePage} />
   );
 
   return (
@@ -91,10 +88,7 @@ export default function ShowcasePageItem({ page, updatePageTitleAndDesc }) {
           )}
           {page.features !== undefined &&
             page.features.map((feature, i) => (
-              <li key={`${page._id}-feature-${feature._id}}`}>
-                {" "}
-                {feature.text}{" "}
-              </li>
+              <li key={`feature-${feature._id}}`}> {feature.text} </li>
             ))}
         </ul>
       </div>

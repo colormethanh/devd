@@ -283,7 +283,6 @@ export default function useAxios() {
       const updateResponse = await dispatch(
         updatePageInDB({ page_id, project_id, access_token, updates })
       );
-
       if (updateResponse.meta?.requestStatus === "fulfilled") {
         if (successCallback) {
           await successCallback();

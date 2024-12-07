@@ -6,8 +6,13 @@ import useAxios from "./useAxios";
 export default function useShowcase(projectName) {
   const access_token = useSelector((state) => state.auth.token);
   const project = useSelector((state) => state.project.project);
-  const { getProjectForShowcase, updateProject, postPage, updatePage } =
-    useAxios();
+  const {
+    getProjectForShowcase,
+    updateProject,
+    postPage,
+    updatePage,
+    patchPageFeature,
+  } = useAxios();
   const { checkAndRefreshToken } = useAuth();
 
   const updateProjectDetails = async (updates) => {
@@ -32,7 +37,7 @@ export default function useShowcase(projectName) {
     );
   };
 
-  const updatePageTitleAndDesc = async (formData, page_id) => {
+  const handlePageUpdate = async (formData, page_id) => {
     updatePage(
       {
         page_id,
@@ -55,5 +60,10 @@ export default function useShowcase(projectName) {
     setupPage();
   }, [projectName]);
 
-  return { project, updateProjectDetails, addNewPage, updatePageTitleAndDesc };
+  return {
+    project,
+    updateProjectDetails,
+    addNewPage,
+    handlePageUpdate,
+  };
 }

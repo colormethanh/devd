@@ -8,7 +8,7 @@ import Form from "./utilities/Form";
 export default function ShowcasePagesContainer({
   project,
   addNewPage,
-  updatePageTitleAndDesc,
+  updatePage,
 }) {
   const [pages, setPages] = useState();
   const [pageFormData, setPageFormData] = useState({
@@ -102,7 +102,7 @@ export default function ShowcasePagesContainer({
           <ShowcasePageItem
             key={`page-${page._id}`}
             page={page}
-            updatePageTitleAndDesc={updatePageTitleAndDesc}
+            updatePage={updatePage}
           />
         ))}
       {Modal}
