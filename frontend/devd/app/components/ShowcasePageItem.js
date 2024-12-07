@@ -13,6 +13,7 @@ export default function ShowcasePageItem({
   updatePage,
   handleDeletePageImage,
   postNewPageImage,
+  needsLogin,
 }) {
   const sliderSettings = {
     dots: true,
@@ -65,14 +66,16 @@ export default function ShowcasePageItem({
     <div className="w-full my-3 flex">
       {/* Page Image */}
       <div className="relative w-[60%] flex justify-center p-5">
-        <Image
-          src={"/static/pencilIcon.png"}
-          width={30}
-          height={30}
-          alt="Modify project data Icon"
-          className="absolute hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg right-3 top-1"
-          onClick={openImageModal}
-        />
+        {!needsLogin && (
+          <Image
+            src={"/static/pencilIcon.png"}
+            width={30}
+            height={30}
+            alt="Modify project data Icon"
+            className="absolute hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg right-3 top-1"
+            onClick={openImageModal}
+          />
+        )}
         <div className="slider-container w-5/6">
           <Slider {...sliderSettings}>
             {page?.images &&
@@ -107,14 +110,16 @@ export default function ShowcasePageItem({
       <div className="w-[40%] p-3 flex flex-col gap-3">
         <div className="w-full flex flex-row justify-between">
           <h1 className="text-6xl font-bold"> {page.name} </h1>
-          <Image
-            src={"/static/pencilIcon.png"}
-            width={30}
-            height={30}
-            alt="Modify project data Icon"
-            className="h-[2rem] w-[2rem] hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
-            onClick={openModal}
-          />
+          {!needsLogin && (
+            <Image
+              src={"/static/pencilIcon.png"}
+              width={30}
+              height={30}
+              alt="Modify project data Icon"
+              className="h-[2rem] w-[2rem] hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
+              onClick={openModal}
+            />
+          )}
         </div>
         <p className="text-xl italic"> {page.description} </p>
 

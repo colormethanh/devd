@@ -11,6 +11,7 @@ export default function ShowcasePagesContainer({
   updatePage,
   handleDeletePageImage,
   postNewPageImage,
+  needsLogin,
 }) {
   const [pages, setPages] = useState();
   const [pageFormData, setPageFormData] = useState({
@@ -88,14 +89,21 @@ export default function ShowcasePagesContainer({
     <div className="relative w-full">
       <div className="w-full flex justify-between">
         <h2 className="text-4xl mb-1"> Pages </h2>
-        <Image
-          src={"/static/plusIcon-green.png"}
-          width={15}
-          height={15}
-          alt="add-pages-icon"
-          className="w-[2rem] h-[2rem] hover:bg-gray-500 p-1 m-1 rounded-lg hover:cursor-pointer"
-          onClick={openModal}
-        />
+        {!needsLogin && (
+          <div
+            className="flex items-center text-xs hover:bg-gray-500 rounded-lg hover:cursor-pointer h-1/2 p-1"
+            onClick={openModal}
+          >
+            <Image
+              src={"/static/plusIcon-green.png"}
+              width={15}
+              height={15}
+              alt="add-pages-icon"
+              className="w-[2rem] h-[2rem] p-2"
+            />
+            Add a new page
+          </div>
+        )}
       </div>
       <HorizontalDivider />
       {/* Pages list*/}
@@ -107,6 +115,7 @@ export default function ShowcasePagesContainer({
             updatePage={updatePage}
             handleDeletePageImage={handleDeletePageImage}
             postNewPageImage={postNewPageImage}
+            needsLogin={needsLogin}
           />
         ))}
       {Modal}

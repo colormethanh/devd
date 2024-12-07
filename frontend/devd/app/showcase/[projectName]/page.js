@@ -36,6 +36,7 @@ export default function ProjectShowcase({ params }) {
           updatePage={handlePageUpdate}
           handleDeletePageImage={handleDeletePageImage}
           postNewPageImage={postNewPageImage}
+          needsLogin={needsLogin}
         />
 
         {/* Component Section */}

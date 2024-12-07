@@ -49,7 +49,10 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
         }}
       >
         <div className="flex flex-col">
-          <label htmlFor={`page-${page._id}-name`} className="text-gray-300">
+          <label
+            htmlFor={`page-${page._id}-name`}
+            className=" text-2xl underline"
+          >
             Page Name:{" "}
           </label>
           <input
@@ -64,7 +67,7 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
         <div className="flex flex-col">
           <label
             htmlFor={`page-${page._id}-description`}
-            className="text-gray-300"
+            className="text-2xl underline"
           >
             Page Description:{" "}
           </label>
@@ -80,7 +83,7 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
           />
         </div>
         <div>
-          <label> Page Features: </label>
+          <label className="text-2xl underline"> Page Features: </label>
           <p className="text-xs text-gray-400 mb-2">
             {" "}
             List the different features that this page contains here!
