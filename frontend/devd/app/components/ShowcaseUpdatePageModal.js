@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Form from "./utilities/Form";
 import Image from "next/image";
+import ShowcaseFeatureInput from "./ShowcaseFeatureInput";
 
 export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
   const [pageData, setPageData] = useState({});
@@ -80,18 +81,16 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
         </div>
         <div>
           <label> Page Features: </label>
-
+          <p className="text-xs text-gray-400 mb-2">
+            {" "}
+            List the different features that this page contains here!
+          </p>
           {pageFeatures.map((feature, i) => (
             <div key={`feature-${feature.text}-${i}`} className="flex mb-2">
               <span className="me-2"> - </span>
-              <input
-                className=" flex-grow inline border border-white text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3"
-                type="text"
-                required
-                value={feature.text}
-                onChange={(e) =>
-                  handleFeatureChange(i, e.target.value, feature)
-                }
+              <ShowcaseFeatureInput
+                text={feature.text}
+                onFinish={(value) => handleFeatureChange(i, value, feature)}
               />
               <div>
                 <Image

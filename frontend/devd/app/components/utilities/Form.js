@@ -16,6 +16,9 @@ export default function Form({
           e.preventDefault();
           onSubmit();
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.preventDefault();
+        }}
       >
         {title !== undefined && (
           <h1 className="text-2xl text-white font-bold">{title}</h1>
