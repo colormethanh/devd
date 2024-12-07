@@ -5,7 +5,11 @@ import Image from "next/image";
 import useModal from "../hooks/useModal";
 import Form from "./utilities/Form";
 
-export default function ShowcasePagesContainer({ project, addNewPage }) {
+export default function ShowcasePagesContainer({
+  project,
+  addNewPage,
+  updatePageTitleAndDesc,
+}) {
   const [pages, setPages] = useState();
   const [pageFormData, setPageFormData] = useState({
     name: "",
@@ -95,7 +99,11 @@ export default function ShowcasePagesContainer({ project, addNewPage }) {
       {/* Pages list*/}
       {project.pages !== undefined &&
         project.pages.map((page) => (
-          <ShowcasePageItem key={`page-${page._id}`} page={page} />
+          <ShowcasePageItem
+            key={`page-${page._id}`}
+            page={page}
+            updatePageTitleAndDesc={updatePageTitleAndDesc}
+          />
         ))}
       {Modal}
     </div>

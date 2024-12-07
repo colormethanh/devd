@@ -275,14 +275,21 @@ export default function useAxios() {
     }
   };
 
-  const updatePage = async ({ page_id, project_id, updates, access_token }) => {
+  const updatePage = async (
+    { page_id, project_id, updates, access_token },
+    successCallback = undefined
+  ) => {
     try {
       const updateResponse = await dispatch(
         updatePageInDB({ page_id, project_id, access_token, updates })
       );
 
       if (updateResponse.meta?.requestStatus === "fulfilled") {
-        await getPageDetails({ project_id, page_id, access_token });
+        if (successCallback) {
+          await successCallback();
+        } else {
+          await getPageDetails({ project_id, page_id, access_token });
+        }
       }
       return updateResponse;
     } catch (err) {

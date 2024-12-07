@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import VerticalDivider from "./utilities/VerticalDivider";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import useModal from "../hooks/useModal";
+import ShowcaseUpdatePageModal from "./ShowcaseUpdatePageModal";
 
-export default function ShowcasePageItem({ page }) {
+export default function ShowcasePageItem({ page, updatePageTitleAndDesc }) {
   const sliderSettings = {
     dots: true,
     arrows: true,
@@ -20,6 +22,19 @@ export default function ShowcasePageItem({ page }) {
       </div>
     ),
   };
+
+  // Modal for updating page title and descriptions
+  const handleUpdatePageTitleAndDesc = (formData, page_id) => {
+    updatePageTitleAndDesc(formData, page_id);
+    closeModal();
+  };
+  const { Modal, openModal, closeModal } = useModal(
+    `Edit Page: ${page.name}`,
+    <ShowcaseUpdatePageModal
+      page={page}
+      handleSubmit={handleUpdatePageTitleAndDesc}
+    />
+  );
 
   return (
     <div className="w-full my-3 flex">
@@ -65,7 +80,7 @@ export default function ShowcasePageItem({ page }) {
             height={30}
             alt="Modify project data Icon"
             className="h-[2rem] w-[2rem] hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
-            onClick={() => {}}
+            onClick={openModal}
           />
         </div>
         <p className="text-xl italic"> {page.description} </p>
@@ -83,6 +98,7 @@ export default function ShowcasePageItem({ page }) {
             ))}
         </ul>
       </div>
+      {Modal}
     </div>
   );
 }
