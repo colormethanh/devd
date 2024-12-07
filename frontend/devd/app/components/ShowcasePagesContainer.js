@@ -10,6 +10,7 @@ export default function ShowcasePagesContainer({
   addNewPage,
   updatePage,
   handleDeletePageImage,
+  postNewPageImage,
 }) {
   const [pages, setPages] = useState();
   const [pageFormData, setPageFormData] = useState({
@@ -105,6 +106,7 @@ export default function ShowcasePagesContainer({
             page={page}
             updatePage={updatePage}
             handleDeletePageImage={handleDeletePageImage}
+            postNewPageImage={postNewPageImage}
           />
         ))}
       {Modal}

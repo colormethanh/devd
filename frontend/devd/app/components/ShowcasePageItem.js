@@ -12,6 +12,7 @@ export default function ShowcasePageItem({
   page,
   updatePage,
   handleDeletePageImage,
+  postNewPageImage,
 }) {
   const sliderSettings = {
     dots: true,
@@ -42,6 +43,10 @@ export default function ShowcasePageItem({
     handleDeletePageImage(image, page._id);
   };
 
+  const handlePostNewImage = (title, image) => {
+    postNewPageImage(title, image, page._id);
+  };
+
   // Modal for updating page image
   const {
     Modal: ImageModal,
@@ -49,7 +54,11 @@ export default function ShowcasePageItem({
     closeModal: closeImageModal,
   } = useModal(
     "Manage Page Images",
-    <ShowcaseImageModal images={page.images} handleDelete={handleImageDelete} />
+    <ShowcaseImageModal
+      images={page.images}
+      handleDelete={handleImageDelete}
+      handlePostNewImage={handlePostNewImage}
+    />
   );
 
   return (

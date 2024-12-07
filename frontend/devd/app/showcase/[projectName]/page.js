@@ -17,6 +17,7 @@ export default function ProjectShowcase({ params }) {
     addNewPage,
     handlePageUpdate,
     handleDeletePageImage,
+    postNewPageImage,
   } = useShowcase(projectName);
   const { needsLogin } = useAuth();
 
@@ -34,6 +35,7 @@ export default function ProjectShowcase({ params }) {
           addNewPage={addNewPage}
           updatePage={handlePageUpdate}
           handleDeletePageImage={handleDeletePageImage}
+          postNewPageImage={postNewPageImage}
         />
 
         {/* Component Section */}

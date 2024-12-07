@@ -359,13 +359,10 @@ export default function useAxios() {
     }
   };
 
-  const updatePageImages = async ({
-    project_id,
-    page_id,
-    image,
-    title,
-    access_token,
-  }) => {
+  const updatePageImages = async (
+    { project_id, page_id, image, title, access_token },
+    onSuccessCallback
+  ) => {
     try {
       const updates = new FormData();
       updates.append("title", title);
@@ -376,11 +373,15 @@ export default function useAxios() {
       );
 
       if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
-        await getPageDetails({
-          project_id,
-          page_id,
-          access_token,
-        });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        } else {
+          await getPageDetails({
+            project_id,
+            page_id,
+            access_token,
+          });
+        }
 
       return uploadImageResponse;
     } catch (err) {
