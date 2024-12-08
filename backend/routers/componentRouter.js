@@ -197,14 +197,15 @@ const componentRoutes = function (componentController, pageController) {
       return next(
         createError(400, "Name, description, snipper, and pages are required")
       );
-
+    let visibility = req.body.visibility ? req.body.visibility : "private";
     try {
       const newComponent = await componentController.postComponent(
         name,
         description,
         snippet,
         pages,
-        req.project_id
+        req.project_id,
+        visibility
       );
 
       if (newComponent instanceof Error) return next(newComponent);

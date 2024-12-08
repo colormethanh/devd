@@ -37,7 +37,7 @@ export default function ShowcasePagesContainer({
     <Form title={""} onSubmit={handleFormPost}>
       <div>
         <label
-          htmlFor="name"
+          htmlFor="page-name"
           className="block text-sm font-medium text-gray-300"
         >
           Name
@@ -45,8 +45,8 @@ export default function ShowcasePagesContainer({
         <input
           ref={nameTextInputRef}
           type="text"
-          id="name"
-          name="name"
+          id="page-name"
+          name="page-name"
           value={pageFormData["name"]}
           onChange={() =>
             handleFormInputChange("name", nameTextInputRef?.current?.value)

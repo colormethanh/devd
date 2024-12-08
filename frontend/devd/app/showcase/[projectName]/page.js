@@ -8,6 +8,7 @@ import ShowcaseComponentItem from "@/app/components/ShowcaseComponentItem";
 import useAuth from "@/app/hooks/useAuth";
 import ShowcaseProjectInfoContainer from "@/app/components/ShowcaseProjectInfoContainer";
 import ShowcasePagesContainer from "@/app/components/ShowcasePagesContainer";
+import ShowcaseComponentsContainer from "@/app/components/ShowcaseComponentsContainer";
 
 export default function ProjectShowcase({ params }) {
   const { projectName } = React.use(params);
@@ -18,6 +19,7 @@ export default function ProjectShowcase({ params }) {
     handlePageUpdate,
     handleDeletePageImage,
     postNewPageImage,
+    postNewComponent,
   } = useShowcase(projectName);
   const { needsLogin } = useAuth();
 
@@ -40,19 +42,11 @@ export default function ProjectShowcase({ params }) {
         />
 
         {/* Component Section */}
-        {project.components !== undefined && (
-          <div className="mb-3">
-            <h2 className="text-4xl">Components</h2>
-            <HorizontalDivider />
-            {/* Components List */}
-            {project.components.map((component) => (
-              <ShowcaseComponentItem
-                key={`component-${component._id}`}
-                component={component}
-              />
-            ))}
-          </div>
-        )}
+        <ShowcaseComponentsContainer
+          project={project}
+          needsLogin={needsLogin}
+          postNewComponent={postNewComponent}
+        />
       </div>
     </div>
   );

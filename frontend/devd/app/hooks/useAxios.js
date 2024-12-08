@@ -390,9 +390,14 @@ export default function useAxios() {
   };
 
   // Components
-  const postComponent = async (project_id, formData, accessToken) => {
+  const postComponent = async (
+    project_id,
+    formData,
+    accessToken,
+    onSuccessCallback = undefined
+  ) => {
     try {
-      await axios.post(
+      const postResponse = await axios.post(
         `${BASE_URL}/projects/${project_id}/components`,
         formData,
         {
@@ -404,9 +409,13 @@ export default function useAxios() {
       );
 
       // update project to contain newly added component in frontend
-      const response = await dispatch(getProject(project_id));
+      if (onSuccessCallback) {
+        await onSuccessCallback();
+      } else {
+        await dispatch(getProject(project_id));
+      }
 
-      return response;
+      return postResponse;
     } catch (err) {
       console.log(err);
     }
