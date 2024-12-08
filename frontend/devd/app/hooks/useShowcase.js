@@ -15,6 +15,8 @@ export default function useShowcase(projectName) {
     updatePageImages,
     postComponent,
     updateComponent,
+    updateComponentImage,
+    deleteComponentImage,
   } = useAxios();
   const { checkAndRefreshToken } = useAuth();
 
@@ -55,14 +57,13 @@ export default function useShowcase(projectName) {
   const handleDeletePageImage = async (image, page_id) => {
     deletePageImage(
       { page_id, project_id: project._id, image, access_token },
-      () => {
-        getProjectForShowcase(project.name);
+      async () => {
+        await getProjectForShowcase(project.name);
       }
     );
   };
 
   const postNewPageImage = async (title, image, page_id) => {
-    debugger;
     updatePageImages(
       {
         project_id: project._id,
@@ -71,8 +72,23 @@ export default function useShowcase(projectName) {
         image,
         access_token,
       },
-      () => {
-        getProjectForShowcase(project.name);
+      async () => {
+        await getProjectForShowcase(project.name);
+      }
+    );
+  };
+
+  const postNewComponentImage = async (title, image, component_id) => {
+    updateComponentImage(
+      {
+        project_id: project._id,
+        component_id,
+        title,
+        image,
+        access_token,
+      },
+      async () => {
+        await getProjectForShowcase(project.name);
       }
     );
   };
@@ -92,6 +108,20 @@ export default function useShowcase(projectName) {
         access_token,
       },
       async () => await getProjectForShowcase(project.name)
+    );
+  };
+
+  const handleDeleteComponentImage = async (image, component_id) => {
+    deleteComponentImage(
+      {
+        component_id,
+        project_id: project._id,
+        image,
+        access_token,
+      },
+      async () => {
+        await getProjectForShowcase(project.name);
+      }
     );
   };
 
@@ -115,5 +145,7 @@ export default function useShowcase(projectName) {
     postNewPageImage,
     postNewComponent,
     handleComponentUpdate,
+    handleDeleteComponentImage,
+    postNewComponentImage,
   };
 }

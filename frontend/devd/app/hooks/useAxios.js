@@ -478,12 +478,10 @@ export default function useAxios() {
     }
   };
 
-  const deleteComponentImage = async ({
-    component_id,
-    project_id,
-    image,
-    access_token,
-  }) => {
+  const deleteComponentImage = async (
+    { component_id, project_id, image, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const deleteResponse = await dispatch(
         deleteComponentImageInDB({
@@ -495,7 +493,11 @@ export default function useAxios() {
       );
 
       if (deleteResponse.meta?.requestStatus === "fulfilled") {
-        await getComponentDetails({ project_id, component_id, access_token });
+        if (onSuccessCallback) {
+          await onSuccessCallback();
+        } else {
+          await getComponentDetails({ project_id, component_id, access_token });
+        }
       }
       return deleteResponse;
     } catch (err) {
@@ -503,13 +505,10 @@ export default function useAxios() {
     }
   };
 
-  const updateComponentImage = async ({
-    project_id,
-    component_id,
-    image,
-    title,
-    access_token,
-  }) => {
+  const updateComponentImage = async (
+    { project_id, component_id, image, title, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const updates = new FormData();
       updates.append("title", title);
@@ -525,11 +524,15 @@ export default function useAxios() {
       );
 
       if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
-        await getComponentDetails({
-          project_id,
-          component_id,
-          access_token,
-        });
+        if (onSuccessCallback) {
+          await onSuccessCallback();
+        } else {
+          await getComponentDetails({
+            project_id,
+            component_id,
+            access_token,
+          });
+        }
       return uploadImageResponse;
     } catch (err) {
       console.log(err);

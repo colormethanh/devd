@@ -10,6 +10,8 @@ export default function ShowcaseComponentsContainer({
   needsLogin,
   postNewComponent,
   updateComponent,
+  handleDeleteComponentImage,
+  postNewComponentImage,
 }) {
   const [components, setComponents] = useState([]);
   const [componentFormData, setComponentFormData] = useState({
@@ -131,6 +133,8 @@ export default function ShowcaseComponentsContainer({
           component={component}
           needsLogin={needsLogin}
           updateComponent={updateComponent}
+          handleDeleteComponentImage={handleDeleteComponentImage}
+          postNewComponentImage={postNewComponentImage}
         />
       ))}
       {AddComponentModal}

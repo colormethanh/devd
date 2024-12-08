@@ -51,7 +51,7 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
         <div className="flex flex-col">
           <label
             htmlFor={`page-${page._id}-name`}
-            className=" text-2xl underline"
+            className=" text-2xl underline mb-1"
           >
             Page Name:{" "}
           </label>
@@ -67,7 +67,7 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
         <div className="flex flex-col">
           <label
             htmlFor={`page-${page._id}-description`}
-            className="text-2xl underline"
+            className="text-2xl underline mb-1"
           >
             Page Description:{" "}
           </label>

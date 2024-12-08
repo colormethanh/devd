@@ -10,7 +10,6 @@ export default function ShowcaseImageModal({
   const [pageImages, setPageImages] = useState([]);
 
   useEffect(() => {
-    console.log(images);
     setPageImages(images);
   });
   return (
