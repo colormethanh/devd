@@ -63,9 +63,9 @@ export default function ShowcasePageItem({
   );
 
   return (
-    <div className="w-full my-3 flex">
+    <div className="w-full my-3 flex flex-col-reverse lg:flex-row">
       {/* Page Image */}
-      <div className="relative w-[60%] flex justify-center p-5">
+      <div className="relative lg:w-[60%] flex justify-center p-5">
         {!needsLogin && (
           <Image
             src={"/static/pencilIcon.png"}
@@ -124,11 +124,13 @@ export default function ShowcasePageItem({
           </Slider>
         </div>
       </div>
-      <VerticalDivider />
+      <div className={"border-l hidden lg:block"}>
+        <VerticalDivider />
+      </div>
       {/* Page details */}
-      <div className="w-[40%] p-3 flex flex-col gap-3">
+      <div className="lg:w-[40%] p-3 flex flex-col gap-3">
         <div className="w-full flex flex-row justify-between">
-          <h1 className="text-6xl font-bold"> {page.name} </h1>
+          <h1 className="text-4xl lg:text-6xl font-bold"> {page.name} </h1>
           {!needsLogin && (
             <Image
               src={"/static/pencilIcon.png"}
@@ -140,11 +142,14 @@ export default function ShowcasePageItem({
             />
           )}
         </div>
-        <p className="text-xl italic"> {page.description} </p>
+        <p className="lg:text-xl italic"> {page.description} </p>
 
         <ul className="list-disc list-inside">
           {page?.features?.length > 0 && (
-            <h3 className="text-4xl"> Features </h3>
+            <h3 className="text-2xl lg:text-4xl underline lg:no-underline">
+              {" "}
+              Features{" "}
+            </h3>
           )}
           {page.features !== undefined &&
             page.features.map((feature, i) => (

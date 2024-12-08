@@ -29,34 +29,36 @@ export default function ShowcaseProjectInfoContainer({
   // Modal for updating project details
   const { Modal, openModal, closeModal } = useModal(
     "Update Project Data",
-    <Form onSubmit={handleProjectDetailsUpdate}>
-      <div className="flex flex-col text-gray-300">
-        <label htmlFor="project-description"> Description: </label>
-        <textarea
-          ref={descriptionRef}
-          className="w-[30vw] border border-white text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none p-2"
-          name="text-textarea"
-          id="project-descriptions"
-          rows={3}
-          defaultValue={projectDetails.description}
-          onChange={() =>
-            handleDetailsChange("description", descriptionRef?.current.value)
-          }
-        />
-      </div>
-      <div className="flex flex-col text-gray-300">
-        <label htmlFor="project-url"> URL: </label>
-        <input
-          type="text"
-          ref={urlRef}
-          className="w-full border border-white text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
-          name="description-textarea"
-          defaultValue={projectDetails["url"]}
-          id={"project-url"}
-          onChange={() => handleDetailsChange("url", urlRef?.current.value)}
-        />
-      </div>
-    </Form>
+    <div className=" sm:w-[40vw]">
+      <Form onSubmit={handleProjectDetailsUpdate}>
+        <div className="flex flex-col text-gray-300">
+          <label htmlFor="project-description"> Description: </label>
+          <textarea
+            ref={descriptionRef}
+            className="border border-white text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none p-2"
+            name="text-textarea"
+            id="project-descriptions"
+            rows={3}
+            defaultValue={projectDetails.description}
+            onChange={() =>
+              handleDetailsChange("description", descriptionRef?.current.value)
+            }
+          />
+        </div>
+        <div className="flex flex-col text-gray-300">
+          <label htmlFor="project-url"> URL: </label>
+          <input
+            type="text"
+            ref={urlRef}
+            className="w-full border border-white text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
+            name="description-textarea"
+            defaultValue={projectDetails["url"]}
+            id={"project-url"}
+            onChange={() => handleDetailsChange("url", urlRef?.current.value)}
+          />
+        </div>
+      </Form>
+    </div>
   );
 
   useEffect(() => {
@@ -69,14 +71,14 @@ export default function ShowcaseProjectInfoContainer({
   return (
     <div className="relative w-full flex flex-col justify-center items-center">
       <div>
-        <h1 className="text-8xl mb-2">{project.name}</h1>
+        <h1 className="text-5xl lg:text-8xl mb-2">{project.name}</h1>
         {!needsLogin && (
           <Image
             src={"/static/pencilIcon.png"}
             width={30}
             height={30}
             alt="Modify project data Icon"
-            className="absolute left-[98%] bottom-[85%] hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
+            className="absolute right-1 top-0 hover:cursor-pointer hover:bg-gray-500 p-1 rounded-lg"
             onClick={openModal}
           />
         )}
@@ -106,7 +108,7 @@ export default function ShowcaseProjectInfoContainer({
         </div>
       </div>
       <div className="w-full text-center mt-3">
-        <p className="italic text-xl"> {project.description} </p>
+        <p className="italic md:text-lg lg:text-xl"> {project.description} </p>
       </div>
       {Modal}
     </div>

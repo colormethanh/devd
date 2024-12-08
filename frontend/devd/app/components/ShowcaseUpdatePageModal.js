@@ -34,7 +34,7 @@ export default function ShowcaseUpdatePageModal({ page, handleSubmit }) {
   }, [page]);
 
   return (
-    <div className="w-[50vw] max-h-[80vh] overflow-auto">
+    <div className=" md:w-[60vw] max-h-[80vh] overflow-auto">
       <Form
         submitText="Save Changes"
         onSubmit={() => {

@@ -108,7 +108,7 @@ export default function ShowcaseComponentsContainer({
   return (
     <div className="mb-3">
       <div className="w-full flex justify-between mb-1">
-        <h2 className="text-4xl">Components</h2>
+        <h2 className="text-3xl lg:text-4xl">Components</h2>
         {!needsLogin && (
           <div
             className="flex items-center text-xs hover:bg-gray-500 rounded-lg hover:cursor-pointer h-1/2 p-1"

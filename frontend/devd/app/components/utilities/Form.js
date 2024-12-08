@@ -7,9 +7,12 @@ export default function Form({
   submitText = "Submit",
   children,
   error,
+  addStyle = "",
 }) {
   return (
-    <div className="min-h-20 h-full  w-full flex justify-center text-white ">
+    <div
+      className={`min-h-20 w-full flex justify-center text-white ${addStyle}`}
+    >
       <form
         className="bg-black p-4 w-full h-full space-y-6 flex flex-col justify-between"
         onSubmit={(e) => {

@@ -18,7 +18,7 @@ export default function ShowcaseUpdateComponentModal({
     });
   }, [component]);
   return (
-    <div className="w-[50vw] max-h-[80vh] overflow-auto">
+    <div className="w-[90vw] md:w-[60vw] max-h-[80vh] overflow-auto">
       <Form
         submitText="Save Changes"
         onSubmit={() => {

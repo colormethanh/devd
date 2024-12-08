@@ -87,8 +87,8 @@ export default function ShowcasePagesContainer({
 
   return (
     <div className="relative w-full">
-      <div className="w-full flex justify-between">
-        <h2 className="text-4xl mb-1"> Pages </h2>
+      <div className="flex-grow flex justify-between">
+        <h2 className="text-3xl lg:text-4xl mb-1"> Pages </h2>
         {!needsLogin && (
           <div
             className="flex items-center text-xs hover:bg-gray-500 rounded-lg hover:cursor-pointer h-1/2 p-1"

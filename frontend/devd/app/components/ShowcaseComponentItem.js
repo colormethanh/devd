@@ -64,9 +64,9 @@ export default function ShowcaseComponentItem({
   );
 
   return (
-    <div className="w-full my-3 flex">
+    <div className="w-full my-3 flex flex-col-reverse lg:flex-row">
       {/* Component Image */}
-      <div className="relative w-[60%] flex justify-center p-5">
+      <div className="relative lg:w-[60%] flex justify-center p-5">
         {!needsLogin && (
           <Image
             src={"/static/pencilIcon.png"}
@@ -125,11 +125,13 @@ export default function ShowcaseComponentItem({
           </Slider>
         </div>
       </div>
-      <VerticalDivider />
+      <div className={"border-l hidden lg:block"}>
+        <VerticalDivider />
+      </div>
       {/* Component Details */}
-      <div className="w-[40%] p-3 flex flex-col gap-3">
+      <div className="lg:w-[40%] p-3 flex flex-col gap-3">
         <div className="w-full flex flex-row justify-between">
-          <h1 className="text-6xl font-bold"> {component.name} </h1>
+          <h1 className="text-4xl md:text-6xl font-bold"> {component.name} </h1>
           {!needsLogin && (
             <Image
               src={"/static/pencilIcon.png"}
@@ -141,7 +143,7 @@ export default function ShowcaseComponentItem({
             />
           )}
         </div>
-        <p className="text-xl italic"> {component.description} </p>
+        <p className="lg:text-xl italic"> {component.description} </p>
       </div>
       {ComponentModal}
       {ComponentImageModal}
