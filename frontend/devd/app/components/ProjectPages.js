@@ -75,6 +75,7 @@ export default function ProjectPages({ project, accessToken }) {
               patchFeature={patchFeature}
               deleteFeature={deleteFeature}
               deleteImage={deleteImage}
+              setPage={setPage}
             />
           )}
         </div>

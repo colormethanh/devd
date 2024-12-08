@@ -74,6 +74,7 @@ export default function useTasks(project) {
 
   const deleteTask = async (task) => {
     await deleteTaskInDB(task._id, project._id, accessToken);
+    await setTask(project?.tasks[project.tasks.length - 2]);
   };
 
   return {

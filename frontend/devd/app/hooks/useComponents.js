@@ -124,8 +124,10 @@ export default function useComponents(project, accessToken) {
     }
   };
 
-  const deleteComponent = async (component) =>
-    deleteComponentInDB(component._id, project._id, accessToken);
+  const deleteComponent = async (component) => {
+    await deleteComponentInDB(component._id, project._id, accessToken);
+    await setComponent(project?.components[project.components.length - 2]);
+  };
 
   return {
     component,

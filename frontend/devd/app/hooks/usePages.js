@@ -143,6 +143,7 @@ export default function usePages(project, accessToken) {
 
   const deletePage = async (page) => {
     await deletePageInDB(page._id, project._id, accessToken);
+    await setPage(project?.pages[project.pages.length - 2]);
   };
 
   return {

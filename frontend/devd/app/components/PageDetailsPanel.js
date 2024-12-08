@@ -10,6 +10,7 @@ import DeleteWarning from "./DeleteWarning";
 
 export default function PageDetailsPanel({
   page,
+  setPage,
   updatePageVisibility,
   updatePageDescription,
   addPageImage,

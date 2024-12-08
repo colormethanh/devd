@@ -32,7 +32,7 @@ export default function TaskDetailPanel({
   };
 
   const handleDelete = () => {
-    console.log("Deleting", task._id);
+    // debugger;
     deleteTask(task);
     closeModal();
   };

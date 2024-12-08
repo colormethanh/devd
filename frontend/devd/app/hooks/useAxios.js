@@ -178,15 +178,23 @@ export default function useAxios() {
 
   const postTask = async (project_id, formData, accessToken) => {
     try {
-      await axios.post(`${BASE_URL}/projects/${project_id}/tasks`, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
+      const resp = await axios.post(
+        `${BASE_URL}/projects/${project_id}/tasks`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+      const project = await getProjectDetails(project_id);
+      const component = await getTaskDetails({
+        project_id,
+        task_id: resp.data.payload.task_id,
+        access_token: accessToken,
       });
-      const response = await getProjectDetails(project_id);
-
-      return response;
+      return component;
     } catch (err) {
       await dispatch(setTaskError("error during task post"));
       return Error(err.message);
@@ -427,7 +435,7 @@ export default function useAxios() {
     access_token
   ) => {
     try {
-      await axios.delete(
+      const resp = await axios.delete(
         `${BASE_URL}/projects/${project_id}/components/${component_id}`,
         {
           headers: {
