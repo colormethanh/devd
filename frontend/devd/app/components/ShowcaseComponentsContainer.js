@@ -9,6 +9,7 @@ export default function ShowcaseComponentsContainer({
   project,
   needsLogin,
   postNewComponent,
+  updateComponent,
 }) {
   const [components, setComponents] = useState([]);
   const [componentFormData, setComponentFormData] = useState({
@@ -128,6 +129,8 @@ export default function ShowcaseComponentsContainer({
         <ShowcaseComponentItem
           key={`component-${component._id}`}
           component={component}
+          needsLogin={needsLogin}
+          updateComponent={updateComponent}
         />
       ))}
       {AddComponentModal}

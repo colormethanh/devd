@@ -442,19 +442,21 @@ export default function useAxios() {
     }
   };
 
-  const updateComponent = async ({
-    component_id,
-    project_id,
-    updates,
-    access_token,
-  }) => {
+  const updateComponent = async (
+    { component_id, project_id, updates, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const updateResponse = await dispatch(
         updateComponentInDB({ project_id, component_id, access_token, updates })
       );
 
       if (updateResponse.meta?.requestStatus === "fulfilled") {
-        await getComponentDetails({ project_id, component_id, access_token });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        } else {
+          await getComponentDetails({ project_id, component_id, access_token });
+        }
       }
     } catch (err) {
       console.log(err);

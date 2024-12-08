@@ -36,7 +36,7 @@ export default function ShowcasePageItem({
     closeModal();
   };
   const { Modal, openModal, closeModal } = useModal(
-    "Edit Page Title and Description",
+    "Manage Page Information",
     <ShowcaseUpdatePageModal page={page} handleSubmit={handleUpdatePage} />
   );
 
