@@ -6,6 +6,7 @@ import useAxios from "../hooks/useAxios";
 export default function Navbar() {
   const router = useRouter();
   const user_id = useSelector((state) => state.auth.user_id);
+  const user = useSelector((state) => state.auth.user);
   const needs_login = useSelector((state) => state.auth.needs_login);
   const { dispatchLogout } = useAxios();
 
@@ -39,6 +40,14 @@ export default function Navbar() {
                   className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
                 >
                   My Projects
+                </div>
+                <div
+                  onClick={() => {
+                    router.push(`/user/${user?.username}`);
+                  }}
+                  className="text-white mx-3 hover:underline underline-offset-4 hover:cursor-pointer"
+                >
+                  My Info
                 </div>
                 <div
                   onClick={handleLogout}

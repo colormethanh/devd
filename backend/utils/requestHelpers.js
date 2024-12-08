@@ -17,7 +17,7 @@ module.exports.fillObjectWithFromBody = (features, body, original) => {
     }
 
     if (body[feature] !== undefined && Array.isArray(body[feature])) {
-      filledObject[feature] = body[feature].concat(original[feature]);
+      filledObject[feature] = body[feature];
     }
   });
 

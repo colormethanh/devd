@@ -22,17 +22,20 @@ export default function ProjectProject({
   }, [project]);
 
   return (
-    <div className="h-5/6 border border-white mr-1 mt-4">
+    <div className="h-5/6 mr-1 mt-4">
       <div className="flex flex-col h-full px-3">
-        <h1 className="text-6xl p-1"> {project.name} </h1>
-        <hr className="my-2"></hr>
+        <h1 className="text-6xl p-1 mb-2"> {project.name} (Preview)</h1>
+        {/* <hr className="my-2"></hr> */}
 
         {/* Project details */}
         <div className="flex gap-4 flex-grow overflow-auto">
           <div className=" w-full h-full flex flex-col gap-6">
             {/* Project Description */}
-            <div>
-              <h3 className="text-2xl font-bold"> Project Description: </h3>
+            <div className="">
+              <h3 className="text-2xl font-bold underline">
+                {" "}
+                Project Description{" "}
+              </h3>
               <p className="text-xs text-gray-400">
                 {" "}
                 Click text below to modify project description{" "}

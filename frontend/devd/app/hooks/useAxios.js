@@ -4,6 +4,7 @@ import {
   login,
   refreshAccessToken,
   logout,
+  patchUserInDB,
 } from "../store/slices/authSlice";
 import { resetTask, setTaskError } from "../store/slices/taskSlice";
 import {
@@ -54,6 +55,18 @@ export default function useAxios() {
     return response;
   };
 
+  // User
+  const patchUser = async (user_id, updates, access_token) => {
+    const response = await dispatch(
+      patchUserInDB({ user_id, updates, access_token })
+    );
+
+    if (response.meta?.requestStatus === "fulfilled") {
+      await refreshToken();
+    }
+    return response;
+  };
+
   // Projects
   const getProjects = async () => {
     try {
@@ -64,14 +77,21 @@ export default function useAxios() {
     }
   };
 
-  const updateProject = async ({ project_id, updates, access_token }) => {
+  const updateProject = async (
+    { project_id, updates, access_token },
+    successCallback = undefined
+  ) => {
     try {
       const response = await dispatch(
         updateProjectInDB({ project_id, updates, access_token })
       );
 
       if (response.meta?.requestStatus === "fulfilled") {
-        await getProjectDetails(project_id);
+        if (successCallback !== undefined) {
+          await successCallback();
+        } else {
+          await getProjectDetails(project_id);
+        }
       }
 
       return response;
@@ -198,9 +218,14 @@ export default function useAxios() {
   };
 
   // Pages
-  const postPage = async (project_id, formData, accessToken) => {
+  const postPage = async (
+    project_id,
+    formData,
+    accessToken,
+    successCallback = undefined
+  ) => {
     try {
-      const resp = await axios.post(
+      const postResponse = await axios.post(
         `${BASE_URL}/projects/${project_id}/pages`,
         formData,
         {
@@ -210,13 +235,13 @@ export default function useAxios() {
           withCredentials: true,
         }
       );
-      const project = await dispatch(getProject(project_id));
-      const page = await getPageDetails({
-        project_id,
-        page_id: resp.data.payload.page_id,
-        access_token: accessToken,
-      });
-      return page;
+      if (!successCallback) {
+        await dispatch(getProject(project_id));
+      } else {
+        await successCallback();
+      }
+
+      return postResponse;
     } catch (err) {
       console.log(err);
     }
@@ -238,19 +263,21 @@ export default function useAxios() {
     }
   };
 
-  const deletePageImage = async ({
-    page_id,
-    project_id,
-    image,
-    access_token,
-  }) => {
+  const deletePageImage = async (
+    { page_id, project_id, image, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const deleteResponse = await dispatch(
         deletePageImageInDB({ page_id, project_id, image, access_token })
       );
 
       if (deleteResponse.meta?.requestStatus === "fulfilled") {
-        await getPageDetails({ project_id, page_id, access_token });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        } else {
+          await getPageDetails({ project_id, page_id, access_token });
+        }
       }
       return deleteResponse;
     } catch (err) {
@@ -258,14 +285,20 @@ export default function useAxios() {
     }
   };
 
-  const updatePage = async ({ page_id, project_id, updates, access_token }) => {
+  const updatePage = async (
+    { page_id, project_id, updates, access_token },
+    successCallback = undefined
+  ) => {
     try {
       const updateResponse = await dispatch(
         updatePageInDB({ page_id, project_id, access_token, updates })
       );
-
       if (updateResponse.meta?.requestStatus === "fulfilled") {
-        await getPageDetails({ project_id, page_id, access_token });
+        if (successCallback) {
+          await successCallback();
+        } else {
+          await getPageDetails({ project_id, page_id, access_token });
+        }
       }
       return updateResponse;
     } catch (err) {
@@ -334,13 +367,10 @@ export default function useAxios() {
     }
   };
 
-  const updatePageImages = async ({
-    project_id,
-    page_id,
-    image,
-    title,
-    access_token,
-  }) => {
+  const updatePageImages = async (
+    { project_id, page_id, image, title, access_token },
+    onSuccessCallback
+  ) => {
     try {
       const updates = new FormData();
       updates.append("title", title);
@@ -351,11 +381,15 @@ export default function useAxios() {
       );
 
       if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
-        await getPageDetails({
-          project_id,
-          page_id,
-          access_token,
-        });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        } else {
+          await getPageDetails({
+            project_id,
+            page_id,
+            access_token,
+          });
+        }
 
       return uploadImageResponse;
     } catch (err) {
@@ -364,9 +398,14 @@ export default function useAxios() {
   };
 
   // Components
-  const postComponent = async (project_id, formData, accessToken) => {
+  const postComponent = async (
+    project_id,
+    formData,
+    accessToken,
+    onSuccessCallback = undefined
+  ) => {
     try {
-      const resp = await axios.post(
+      const postResponse = await axios.post(
         `${BASE_URL}/projects/${project_id}/components`,
         formData,
         {
@@ -377,14 +416,14 @@ export default function useAxios() {
         }
       );
 
-      const project = await dispatch(getProject(project_id));
-      const component = await getComponentDetails({
-        project_id,
-        component_id: resp.data.payload.component_id,
-        access_token: accessToken,
-      });
+      // update project to contain newly added component in frontend
+      if (onSuccessCallback) {
+        await onSuccessCallback();
+      } else {
+        await dispatch(getProject(project_id));
+      }
 
-      return component;
+      return postResponse;
     } catch (err) {
       console.log(err);
     }
@@ -411,19 +450,21 @@ export default function useAxios() {
     }
   };
 
-  const updateComponent = async ({
-    component_id,
-    project_id,
-    updates,
-    access_token,
-  }) => {
+  const updateComponent = async (
+    { component_id, project_id, updates, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const updateResponse = await dispatch(
         updateComponentInDB({ project_id, component_id, access_token, updates })
       );
 
       if (updateResponse.meta?.requestStatus === "fulfilled") {
-        await getComponentDetails({ project_id, component_id, access_token });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        } else {
+          await getComponentDetails({ project_id, component_id, access_token });
+        }
       }
     } catch (err) {
       console.log(err);
@@ -445,12 +486,10 @@ export default function useAxios() {
     }
   };
 
-  const deleteComponentImage = async ({
-    component_id,
-    project_id,
-    image,
-    access_token,
-  }) => {
+  const deleteComponentImage = async (
+    { component_id, project_id, image, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const deleteResponse = await dispatch(
         deleteComponentImageInDB({
@@ -462,7 +501,11 @@ export default function useAxios() {
       );
 
       if (deleteResponse.meta?.requestStatus === "fulfilled") {
-        await getComponentDetails({ project_id, component_id, access_token });
+        if (onSuccessCallback) {
+          await onSuccessCallback();
+        } else {
+          await getComponentDetails({ project_id, component_id, access_token });
+        }
       }
       return deleteResponse;
     } catch (err) {
@@ -470,13 +513,10 @@ export default function useAxios() {
     }
   };
 
-  const updateComponentImage = async ({
-    project_id,
-    component_id,
-    image,
-    title,
-    access_token,
-  }) => {
+  const updateComponentImage = async (
+    { project_id, component_id, image, title, access_token },
+    onSuccessCallback = undefined
+  ) => {
     try {
       const updates = new FormData();
       updates.append("title", title);
@@ -492,11 +532,15 @@ export default function useAxios() {
       );
 
       if (uploadImageResponse?.meta?.requestStatus === "fulfilled")
-        await getComponentDetails({
-          project_id,
-          component_id,
-          access_token,
-        });
+        if (onSuccessCallback) {
+          await onSuccessCallback();
+        } else {
+          await getComponentDetails({
+            project_id,
+            component_id,
+            access_token,
+          });
+        }
       return uploadImageResponse;
     } catch (err) {
       console.log(err);
@@ -507,7 +551,7 @@ export default function useAxios() {
     dispatchLogin,
     dispatchSignup,
     refreshToken,
-    getProjects,
+    patchUser,
     updateProject,
     postProjectToDB,
     deleteProjectInDB,

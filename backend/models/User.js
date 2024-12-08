@@ -4,6 +4,9 @@ const crypto = require("crypto");
 
 const UserSchema = new Schema({
   username: { type: String, unique: true, required: true },
+  bio: { type: String },
+  fName: { type: String },
+  lName: { type: String },
   salt: { type: String, required: true },
   hash: { type: String, required: true },
   email: {

@@ -24,13 +24,13 @@ exports.getPage = async (page_id) => {
   }
 };
 
-exports.postPage = async (name, description, project) => {
+exports.postPage = async (name, description, project, visibility) => {
   try {
     const newPage = new PageModel({
       name,
       description,
       project,
-      visibility: "private",
+      visibility: visibility,
       date_created: Date.now(),
     });
 

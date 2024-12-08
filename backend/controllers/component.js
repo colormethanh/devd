@@ -45,7 +45,8 @@ exports.postComponent = async (
   description,
   snippet,
   pages,
-  project_id
+  project_id,
+  visibility
 ) => {
   try {
     const newComponent = new ComponentModel({
@@ -56,6 +57,7 @@ exports.postComponent = async (
       children: [],
       parents: [],
       images: [],
+      visibility: visibility,
       project: project_id,
     });
 

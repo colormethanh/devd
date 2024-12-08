@@ -12,3 +12,16 @@ exports.getUser = async (userId) => {
     return createError(err.statusCode, err.message);
   }
 };
+
+exports.updateUser = async (user_id, updates) => {
+  try {
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user_id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+    return updatedUser;
+  } catch (err) {
+    return createError(err.statusCode, err.message);
+  }
+};

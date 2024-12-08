@@ -1,23 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 
-export default function TextAndInputContainer({
+export default function TextAndTextBox({
   text,
   classString,
   updateCallback,
+  rows = 3,
 }) {
   const [isEdit, setIsEdit] = useState(false);
   const textAreaRef = useRef(null);
 
-  const handleTextClick = () => {
+  const handleDescriptionClick = () => {
     setIsEdit((prev) => !prev);
   };
 
-  const handleTextUpdate = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     if (textAreaRef.current) {
       updateCallback(textAreaRef.current.value);
     }
+    setIsEdit(false);
   };
 
   useEffect(() => {
@@ -28,14 +30,15 @@ export default function TextAndInputContainer({
     <div className={`${classString}`}>
       <div className={`sm:w-full overflow-auto`}>
         {isEdit ? (
-          <form onSubmit={handleTextUpdate}>
-            <div className="flex gap-4">
-              <input
-                type="text"
+          <form onSubmit={handleFormSubmit}>
+            <div>
+              <textarea
                 ref={textAreaRef}
                 className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
-                name="description-textarea"
+                name="text-textarea"
+                rows={rows}
                 defaultValue={text}
+                required={true}
               />
               <div className="flex justify-end">
                 <Button
@@ -66,8 +69,8 @@ export default function TextAndInputContainer({
         ) : (
           <div className="hover:cursor-pointer border border-black  hover:border-gray-500 italic">
             <p
-              onClick={handleTextClick}
-              className="text-lg ms-3 overflow-auto min-h-7"
+              onClick={handleDescriptionClick}
+              className="text-lg ms-3 overflow-auto "
             >
               {text}
             </p>

@@ -7,27 +7,36 @@ export default function Form({
   submitText = "Submit",
   children,
   error,
+  addStyle = "",
 }) {
   return (
-    <div className="min-h-20 w-full flex justify-center text-white ">
+    <div
+      className={`min-h-20 w-full flex justify-center text-white ${addStyle}`}
+    >
       <form
-        className="bg-black p-4 w-full space-y-6"
+        className="bg-black p-4 w-full h-full space-y-6 flex flex-col justify-between"
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.preventDefault();
+        }}
       >
-        <h1 className="text-2xl text-white font-bold">{title}</h1>
+        {title !== undefined && (
+          <h1 className="text-2xl text-white font-bold">{title}</h1>
+        )}
         {error && <p className="text-red-500"> Oh No! {error}. Try again. </p>}
         {children}
         <div className="w-full flex justify-end">
           <button
             className={`bg-[#000000] 
                 text-white border 
-                border-white 
-                hover:bg-white 
-                hover:text-black 
-                focus:outline-black 
+                border-green-500 
+                hover:bg-green-500
+                hover:border-green-800
+                hover:text-white
+                focus:outline-green-500 
                 w-48 
                 p-3 py-0 ${submitButtonStyle}`}
             type="submit"
