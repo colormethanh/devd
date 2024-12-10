@@ -16,7 +16,6 @@ export default function UserProjectsListItem({
         onClick={() => handleRouteToProject(project.project_id._id)}
       >
         <div className="w-1/2 text-start">{project.project_id?.name}</div>{" "}
-        <div className="w-1/2 text-start"> Access: {project.role} </div>
       </div>
       <div className="h-full flex items-center">
         <div

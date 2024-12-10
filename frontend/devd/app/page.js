@@ -23,40 +23,41 @@ export default function Home() {
       <div className="home-options flex flex-col items-center mt-3">
         {needsLogin === true ? (
           <>
-            <Button
-              clickCallback={() => {
+            <button
+              onClick={() => {
                 router.push("/auth");
               }}
-              addStyle="mt-3"
+              className="w-40 h-10 border px-3 hover:bg-white hover:text-black mt-3"
             >
               <div className="w-full flex justify-between">
                 Login
                 <div className="mr-3 grid place-items-center">{">"} </div>
               </div>
-            </Button>
-            <Button
-              clickCallback={() => {
+            </button>
+            <button
+              onClick={() => {
                 router.push("/auth/signup");
               }}
-              addStyle="mt-3"
+              className="w-40 h-10 border px-3 hover:bg-white hover:text-black mt-3"
             >
               <div className="w-full flex justify-between">
                 Signup
                 <div className="mr-3 grid place-items-center">{">"} </div>
               </div>
-            </Button>
+            </button>
           </>
         ) : (
-          <Button
-            clickCallback={() => {
+          <button
+            onClick={() => {
               router.push("/projects");
             }}
+            className="w-40 h-10 border px-3 hover:bg-white hover:text-black"
           >
             <div className="w-full flex justify-between">
               Enter
               <div className="mr-3 grid place-items-center">{">"} </div>
             </div>
-          </Button>
+          </button>
         )}
       </div>
     </div>

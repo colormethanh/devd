@@ -17,7 +17,9 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
           isOpen ? "w-60" : "w-14"
         } flex flex-col items-center h-full border-r transition-all duration-200 `}
       >
-        <div className="border-b border-white h-10 w-full text-center flex justify-center">
+        <div
+          className={`border-b border-white h-10 w-full text-center justify-center`}
+        >
           <Image
             src={"/static/agile-Icon.png"}
             alt="app logo"
@@ -86,7 +88,7 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
         onClick={() => {
           toggleNav();
         }}
-        className="hover:cursor-pointer ms-3 w-12"
+        className="hover:cursor-pointer ms-3 w-12  hidden lg:block"
       >
         <Image
           className="transition-all duration-300"

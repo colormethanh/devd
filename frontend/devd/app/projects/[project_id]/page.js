@@ -43,7 +43,7 @@ export default function ProjectDetails({ params }) {
   }, [project]);
 
   return (
-    <div className="flex h-full w-full">
+    <div className="flex h-[100vh] w-full">
       <SideBar
         onItemClick={handleChangeView}
         isViewing={isViewing}
@@ -53,7 +53,7 @@ export default function ProjectDetails({ params }) {
       {needsLogin === true ? (
         <div className="w-full"> Please login to continue </div>
       ) : (
-        <div className="w-full overflow-hidden">
+        <div className="w-full overflow-auto">
           {isViewing === "project" && (
             <ProjectProject
               project={project}

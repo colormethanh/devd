@@ -21,9 +21,11 @@ export default function SideBarItem({
   };
 
   return (
-    <li onMouseEnter={handleHover} onMouseLeave={handleExit}>
+    <li className="h-10" onMouseEnter={handleHover} onMouseLeave={handleExit}>
       <Button
-        addStyle={`w-full  ${isSelected ? "border" : "border-0"}`}
+        addStyle={`w-full h-full  ${
+          isSelected ? "border-l border-b" : "border-0"
+        }`}
         clickCallback={onClickCallback}
       >
         <div className={`flex flex-row ${!isOpen && "justify-center"}`}>

@@ -2,12 +2,10 @@ import React, { useState } from "react";
 
 export default function TasksContainer({ items, title, handleTaskClick }) {
   return (
-    <div className=" text-left p-2 w-full border  text-white h-full">
-      <div className="w-full h-8 text-lg flex items-center border-b">
-        {title}
-      </div>
+    <div className="h-[30vh] text-left p-2 w-full border text-white">
+      <div className="w-full text-lg flex items-center border-b">{title}</div>
 
-      <div className="mt-2 h-5/6 w-full overflow-auto">
+      <div className="mt-2 w-full overflow-auto">
         <ul>
           {items !== undefined &&
             items.map((item) => {

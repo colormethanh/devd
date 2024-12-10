@@ -23,8 +23,6 @@ export default function Button({
         hover:bg-white 
         hover:text-black 
         focus:outline-black 
-        w-48 
-        p-3
         ${addStyle}`}
     >
       <div className="w-full flex flex-row justify-between">

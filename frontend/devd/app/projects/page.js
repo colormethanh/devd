@@ -106,8 +106,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="flex flex-row justify-center mt-6 text-center h-full w-full">
-      <div className="w-2/3 h-4/5 border p-3 flex flex-col">
-        <h1 className="text-3xl mb-3">Welcome Back: {user && user.username}</h1>
+      <div className="w-full md:w-2/3 h-4/5 flex flex-col">
         <div className="h-5/6 flex g-3">
           {/* User Projects container */}
           <UserProjectsContainer
