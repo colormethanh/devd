@@ -27,7 +27,7 @@ export default function ProjectShowcase({ params }) {
   const { needsLogin } = useAuth();
 
   return (
-    <div className="w-full h-[90%] p-3 overflow-auto ">
+    <div className="w-full h-[90vh] p-3 overflow-auto ">
       <div className="w-full flex flex-col gap-6">
         <ShowcaseProjectInfoContainer
           project={project}

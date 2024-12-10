@@ -119,7 +119,7 @@ export default function Navbar() {
           {isOpen && (
             <div
               className={`absolute right-0
-               z-100 mt-2 w-32 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
+               z-50 mt-2 w-32 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
             >
               <ul className="md:flex text-xs">
                 <li

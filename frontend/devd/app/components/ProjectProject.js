@@ -28,7 +28,6 @@ export default function ProjectProject({
           {" "}
           Project overview: {project.name}
         </h1>
-        {/* <hr className="my-2"></hr> */}
 
         {/* Project details */}
         <div className="flex gap-4 h-max">

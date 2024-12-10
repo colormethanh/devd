@@ -62,24 +62,25 @@ export default function TaskDetailPanel({
   return (
     <DetailPanel>
       <div className="w-full flex flex-col ">
-        <h1 className="text-4xl"> {task.name} </h1>
+        <h1 className="text-xl md:text-2xl lg:text-4xl"> {task.name} </h1>
         <hr className="my-2 "></hr>
 
         {/* Title and info bar */}
-        <div className="flex flex-col w-1/2 sm:flex-row sm:w-full">
+        <div className="flex flex-col sm:flex-row sm:w-full">
           {/* Posted date */}
-          <div className="mr-3 ">
+          <div className="mr-3 my-1 md:my-0">
             <div className="flex flex-col sm:flex-row">
-              <span className="text-s">
+              <span className="text-sm">
                 {" "}
                 Created: {formatDate(task.date_created)}{" "}
               </span>
             </div>
           </div>
+          <div className="border-l border-b sm:border-b-0 border-white"></div>
           <div className="border-l border-white mr-3"></div>
 
           {/* Task status */}
-          <div className="mr-3 ">
+          <div className="mr-3 my-1 md:my-0">
             <select
               id="status"
               name="status"
@@ -92,17 +93,18 @@ export default function TaskDetailPanel({
               <option value={"done"}>Done</option>
             </select>
           </div>
-
+          <div className="border-l border-b sm:border-b-0 border-white"></div>
           <div className="border-l border-white mr-3"></div>
 
           {/* Delete Task */}
           <div
             onClick={toggleDeleteModal}
-            className="mr-3 text-xs flex items-center border border-black py-1 px-2 hover:cursor-pointer hover:border-red-500"
+            className="mr-3 text-xs flex items-center border border-black py-1 px-2 hover:cursor-pointer hover:border-red-500 my-1 md:my-0"
           >
             Delete Task
           </div>
         </div>
+        <div className="border-l border-b sm:border-b-0 border-white"></div>
       </div>
 
       {/* Task Description */}
@@ -116,7 +118,7 @@ export default function TaskDetailPanel({
 
       {/* Relevant contents */}
 
-      <RelevantContentsContainer
+      {/* <RelevantContentsContainer
         projectContents={{
           components: filterRelevantContents(
             project.components,
@@ -127,7 +129,7 @@ export default function TaskDetailPanel({
         relevantContents={task.relevant_contents}
         addContent={handleAddRelevantContent}
         changeViewTo={changeViewTo}
-      />
+      /> */}
       {Modal}
     </DetailPanel>
   );

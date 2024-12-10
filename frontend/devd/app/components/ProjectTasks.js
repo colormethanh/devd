@@ -37,9 +37,9 @@ export default function ProjectTasks({ project, changeViewTo }) {
   }, [project]);
 
   return (
-    <div className="h-5/6 border border-white mr-1 mt-4">
+    <div className="mr-1 mt-4">
       <div className="flex h-full">
-        <div className="flex flex-col w-1/6 h-full">
+        {/* <div className="flex flex-col w-1/6 h-full">
           <div className="flex w-full justify-end p-1 h-8 border-b border-gray-500">
             <div
               onClick={handleGoToAddTask}
@@ -57,8 +57,8 @@ export default function ProjectTasks({ project, changeViewTo }) {
             setIsAddItemView={setIsAddTaskView}
             itemName={"tasks"}
           />
-        </div>
-        <div className="w-5/6 h-full">
+        </div> */}
+        <div className="w-full h-full">
           {isAddTaskView ? (
             <AddTaskPanel
               setIsAddTaskView={setIsAddTaskView}

@@ -68,14 +68,6 @@ export default function useAxios() {
   };
 
   // Projects
-  const getProjects = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/projects`);
-      return response.data.payload;
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const updateProject = async (
     { project_id, updates, access_token },

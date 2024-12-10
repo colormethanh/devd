@@ -23,12 +23,10 @@ export default function SideBarItem({
   return (
     <li className="h-10" onMouseEnter={handleHover} onMouseLeave={handleExit}>
       <Button
-        addStyle={`w-full h-full  ${
-          isSelected ? "border-l border-b" : "border-0"
-        }`}
+        addStyle={`w-full h-full border-0`}
         clickCallback={onClickCallback}
       >
-        <div className={`flex flex-row ${!isOpen && "justify-center"}`}>
+        <div className={`flex flex-row ${!isOpen && "justify-center"} px-2`}>
           {" "}
           <div className={`flex justify-center w-8 h-7 ${isOpen && "mr-3"}`}>
             <Image

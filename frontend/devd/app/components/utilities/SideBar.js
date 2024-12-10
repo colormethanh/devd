@@ -18,7 +18,7 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
         } flex flex-col items-center h-full border-r transition-all duration-200 `}
       >
         <div
-          className={`border-b border-white h-10 w-full text-center justify-center`}
+          className={`border-b border-white h-10 w-full text-center flex justify-center`}
         >
           <Image
             src={"/static/agile-Icon.png"}
@@ -36,7 +36,6 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
               onItemClick("project");
             }}
             isOpen={isOpen}
-            isSelected={isViewing === "project"}
           >
             Project
           </SideBarItem>
@@ -51,7 +50,7 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
           >
             Tasks
           </SideBarItem>
-          <SideBarItem
+          {/* <SideBarItem
             src={"/static/pagesIcon-white.png"}
             onHoverSrc={"/static/pagesIcon.png"}
             onClickCallback={() => {
@@ -72,7 +71,7 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
             isSelected={isViewing === "components"}
           >
             Components
-          </SideBarItem>
+          </SideBarItem> */}
           <SideBarItem
             src="/static/showcaseIcon-white.png"
             onHoverSrc={"/static/showcaseIcon.png"}
