@@ -24,7 +24,7 @@ export default function ProjectProject({
   return (
     <div className="mr-1 mt-4">
       <div className="flex flex-col px-3">
-        <h1 className="text-4xl lg:text-6xl p-1 mb-2">
+        <h1 className="text-4xl lg:text-6xl p-1 mb-2  border-b border-gray-500">
           {" "}
           Project overview: {project.name}
         </h1>

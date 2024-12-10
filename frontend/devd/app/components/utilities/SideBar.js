@@ -11,7 +11,7 @@ export default function SideBar({ onItemClick, isViewing, routeToShowcase }) {
   };
 
   return (
-    <div className={`flex h-full bg-black text-white`}>
+    <div className={`flex h-[100vh] bg-black text-white`}>
       <div
         className={`${
           isOpen ? "w-60" : "w-14"
