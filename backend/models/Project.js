@@ -12,6 +12,7 @@ const projectSchema = new Schema({
   name: { type: String, required: true, unique: true },
   owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   features: [{ type: String }],
+  project_image: { type: String },
   components: [{ type: Schema.Types.ObjectId, ref: "Component" }],
   pages: [{ type: Schema.Types.ObjectId, ref: "Page" }],
   tasks: [{ type: Schema.Types.ObjectId, ref: "Task" }],

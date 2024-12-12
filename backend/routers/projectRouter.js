@@ -126,7 +126,13 @@ const projectRoutes = function (projectController) {
           )
         );
 
-      const allowedUpdates = ["name", "description", "features", "url"];
+      const allowedUpdates = [
+        "name",
+        "description",
+        "features",
+        "url",
+        "project_image",
+      ];
 
       if (!hasOne(allowedUpdates, req.body))
         next(createError(400, "Must update at lease one property"));

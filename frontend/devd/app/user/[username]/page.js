@@ -38,14 +38,9 @@ export default function page({ params }) {
   }, []);
 
   return (
-    <div className="w-full h-[90vh] flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+    <div className="w-full h-[90vh] flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden ">
       {/* User info half */}
-      <div className="lg:h-full lg:w-1/3 p-4 flex justify-center items-center border-r ">
-        {/* <div>
-          <p className="text-2xl"> Username: </p>
-          <p className="text-xl"> {user?.username} </p>
-        </div> */}
-
+      <div className="lg:h-full lg:w-1/3 p-4 flex justify-center items-center bg-[url('/static/defaultPortfolioBanner-1.jpg')]  lg:bg-cover bg-center lg:bg-top">
         <div className="w-2/3 flex flex-col items-center lg:items-end gap-4">
           <div className="w-16 h-16">
             <Image
@@ -93,8 +88,8 @@ export default function page({ params }) {
           />
         </div>
         <hr className="border border-gray-500 my-8"></hr>
-        <h1 className="text-lg lg:text-3xl my-3">Projects</h1>
-        <div className="h-max w-full flex flex-wrap gap-5">
+        <h1 className="text-lg lg:text-3xl my-3">Portfolio</h1>
+        <div className="h-max w-full flex flex-wrap md:justify-around gap-5">
           {user?.projects?.map((project) => (
             <ShowcasePortfolioItem
               key={`showcase-item-${project._id}`}
