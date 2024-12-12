@@ -4,6 +4,8 @@ import useUser from "@/app/hooks/useUser";
 import useAuth from "@/app/hooks/useAuth";
 import TextAndInputContainer from "@/app/components/utilities/TextAndInputContainer";
 import TextAndTextBox from "@/app/components/utilities/TextAndTextBox";
+import Image from "next/image";
+import ShowcasePortfolioItem from "@/app/components/ShowcasePortfolioItem";
 
 export default function page({ params }) {
   const { username } = React.use(params);
@@ -30,59 +32,75 @@ export default function page({ params }) {
     const setupPage = async () => {
       if (accessToken !== undefined) {
         await checkAndRefreshToken(accessToken);
-        if (needsLogin === true) router.push("/auth");
       }
     };
     setupPage();
   }, []);
 
   return (
-    <div className="w-full h-full flex justify-center">
-      <div className="w-2/3 flex flex-col gap-4">
-        <div>
-          <h1 className="text-4xl underline">User Info Page</h1>
-          <p>
-            {" "}
-            Customize the info on this page to modify make changes to your info
-            in the showcase{" "}
-          </p>
-        </div>
-
-        <div>
+    <div className="w-full h-[90vh] flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
+      {/* User info half */}
+      <div className="lg:h-full lg:w-1/3 p-4 flex justify-center items-center border-r ">
+        {/* <div>
           <p className="text-2xl"> Username: </p>
           <p className="text-xl"> {user?.username} </p>
+        </div> */}
+
+        <div className="w-2/3 flex flex-col items-center lg:items-end gap-4">
+          <div className="w-16 h-16">
+            <Image
+              src={"/static/defaultUser.png"}
+              height={500}
+              width={500}
+              alt="user-icon"
+            />
+          </div>
+
+          <div className="flex flex-wrap">
+            <div>
+              <TextAndInputContainer
+                text={user?.fName ? user.fName : "Oh no! Add a first name now!"}
+                updateCallback={handleFirstNameUpdate}
+              />
+            </div>
+
+            <div className="hover:ml-3">
+              <TextAndInputContainer
+                text={user?.lName ? user.lName : "Oh no! Add a last name now!"}
+                updateCallback={handleLastNameUpdate}
+              />
+            </div>
+          </div>
+
+          <div>
+            <TextAndInputContainer
+              text={user?.email ? user.email : "email coming soon!"}
+              updateCallback={handleEmailUpdate}
+            />
+          </div>
         </div>
+      </div>
+
+      {/* User projects */}
+      <div className="lg:w-2/3 lg:h-full lg:overflow-y-auto flex flex-col py-4 px-8 lg:px-10">
+        <h1 className="text-xl lg:text-3xl mb-8 lg:mb-4">Hi!</h1>
 
         <div>
-          <p className="text-2xl"> Email: </p>
-          <TextAndInputContainer
-            text={user?.email ? user.email : "Oh no! Add a email now!"}
-            updateCallback={handleEmailUpdate}
-          />
-        </div>
-
-        <div>
-          <p className="text-2xl"> First Name: </p>
-          <TextAndInputContainer
-            text={user?.fName ? user.fName : "Oh no! Add a first name now!"}
-            updateCallback={handleFirstNameUpdate}
-          />
-        </div>
-
-        <div>
-          <p className="text-2xl"> Last Name: </p>
-          <TextAndInputContainer
-            text={user?.lName ? user.lName : "Oh no! Add a last name now!"}
-            updateCallback={handleLastNameUpdate}
-          />
-        </div>
-
-        <div>
-          <h2 className="text-2xl"> Bio: </h2>
           <TextAndTextBox
-            text={user?.bio ? user.bio : "Oh no! Add a user Bio now!"}
+            text={user?.bio ? user.bio : "Bio coming soon!"}
             updateCallback={handleBioUpdate}
+            rows={8}
           />
+        </div>
+        <hr className="border border-gray-500 my-8"></hr>
+        <h1 className="text-lg lg:text-3xl my-3">Projects</h1>
+        <div className="h-max w-full flex flex-wrap gap-5">
+          {user?.projects?.map((project) => (
+            <ShowcasePortfolioItem
+              key={`showcase-item-${project._id}`}
+              project={project}
+            />
+          ))}
         </div>
       </div>
     </div>

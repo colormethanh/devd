@@ -105,17 +105,15 @@ export default function ProjectsPage() {
   }, [accessToken, user, projects]);
 
   return (
-    <div className="flex flex-row justify-center mt-6 text-center h-full w-full">
-      <div className="w-full md:w-2/3 h-4/5 flex flex-col">
-        <div className="h-5/6 flex g-3">
-          {/* User Projects container */}
-          <UserProjectsContainer
-            user={user}
-            handleRouteToProject={handleRouteToProject}
-            openAddProjectModal={openModal}
-            openDeleteProjectModal={handleOpenDeleteModal}
-          />
-        </div>
+    <div className="flex flex-row justify-center text-center h-[90vh] w-full">
+      <div className="w-full md:w-2/3">
+        {/* User Projects container */}
+        <UserProjectsContainer
+          user={user}
+          handleRouteToProject={handleRouteToProject}
+          openAddProjectModal={openModal}
+          openDeleteProjectModal={handleOpenDeleteModal}
+        />
       </div>
       {AddProjectModal}
       {DeleteProjectModal}

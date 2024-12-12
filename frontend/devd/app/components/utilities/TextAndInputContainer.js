@@ -44,7 +44,9 @@ export default function TextAndInputContainer({
               />
               <div className="flex justify-end">
                 <button
-                  className={"py-0 mr-3 border w-40 border-red-500"}
+                  className={
+                    "py-0 mr-3 border w-40 border-red-500 hover:bg-red-500"
+                  }
                   onClick={() => {
                     setIsEdit(false);
                   }}
@@ -57,8 +59,7 @@ export default function TextAndInputContainer({
                   className="bg-[#000000] 
                               text-white 
                               border
-                              hover:bg-white 
-                              hover:text-black 
+                              hover:bg-green-500 
                               focus:outline-black 
                               w-40 
                               p-3 py-0 border-green-500"
@@ -70,13 +71,13 @@ export default function TextAndInputContainer({
             </div>
           </form>
         ) : (
-          <div className="hover:cursor-pointer border border-black  hover:border-gray-500 italic">
-            <p
+          <div className="hover:cursor-pointer border border-black  hover:border-gray-500 italic hover:pr-3">
+            <span
               onClick={handleTextClick}
               className="lg:text-lg ms-3 overflow-auto min-h-7"
             >
               {text}
-            </p>
+            </span>
           </div>
         )}
       </div>

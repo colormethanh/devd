@@ -18,7 +18,7 @@ export default function UserProjectsContainer({
   ];
 
   return (
-    <div className="h-full w-full flex flex-col gap-2 p-3">
+    <div className="h-[90%] w-full flex flex-col gap-2 p-3">
       <div className="w-full flex gap-2">
         <h3 className="text-start text-lg font-bold"> Your projects </h3>
 

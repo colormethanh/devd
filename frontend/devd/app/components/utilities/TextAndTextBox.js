@@ -3,9 +3,10 @@ import Button from "./Button";
 
 export default function TextAndTextBox({
   text,
-  classString,
+  classString = "",
   updateCallback,
   rows = 3,
+  textAreaStyle = "",
 }) {
   const [isEdit, setIsEdit] = useState(false);
   const textAreaRef = useRef(null);
@@ -34,8 +35,8 @@ export default function TextAndTextBox({
             <div>
               <textarea
                 ref={textAreaRef}
-                className="w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3  text-lg"
-                name="text-textarea"
+                className={`w-full border border-green-600 text-white bg-black  focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 resize-none px-3 text-sm"
+                name="text-textarea ${textAreaStyle}`}
                 rows={rows}
                 defaultValue={text}
                 required={true}
@@ -68,12 +69,11 @@ export default function TextAndTextBox({
           </form>
         ) : (
           <div className="hover:cursor-pointer border border-black  hover:border-gray-500 italic">
-            <p
-              onClick={handleDescriptionClick}
-              className="text-lg ms-3 overflow-auto "
-            >
-              {text}
-            </p>
+            <pre>
+              <p onClick={handleDescriptionClick} className="text-sm">
+                {text}
+              </p>
+            </pre>
           </div>
         )}
       </div>

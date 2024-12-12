@@ -15,7 +15,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col h-2/3 w-100 text-center justify-center">
+    <div className="flex flex-col h-[90vh] w-100 text-center justify-center">
       <div className="">
         <p> An app for all things... </p>
         <h1 className="text-6xl font-bold"> Devd </h1>
